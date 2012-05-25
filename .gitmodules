@@ -1,0 +1,3 @@
+[submodule "Source/External/Reachability"]
+	path = Source/External/Reachability
+	url = https://github.com/tonymillion/Reachability.git
