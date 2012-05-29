@@ -2,6 +2,7 @@
 
 iPhone/iPad controller simple web browser with toolbar options (backward, forward, stop loading and export).
 Feel free to fork it and make it more interesting!
+![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser.png)
 
 ## How to use
 It is very easy to integrate to your projects.
