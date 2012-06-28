@@ -26,6 +26,8 @@
     BOOL fromBanner;
 }
 
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+
 @property (nonatomic, strong) Reachability *netReach;
 
 @property(nonatomic, strong) NSURL *loadingURL;

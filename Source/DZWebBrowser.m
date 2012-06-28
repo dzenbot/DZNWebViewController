@@ -13,10 +13,10 @@
 #define CLOSE_BTN_TITLE @"Close"
 
 @interface DZWebBrowser ()
-
 @end
 
 @implementation DZWebBrowser
+@synthesize webView;
 @synthesize netReach, loadingURL, stringURL, currentURL;
 @synthesize navBarBkgdImage, toolBarBkgdImage;
 
@@ -28,7 +28,6 @@
         //Init Internet Reachability
         self.netReach = [Reachability reachabilityForInternetConnection];
         [netReach startNotifier];
-        
         startingRequest = [NSMutableURLRequest requestWithURL:URL];
     }
     
