@@ -100,6 +100,11 @@
         _webView.delegate = self;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _webView.scalesPageToFit = YES;
+        
+#ifndef __IPHONE_6_0
+        _webView.suppressesIncrementalRendering = YES;
+#endif
+        
     }
     return _webView;
 }
