@@ -8,11 +8,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DZWebBrowser.h"
 
 @interface ViewController : UIViewController
-{
-    IBOutlet UIButton *button;
-}
 
 @end

@@ -17,7 +17,6 @@
 		F5451E2C1570432C00E1E95F /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5451E2A1570432C00E1E95F /* ViewController_iPhone.xib */; };
 		F5451E2F1570432C00E1E95F /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5451E2D1570432C00E1E95F /* ViewController_iPad.xib */; };
 		F5451E3F1570441200E1E95F /* DZWebBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = F5451E3D1570441200E1E95F /* DZWebBrowser.m */; };
-		F5451E401570441200E1E95F /* DZWebBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = F5451E3E1570441200E1E95F /* DZWebBrowser.xib */; };
 		F5451E4E1570448800E1E95F /* webNextButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5451E481570448800E1E95F /* webNextButton.png */; };
 		F5451E4F1570448800E1E95F /* webNextButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5451E491570448800E1E95F /* webNextButton@2x.png */; };
 		F5451E501570448800E1E95F /* webPrevButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5451E4A1570448800E1E95F /* webPrevButton.png */; };
@@ -46,7 +45,6 @@
 		F5451E2E1570432C00E1E95F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		F5451E3C1570441200E1E95F /* DZWebBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZWebBrowser.h; path = ../../../Source/DZWebBrowser.h; sourceTree = "<group>"; };
 		F5451E3D1570441200E1E95F /* DZWebBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZWebBrowser.m; path = ../../../Source/DZWebBrowser.m; sourceTree = "<group>"; };
-		F5451E3E1570441200E1E95F /* DZWebBrowser.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DZWebBrowser.xib; path = ../../../Source/DZWebBrowser.xib; sourceTree = "<group>"; };
 		F5451E481570448800E1E95F /* webNextButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = webNextButton.png; path = ../../../Source/images/webNextButton.png; sourceTree = "<group>"; };
 		F5451E491570448800E1E95F /* webNextButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "webNextButton@2x.png"; path = "../../../Source/images/webNextButton@2x.png"; sourceTree = "<group>"; };
 		F5451E4A1570448800E1E95F /* webPrevButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = webPrevButton.png; path = ../../../Source/images/webPrevButton.png; sourceTree = "<group>"; };
@@ -143,7 +141,6 @@
 			children = (
 				F5451E3C1570441200E1E95F /* DZWebBrowser.h */,
 				F5451E3D1570441200E1E95F /* DZWebBrowser.m */,
-				F5451E3E1570441200E1E95F /* DZWebBrowser.xib */,
 				F5451E411570442300E1E95F /* Helpers */,
 				F5451E421570442600E1E95F /* Images */,
 			);
@@ -226,7 +223,6 @@
 				F5451E201570432C00E1E95F /* InfoPlist.strings in Resources */,
 				F5451E2C1570432C00E1E95F /* ViewController_iPhone.xib in Resources */,
 				F5451E2F1570432C00E1E95F /* ViewController_iPad.xib in Resources */,
-				F5451E401570441200E1E95F /* DZWebBrowser.xib in Resources */,
 				F5451E4E1570448800E1E95F /* webNextButton.png in Resources */,
 				F5451E4F1570448800E1E95F /* webNextButton@2x.png in Resources */,
 				F5451E501570448800E1E95F /* webPrevButton.png in Resources */,
@@ -369,6 +365,7 @@
 				F5451E341570432C00E1E95F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

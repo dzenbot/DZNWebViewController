@@ -9,6 +9,8 @@
 
 #import "ViewController.h"
 
+#import "DZWebBrowser.h"
+
 @implementation ViewController
 
 #pragma mark - View lifecycle
@@ -16,8 +18,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSLog(@"%s",__FUNCTION__);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -44,16 +44,16 @@
     
 }
 
-
 - (IBAction)openBrowser:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
+    NSURL *URL = [NSURL URLWithString:@"http://dribbble.com/"];
     
-    NSURL *url = [NSURL URLWithString:@"https://github.com/DZen-Interaktiv"];
-    DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:url];
+    DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
+    
     [self presentModalViewController:webBrowserNC animated:YES];
 }
+
 
 #pragma mark - View lifeterm
 
@@ -69,19 +69,6 @@
 
 
 #pragma mark - View Auto-Rotation
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    NSLog(@"self.view.center = %@",NSStringFromCGPoint(self.view.center));
-    
-    /*[button setCenter:CGPointMake(self.view.frame.size.width/2-button.frame.size.width/2,
-                                  self.view.frame.size.height/2-button.frame.size.height/2)];*/
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    
-}
                          
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

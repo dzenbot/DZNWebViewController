@@ -9,26 +9,42 @@
 
 #import "DZWebBrowser.h"
 
-#define LOADING_MSSG @"Loading..."
-#define CLOSE_BTN_TITLE @"Close"
+#define LOADING_TITLE NSLocalizedString(@"Loading...",nil)
+#define CLOSE_BTN_TITLE NSLocalizedString(@"Close",nil)
+#define CANCEL_ACTIONSHEET_TITLE NSLocalizedString(@"Cancel",nil)
 
 @interface DZWebBrowser ()
+{
+    UIBarButtonItem *stopButton;
+	UIBarButtonItem *backButton;
+	UIBarButtonItem *forwardButton;
+    UIBarButtonItem *shareButton;
+    
+    BOOL hasConnectivity;
+}
+
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+
 @end
 
 @implementation DZWebBrowser
-@synthesize webView;
-@synthesize netReach, loadingURL, stringURL, currentURL;
-@synthesize navBarBkgdImage, toolBarBkgdImage;
+@synthesize webView = _webView;
+@synthesize navBarBkgdImage = _navBarBkgdImage;
+@synthesize toolBarBkgdImage = _toolBarBkgdImage;
+@synthesize currentURL = _currentURL;
+@synthesize activityIndicator = _activityIndicator;
+@synthesize netReach = _netReach;
 
-- (id)initBrowserWithURL:(NSURL *)URL
+- (id)initWebBrowserWithURL:(NSURL *)URL
 {
     self = [super init];
     if (self) 
     {
+        _currentURL = URL;
+        
         //Init Internet Reachability
-        self.netReach = [Reachability reachabilityForInternetConnection];
-        [netReach startNotifier];
-        startingRequest = [NSMutableURLRequest requestWithURL:URL];
+        _netReach = [Reachability reachabilityForInternetConnection];
+        [_netReach startNotifier];
     }
     
     return self;
@@ -40,65 +56,129 @@
 {
     [super viewDidLoad];
     
-    [self.navigationController.navigationBar setBackgroundImage:navBarBkgdImage forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+    [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
+    [self.navigationController setToolbarHidden:NO];
+    [self setToolbarItems:self.items animated:NO];
     
-    UIBarButtonItem *closeButton = [[UIBarButtonItem alloc] initWithTitle:CLOSE_BTN_TITLE style:UIBarButtonItemStyleDone target:self action:@selector(closeAction:)];
-    [self.navigationItem setLeftBarButtonItem:closeButton animated:NO];
+    [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
     
-    [toolBar setBackgroundImage:toolBarBkgdImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
-    [toolBar setBackgroundColor:[UIColor blackColor]];
+    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:_activityIndicator];
+    [self.navigationItem setRightBarButtonItem:activityItem];
     
-    webView.delegate = self;
-    webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    webView.scalesPageToFit = YES;
-    webView.scrollView.delegate = self;
-    
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    [spinner startAnimating];
-    activityItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-    
-    [webView loadRequest:startingRequest];
+    backButton.enabled = NO;
+	forwardButton.enabled = NO;
+    shareButton.enabled = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [self.view addSubview:self.webView];
+    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+
+#pragma mark Getter Methods
+
+- (UIWebView *)webView
+{
+    if (!_webView)
+    {
+        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        _webView.delegate = self;
+        _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _webView.scalesPageToFit = YES;
+    }
+    return _webView;
+}
+
+- (UIActivityIndicatorView *)activityIndicator
+{
+    if (_activityIndicator)
+    {
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        _activityIndicator.hidesWhenStopped = YES;
+        _activityIndicator.color = [UIColor whiteColor];
+        [_activityIndicator startAnimating];
+        
+        NSLog(@"_activityIndicator : %@",_activityIndicator.description);
+    }
+    return _activityIndicator;
+}
+
+- (UIBarButtonItem *)closeButton
+{
+    return [[UIBarButtonItem alloc] initWithTitle:CLOSE_BTN_TITLE style:UIBarButtonItemStyleDone target:self action:@selector(closeAction:)];
+}
+
+- (NSArray *)items
+{
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
+    stopButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webStopButton"] style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
+    backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webPrevButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    forwardButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webNextButton"] style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
+    shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
+    
+    return [[NSArray alloc] initWithObjects:stopButton, space, backButton, space, forwardButton, space, shareButton, nil];
+}
+
+
+#pragma mark Setter Methods
+
+- (void)setNavBarBkgdImage:(UIImage *)navBarBkgdImage
+{
+    [self.navigationController.navigationBar setBackgroundImage:navBarBkgdImage forBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)setToolBarBkgdImage:(UIImage *)toolBarBkgdImage
+{
+    [self.navigationController.toolbar setBackgroundImage:toolBarBkgdImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
 
 #pragma mark -
 #pragma mark WebViewController Methods
 
-
-- (IBAction)stopAction:(id)sender
+- (void)stopAction:(id)sender
 {
-	[webView stopLoading];
+	[_webView stopLoading];
 }
 
-- (IBAction)backAction:(id)sender
+- (void)backAction:(id)sender
 {
-	[webView goBack];
+	[_webView goBack];
 }
 
-- (IBAction)forwardAction:(id)sender
+- (void)forwardAction:(id)sender
 {
-	[webView goForward];
+	[_webView goForward];
 }
 
-- (IBAction)shareAction:(id)sender
+- (void)shareAction:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:nil];
+    [actionSheet showFromToolbar:self.navigationController.toolbar];
+}
+
+- (void)setActivityIndicatorVisible:(BOOL)visible
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
+    
+    if (visible) [_activityIndicator startAnimating];
+    else [_activityIndicator stopAnimating];
 }
 
 - (void)closeAction:(id)sender
@@ -110,19 +190,19 @@
 
 - (void)browserWillClose
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [webView stopLoading];
-    webView.delegate = nil;
-    webView = nil;
+    [self setActivityIndicatorVisible:NO];
+
+    [_webView stopLoading];
+    _webView.delegate = nil;
+    _webView = nil;
 }
 
 
 #pragma mark -
 #pragma mark UIWebViewDelegate
 
-- (BOOL)webView:(UIWebView*)_webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType
+- (BOOL)webView:(UIWebView *)webview shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    
     //Little timer to avoid loading lags
     NSTimer *webTimer = [NSTimer timerWithTimeInterval:1.0 target:self
                                               selector:@selector(reachabilityChanged)
@@ -132,80 +212,34 @@
     [[NSRunLoop mainRunLoop] addTimer:webTimer forMode:NSDefaultRunLoopMode];
     
     self.currentURL = request.URL;
-	loadingURL = request.URL;
+    
     stopButton.enabled = YES;
-	backButton.enabled = [_webView canGoBack];
-	forwardButton.enabled = [_webView canGoForward];
-    actionButton.enabled = YES;
     
 	return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView*)_webView
+- (void)webViewDidStartLoad:(UIWebView *)webview
 {
-	self.navigationItem.title = LOADING_MSSG;
-	if (!self.navigationItem.rightBarButtonItem) {
-		[self.navigationItem setRightBarButtonItem:activityItem animated:YES];
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-	}
+	self.navigationItem.title = LOADING_TITLE;
     
-    stopButton.enabled = YES;
-	backButton.enabled = [_webView canGoBack];
-	forwardButton.enabled = [_webView canGoForward];
-    actionButton.enabled = YES;
+	[self setActivityIndicatorVisible:YES];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView*)_webView
+- (void)webViewDidFinishLoad:(UIWebView *)webview
 {
-	self.navigationItem.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+	self.navigationItem.title = [webview stringByEvaluatingJavaScriptFromString:@"document.title"];
     
-	if (self.navigationItem.rightBarButtonItem == activityItem) {
-		[self.navigationItem setRightBarButtonItem:nil animated:NO];
-        
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	}
+	[self setActivityIndicatorVisible:NO];
     
     stopButton.enabled = NO;
-    backButton.enabled = [_webView canGoBack];
-    forwardButton.enabled = [_webView canGoForward];
-    actionButton.enabled = YES;
+    backButton.enabled = [webview canGoBack];
+    forwardButton.enabled = [webview canGoForward];
+    shareButton.enabled = YES;
 }
 
-- (void)webView:(UIWebView*)_webView didFailLoadWithError:(NSError*)error
+- (void)webView:(UIWebView *)webview didFailLoadWithError:(NSError *)error
 {
-	[self webViewDidFinishLoad:_webView];
-}
-
-- (NSURL *)URL
-{
-	return loadingURL ? loadingURL : webView.request.URL;
-}
-
-#pragma mark - UIScrollViewDelegate Methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    
-}
-
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
-{
-    
+	[self webViewDidFinishLoad:webview];
 }
 
 
@@ -214,37 +248,24 @@
 
 - (void)reachabilityChanged
 {
-    if(![self networkReachable])
+    if (![self networkReachable])
     {
-        hasConnectivity = false;
         //self.navigationItem.title = @"";
         
-        [webView stopLoading];
+        [_webView stopLoading];
+        
         stopButton.enabled = NO;
         backButton.enabled = NO;
         forwardButton.enabled = NO;
-        actionButton.enabled = NO;
-        
-        webView.delegate = nil;
-        
-        
-        if (self.navigationItem.rightBarButtonItem == activityItem)
-        {
-            [self.navigationItem setRightBarButtonItem:nil animated:NO];
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        }
+        shareButton.enabled = NO;
         
         UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:@"Internet Error"
-                                                                  message:@"No Internet detected."
+                                                                  message:@"No Internet detected. Please check your connection settings."
                                                                  delegate:nil
                                                         cancelButtonTitle:@"OK"
                                                         otherButtonTitles:nil];
         [alertNoInternet show];
     }
-    else
-    {
-        hasConnectivity = true;
-    }    
 }
 
 - (BOOL)networkReachable
@@ -252,8 +273,7 @@
 	NetworkStatus netStatus = [self.netReach currentReachabilityStatus];
 	BOOL connectionRequired = [self.netReach connectionRequired];
 	
-	if (((netStatus == ReachableViaWiFi) || (netStatus == ReachableViaWWAN)) && (!connectionRequired))
-    {
+	if (((netStatus == ReachableViaWiFi) || (netStatus == ReachableViaWWAN)) && (!connectionRequired)) {
 		return YES;
 	}
 	return NO;
@@ -263,17 +283,17 @@
 
 - (void)didReceiveMemoryWarning
 {
-    webView.delegate = nil;
-    webView = nil;
+    _webView.delegate = nil;
+    _webView = nil;
     
     [super didReceiveMemoryWarning];
 }
 
 - (void)viewWillUnload
 {
-    [webView removeFromSuperview];
-    webView.delegate = nil;
-    webView = nil;
+    [_webView removeFromSuperview];
+    _webView.delegate = nil;
+    _webView = nil;
     
     NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
     [NSURLCache setSharedURLCache:sharedCache];
@@ -287,8 +307,8 @@
 
 - (void)viewDidUnload
 {
-    webView.delegate = nil;
-    webView = nil;
+    _webView.delegate = nil;
+    _webView = nil;
     
     [super viewDidUnload];
 }

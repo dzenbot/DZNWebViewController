@@ -10,39 +10,19 @@
 #import <UIKit/UIKit.h>
 #import "Reachability.h"
 
-@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIScrollViewDelegate>
-{
-    IBOutlet UIWebView *webView;
-    IBOutlet UIToolbar *toolBar;
-    IBOutlet UIBarButtonItem *stopButton;
-	IBOutlet UIBarButtonItem *backButton;
-	IBOutlet UIBarButtonItem *forwardButton;
-    IBOutlet UIBarButtonItem *actionButton;
-	UIBarButtonItem *activityItem;
-    
-    NSMutableURLRequest *startingRequest;
-    
-    BOOL hasConnectivity;
-    BOOL fromBanner;
-}
+@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) UIWebView *webView;
 
 @property (nonatomic, strong) Reachability *netReach;
 
-@property(nonatomic, strong) NSURL *loadingURL;
 @property(nonatomic, strong) NSURL *currentURL;
 @property(nonatomic, strong) NSString *stringURL;
 
 @property(nonatomic, strong) UIImage *navBarBkgdImage;
 @property(nonatomic, strong) UIImage *toolBarBkgdImage;
 
-- (id)initBrowserWithURL:(NSURL *)URL;
-
-- (IBAction)backAction:(id)sender;
-- (IBAction)forwardAction:(id)sender;
-- (IBAction)shareAction:(id)sender;
-- (IBAction)closeAction:(id)sender;
+- (id)initWebBrowserWithURL:(NSURL *)URL;
 
 - (void)reachabilityChanged;
 - (BOOL)networkReachable;
