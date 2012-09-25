@@ -32,7 +32,6 @@
 @synthesize navBarBkgdImage = _navBarBkgdImage;
 @synthesize toolBarBkgdImage = _toolBarBkgdImage;
 @synthesize currentURL = _currentURL;
-@synthesize activityIndicator = _activityIndicator;
 @synthesize netReach = _netReach;
 
 - (id)initWebBrowserWithURL:(NSURL *)URL
@@ -62,9 +61,6 @@
     [self setToolbarItems:self.items animated:NO];
     
     [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
-    
-    UIBarButtonItem *activityItem = [[UIBarButtonItem alloc] initWithCustomView:_activityIndicator];
-    [self.navigationItem setRightBarButtonItem:activityItem];
     
     backButton.enabled = NO;
 	forwardButton.enabled = NO;
@@ -109,20 +105,6 @@
     return _webView;
 }
 
-- (UIActivityIndicatorView *)activityIndicator
-{
-    if (_activityIndicator)
-    {
-        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        _activityIndicator.hidesWhenStopped = YES;
-        _activityIndicator.color = [UIColor whiteColor];
-        [_activityIndicator startAnimating];
-        
-        NSLog(@"_activityIndicator : %@",_activityIndicator.description);
-    }
-    return _activityIndicator;
-}
-
 - (UIBarButtonItem *)closeButton
 {
     return [[UIBarButtonItem alloc] initWithTitle:CLOSE_BTN_TITLE style:UIBarButtonItemStyleDone target:self action:@selector(closeAction:)];
@@ -137,7 +119,7 @@
     forwardButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webNextButton"] style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
     
-    return [[NSArray alloc] initWithObjects:stopButton, space, backButton, space, forwardButton, space, shareButton, nil];
+    return [[NSArray alloc] initWithObjects:space, stopButton, space, backButton, space, forwardButton, space, shareButton, space, nil];
 }
 
 
@@ -153,6 +135,22 @@
     [self.navigationController.toolbar setBackgroundImage:toolBarBkgdImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
+- (void)setRightButtonIndicator:(BOOL)show
+{
+    if (show)
+    {
+        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        activityIndicator.color = [UIColor whiteColor];
+        [activityIndicator startAnimating];
+        
+        UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
+        [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
+    }
+    else [self.navigationItem setRightBarButtonItem:nil animated:YES];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = show;
+}
+
 
 #pragma mark -
 #pragma mark WebViewController Methods
@@ -160,6 +158,7 @@
 - (void)stopAction:(id)sender
 {
 	[_webView stopLoading];
+    [self setRightButtonIndicator:NO];
 }
 
 - (void)backAction:(id)sender
@@ -178,24 +177,15 @@
     [actionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
-- (void)setActivityIndicatorVisible:(BOOL)visible
-{
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
-    
-    if (visible) [_activityIndicator startAnimating];
-    else [_activityIndicator stopAnimating];
-}
-
 - (void)closeAction:(id)sender
 {
     [self browserWillClose];
     [self dismissModalViewControllerAnimated:YES];
 }
 
-
 - (void)browserWillClose
 {
-    [self setActivityIndicatorVisible:NO];
+    [self setRightButtonIndicator:NO];
 
     [_webView stopLoading];
     _webView.delegate = nil;
@@ -227,24 +217,26 @@
 {
 	self.navigationItem.title = LOADING_TITLE;
     
-	[self setActivityIndicatorVisible:YES];
+	[self setRightButtonIndicator:YES];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webview
 {
 	self.navigationItem.title = [webview stringByEvaluatingJavaScriptFromString:@"document.title"];
     
-	[self setActivityIndicatorVisible:NO];
-    
     stopButton.enabled = NO;
     backButton.enabled = [webview canGoBack];
     forwardButton.enabled = [webview canGoForward];
     shareButton.enabled = YES;
+    
+    [self setRightButtonIndicator:NO];
 }
 
 - (void)webView:(UIWebView *)webview didFailLoadWithError:(NSError *)error
 {
 	[self webViewDidFinishLoad:webview];
+    
+    [self setRightButtonIndicator:NO];
 }
 
 
