@@ -20,6 +20,7 @@
 #define ACTIONSHEET_FACEBOOK_BTN_TITLE NSLocalizedString(@"Post to Facebook",nil)
 #define ACTIONSHEET_MAIL_BTN_TITLE NSLocalizedString(@"Send link by Email",nil)
 #define ACTIONSHEET_COPY_BTN_TITLE NSLocalizedString(@"Copy link",nil)
+#define ACTIONSHEET_OPEN_BTN_TITLE NSLocalizedString(@"Open link",nil)
 
 @interface DZWebBrowser ()
 {
@@ -29,6 +30,8 @@
     UIBarButtonItem *shareButton;
     
     BOOL hasConnectivity;
+    
+    NSString *detectedUrl;
 }
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
@@ -109,6 +112,11 @@
         _webView.suppressesIncrementalRendering = YES;
 #endif
         
+        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressRecognized:)];
+        longPressRecognizer.allowableMovement = 20;
+        longPressRecognizer.minimumPressDuration = 1.0f;
+        longPressRecognizer.delegate = self;
+        [_webView addGestureRecognizer:longPressRecognizer];
     }
     return _webView;
 }
@@ -217,6 +225,39 @@
     UIGraphicsEndImageContext();
     return image;
 }
+
+/**
+ * Opens an actionSheet as a contextual menu for the webview
+ *
+ * @param point The coordinate point from where the contextual menu should point to.
+ */
+- (void)openContextualMenuAtPoint:(CGPoint)point
+{
+    //// Create the ActionSheet
+    UIActionSheet *contextualMenu = [[UIActionSheet alloc] initWithTitle:[detectedUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                                                             delegate:self
+                                                    cancelButtonTitle:nil
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:ACTIONSHEET_OPEN_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, nil];
+
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [contextualMenu showFromRect:CGRectMake(point.x, point.y, 1, 1) inView:_webView animated:YES];
+    }
+    else {
+        [contextualMenu showFromToolbar:self.navigationController.toolbar];
+    }
+}
+
+- (void)linkLongPressRecognized:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
+    {
+        //// The point from where the gesture was called
+        CGPoint point = [gestureRecognizer locationInView:_webView];
+        [self openContextualMenuAtPoint:point];
+    }
+}
+
 
 - (void)closeAction:(id)sender
 {

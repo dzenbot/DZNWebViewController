@@ -13,7 +13,7 @@
 #import <MessageUI/MFMailComposeViewController.h>
 #import "Reachability.h"
 
-@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
 /**  */
 @property (nonatomic, strong) UIWebView *webView;
