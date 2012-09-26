@@ -18,7 +18,7 @@ Import "DZWebBrowser.h" to your view controller subclass.
 
 ### Step 2
 ```
-Import Apple's SystemConfiguration and CFNetwork frameworks.
+Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 ```
 
 ### Step 3
