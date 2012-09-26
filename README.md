@@ -5,7 +5,7 @@ Feel free to fork it and make it more interesting!
 
 DZWebBrowser uses ARC and supports iOS6 and below.
 
-![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser.png)
+
 
 ## How to use
 It is very easy to integrate into your projects.
