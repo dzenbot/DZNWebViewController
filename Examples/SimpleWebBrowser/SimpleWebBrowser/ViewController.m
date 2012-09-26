@@ -1,15 +1,16 @@
-
+//
 //  ViewController.m
 //  SimpleWebBrowser
 //
-//  Created by Ignacio Romero Zurbuchen on 5/25/12.
-//  Copyright (c) 2011 DZen Interaktiv.
+//  Created by Ignacio on 9/26/12.
+//  Copyright (c) 2012 DZen Interaktiv. All rights reserved.
 //  Licence: MIT-Licence
 //
 
 #import "ViewController.h"
 
-#import "DZWebBrowser.h"
+@interface ViewController ()
+@end
 
 @implementation ViewController
 
@@ -23,26 +24,23 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-    
 }
+
 
 - (IBAction)openBrowser:(id)sender
 {
@@ -51,9 +49,8 @@
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
     
-    [self presentModalViewController:webBrowserNC animated:YES];
+    [self presentViewController:webBrowserNC animated:YES completion:NULL];
 }
-
 
 #pragma mark - View lifeterm
 
@@ -69,10 +66,11 @@
 
 
 #pragma mark - View Auto-Rotation
-                         
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    if (interfaceOrientation == UIInterfaceOrientationPortrait) return YES;
+    else return NO;
 }
 
 @end

@@ -1,19 +1,17 @@
-
+//
 //  AppDelegate.m
 //  SimpleWebBrowser
 //
-//  Created by Ignacio Romero Zurbuchen on 5/25/12.
-//  Copyright (c) 2011 DZen Interaktiv.
+//  Created by Ignacio on 9/26/12.
+//  Copyright (c) 2012 DZen Interaktiv. All rights reserved.
 //  Licence: MIT-Licence
 //
 
 #import "AppDelegate.h"
+
 #import "ViewController.h"
 
 @implementation AppDelegate
-
-@synthesize window = _window;
-@synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -24,7 +22,6 @@
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }
-    
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

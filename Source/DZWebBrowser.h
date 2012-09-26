@@ -8,23 +8,29 @@
 //
 
 #import <UIKit/UIKit.h>
+
+#import <Social/Social.h>
+#import <MessageUI/MFMailComposeViewController.h>
 #import "Reachability.h"
 
-@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
+@interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
+/**  */
 @property (nonatomic, strong) UIWebView *webView;
-
+/**  */
 @property (nonatomic, strong) Reachability *netReach;
-
+/**  */
 @property(nonatomic, strong) NSURL *currentURL;
+/**  */
 @property(nonatomic, strong) NSString *stringURL;
-
+/**  */
 @property(nonatomic, strong) UIImage *navBarBkgdImage;
+/**  */
 @property(nonatomic, strong) UIImage *toolBarBkgdImage;
 
+/**
+ *
+*/
 - (id)initWebBrowserWithURL:(NSURL *)URL;
-
-- (void)reachabilityChanged;
-- (BOOL)networkReachable;
 
 @end

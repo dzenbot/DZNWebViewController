@@ -8,10 +8,18 @@
 //
 
 #import "DZWebBrowser.h"
+#import <QuartzCore/QuartzCore.h>
+
+#define kWebLoadingTimout 10.0
 
 #define LOADING_TITLE NSLocalizedString(@"Loading...",nil)
 #define CLOSE_BTN_TITLE NSLocalizedString(@"Close",nil)
 #define CANCEL_ACTIONSHEET_TITLE NSLocalizedString(@"Cancel",nil)
+
+#define ACTIONSHEET_TWITTER_BTN_TITLE NSLocalizedString(@"Tweet to Twitter",nil)
+#define ACTIONSHEET_FACEBOOK_BTN_TITLE NSLocalizedString(@"Post to Facebook",nil)
+#define ACTIONSHEET_MAIL_BTN_TITLE NSLocalizedString(@"Send link by Email",nil)
+#define ACTIONSHEET_COPY_BTN_TITLE NSLocalizedString(@"Copy link",nil)
 
 @interface DZWebBrowser ()
 {
@@ -65,14 +73,14 @@
     backButton.enabled = NO;
 	forwardButton.enabled = NO;
     shareButton.enabled = NO;
+    
+    [self.view addSubview:self.webView];
+    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self.view addSubview:self.webView];
-    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -173,14 +181,47 @@
 
 - (void)shareAction:(id)sender
 {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:nil];
-    [actionSheet showFromToolbar:self.navigationController.toolbar];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:ACTIONSHEET_TWITTER_BTN_TITLE, ACTIONSHEET_FACEBOOK_BTN_TITLE, ACTIONSHEET_MAIL_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, nil];
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [actionSheet showFromBarButtonItem:sender animated:YES];
+    }
+    else {
+        [actionSheet showFromToolbar:self.navigationController.toolbar];
+    }
+}
+
+/**
+ * Renders a graphic context form the browser's webview.
+ * Scale factor and offset are taken in consideration.
+ *
+ * @params view The view from which to render the graphic context.
+ * @returns An image from the graphic context of the specified view.
+*/
+- (UIImage *)getThumbnailFromWebView
+{
+    UIImage *image = nil;
+    UIGraphicsBeginImageContextWithOptions(_webView.frame.size,NO,0.0);
+    //UIGraphicsBeginImageContext(webview.frame.size);
+    {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextTranslateCTM(context, 0, 0);
+        for (UIView *subview in _webView.scrollView.subviews)
+        {
+            [subview.layer renderInContext:context];
+            
+            //// Renders the viewport snapshot
+            image = UIGraphicsGetImageFromCurrentImageContext();
+        }
+    }
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 - (void)closeAction:(id)sender
 {
     [self browserWillClose];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)browserWillClose
@@ -199,7 +240,7 @@
 - (BOOL)webView:(UIWebView *)webview shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     //Little timer to avoid loading lags
-    NSTimer *webTimer = [NSTimer timerWithTimeInterval:1.0 target:self
+    NSTimer *webTimer = [NSTimer timerWithTimeInterval:kWebLoadingTimout target:self
                                               selector:@selector(reachabilityChanged)
                                               userInfo:nil
                                                repeats:NO];
@@ -240,6 +281,73 @@
 }
 
 
+#pragma mark UIActionSheetDelegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_MAIL_BTN_TITLE])
+    {
+        if ([MFMailComposeViewController canSendMail])
+        {
+            MFMailComposeViewController *mailComposeVC = [[MFMailComposeViewController alloc] init];
+            mailComposeVC.mailComposeDelegate = self;
+            mailComposeVC.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
+            [mailComposeVC setSubject:self.navigationItem.title];
+            [mailComposeVC setMessageBody:_webView.request.URL.absoluteString isHTML:YES];
+            
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+                mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
+            }
+            
+            mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self.navigationController presentViewController:mailComposeVC animated:YES completion:NULL];
+        }
+    }
+    else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_COPY_BTN_TITLE])
+    {
+        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+        [pasteBoard setString:_webView.request.URL.absoluteString];
+    }
+    else
+    {
+        NSString *ServiceType = nil;
+        
+        if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_TWITTER_BTN_TITLE])
+        {
+            if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+                ServiceType = SLServiceTypeTwitter;
+            }
+        }
+        else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_FACEBOOK_BTN_TITLE])
+        {
+            if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+                ServiceType = SLServiceTypeFacebook;
+            }
+        }
+        
+        if (ServiceType) {
+            SLComposeViewController *socialComposeVC = [SLComposeViewController composeViewControllerForServiceType:ServiceType];
+            [socialComposeVC setInitialText:[NSString stringWithFormat:@"%@\n%@",self.navigationItem.title,_webView.request.URL.absoluteString]];
+            [socialComposeVC addImage:[self getThumbnailFromWebView]];
+            [self.navigationController presentViewController:socialComposeVC animated:YES completion:NULL];
+        }
+    }
+}
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet
+{
+    
+}
+
+
+#pragma mark MFMailComposeViewControllerDelegate Methods
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
 #pragma mark -
 #pragma mark Reachability Notification
 
@@ -247,12 +355,8 @@
 {
     if (![self networkReachable])
     {
-        //self.navigationItem.title = @"";
-        
         [_webView stopLoading];
         
-        stopButton.enabled = NO;
-        backButton.enabled = NO;
         forwardButton.enabled = NO;
         shareButton.enabled = NO;
         
@@ -296,8 +400,6 @@
     [NSURLCache setSharedURLCache:sharedCache];
     [sharedCache removeAllCachedResponses];
     sharedCache = nil;
-    
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     [super viewWillUnload];
 }
