@@ -111,12 +111,6 @@
 #ifndef __IPHONE_6_0
         _webView.suppressesIncrementalRendering = YES;
 #endif
-        
-        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressRecognized:)];
-        longPressRecognizer.allowableMovement = 20;
-        longPressRecognizer.minimumPressDuration = 1.0f;
-        longPressRecognizer.delegate = self;
-        [_webView addGestureRecognizer:longPressRecognizer];
     }
     return _webView;
 }
@@ -210,7 +204,6 @@
 {
     UIImage *image = nil;
     UIGraphicsBeginImageContextWithOptions(_webView.frame.size,NO,0.0);
-    //UIGraphicsBeginImageContext(webview.frame.size);
     {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextTranslateCTM(context, 0, 0);
@@ -225,39 +218,6 @@
     UIGraphicsEndImageContext();
     return image;
 }
-
-/**
- * Opens an actionSheet as a contextual menu for the webview
- *
- * @param point The coordinate point from where the contextual menu should point to.
- */
-- (void)openContextualMenuAtPoint:(CGPoint)point
-{
-    //// Create the ActionSheet
-    UIActionSheet *contextualMenu = [[UIActionSheet alloc] initWithTitle:[detectedUrl stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
-                                                             delegate:self
-                                                    cancelButtonTitle:nil
-                                               destructiveButtonTitle:nil
-                                                    otherButtonTitles:ACTIONSHEET_OPEN_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, nil];
-
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [contextualMenu showFromRect:CGRectMake(point.x, point.y, 1, 1) inView:_webView animated:YES];
-    }
-    else {
-        [contextualMenu showFromToolbar:self.navigationController.toolbar];
-    }
-}
-
-- (void)linkLongPressRecognized:(UIGestureRecognizer *)gestureRecognizer
-{
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
-    {
-        //// The point from where the gesture was called
-        CGPoint point = [gestureRecognizer locationInView:_webView];
-        [self openContextualMenuAtPoint:point];
-    }
-}
-
 
 - (void)closeAction:(id)sender
 {
@@ -421,6 +381,7 @@
 	return NO;
 }
 
+
 #pragma mark - View lifeterm
 
 - (void)didReceiveMemoryWarning
@@ -433,10 +394,6 @@
 
 - (void)viewWillUnload
 {
-    [_webView removeFromSuperview];
-    _webView.delegate = nil;
-    _webView = nil;
-    
     NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
     [NSURLCache setSharedURLCache:sharedCache];
     [sharedCache removeAllCachedResponses];
@@ -447,9 +404,6 @@
 
 - (void)viewDidUnload
 {
-    _webView.delegate = nil;
-    _webView = nil;
-    
     [super viewDidUnload];
 }
 
