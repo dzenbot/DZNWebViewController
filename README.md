@@ -25,8 +25,8 @@ Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 Instantiate a DZWebBrowser object and init with a NSURL.
 You also need to embed the view controller into a UINavigationController.
 ```
-NSURL *url = [NSURL URLWithString:@"https://www.google.com/"];
-DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:url];
+NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
+DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
 UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
 [self presentModalViewController:webBrowserNC animated:YES];
 ```
