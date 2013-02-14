@@ -7,9 +7,10 @@ DZWebBrowser uses ARC and supports iOS6 and below.
 
 ![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser2.png)
 
+
 ## How to use
-It is very easy to integrate into your projects.
-Take a look into the sample project.
+It is very easy to integrate into your projects. Take a look into the sample project.
+Enjoy it! Hopefully you saved a couple of hours xD
 
 ### Step 1
 ```
@@ -34,8 +35,6 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 ### Step 4
 You can customize the navigation and tool bars with an UIImage pattern.
 
-### Step 5
-Enjoy it! Hopefully you saved a couple of hours xD
 
 ## Third party Frameworks and iOS Categories
 
