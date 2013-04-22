@@ -36,11 +36,11 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 [self presentModalViewController:webBrowserNC animated:YES];
 ```
 
-## Third party Frameworks and iOS Categories
+## Third party Frameworks
 
 DZWebBrowser requires third party frameworks, added as submodules:
-- Apple's Reachability, but the ARC version from @tonymillion (https://github.com/tonymillion/Reachability).
-- NJKWebViewProgress from @ninjinkun (https://github.com/ninjinkun/NJKWebViewProgress).
+- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [@tonymillion](https://github.com/tonymillionn).
+- [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [@ninjinkun](https://github.com/ninjinkun).
 
 ## License
 (The MIT License)
