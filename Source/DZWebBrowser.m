@@ -12,26 +12,12 @@
 
 #define kWebLoadingTimout 10.0
 
-#define LOADING_TITLE NSLocalizedString(@"Loading...",nil)
-#define CLOSE_BTN_TITLE NSLocalizedString(@"Close",nil)
-#define CANCEL_ACTIONSHEET_TITLE NSLocalizedString(@"Cancel",nil)
-
-#define ACTIONSHEET_TWITTER_BTN_TITLE NSLocalizedString(@"Tweet to Twitter",nil)
-#define ACTIONSHEET_FACEBOOK_BTN_TITLE NSLocalizedString(@"Post to Facebook",nil)
-#define ACTIONSHEET_MAIL_BTN_TITLE NSLocalizedString(@"Send link by Email",nil)
-#define ACTIONSHEET_COPY_BTN_TITLE NSLocalizedString(@"Copy link",nil)
-#define ACTIONSHEET_OPEN_BTN_TITLE NSLocalizedString(@"Open link",nil)
-
 @interface DZWebBrowser ()
 {
     UIBarButtonItem *stopButton;
 	UIBarButtonItem *backButton;
 	UIBarButtonItem *forwardButton;
     UIBarButtonItem *shareButton;
-    
-    BOOL hasConnectivity;
-    
-    NSString *detectedUrl;
 }
 
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
@@ -286,7 +272,9 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_MAIL_BTN_TITLE])
+    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+    
+    if ([buttonTitle isEqualToString:ACTIONSHEET_MAIL_BTN_TITLE])
     {
         if ([MFMailComposeViewController canSendMail])
         {
@@ -304,7 +292,7 @@
             [self.navigationController presentViewController:mailComposeVC animated:YES completion:NULL];
         }
     }
-    else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_COPY_BTN_TITLE])
+    else if ([buttonTitle isEqualToString:ACTIONSHEET_COPY_BTN_TITLE])
     {
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
         [pasteBoard setString:_webView.request.URL.absoluteString];
@@ -313,7 +301,7 @@
     {
         NSString *ServiceType = nil;
         
-        if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_TWITTER_BTN_TITLE])
+        if ([buttonTitle isEqualToString:ACTIONSHEET_TWITTER_BTN_TITLE])
         {
             if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
                 ServiceType = SLServiceTypeTwitter;
@@ -334,12 +322,6 @@
         }
     }
 }
-
-- (void)actionSheetCancel:(UIActionSheet *)actionSheet
-{
-    
-}
-
 
 #pragma mark MFMailComposeViewControllerDelegate Methods
 
@@ -405,13 +387,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-}
-
-#pragma mark - View Auto-Rotation
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
 }
 
 @end

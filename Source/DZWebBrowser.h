@@ -13,6 +13,16 @@
 #import <MessageUI/MFMailComposeViewController.h>
 #import "Reachability.h"
 
+#define LOADING_TITLE NSLocalizedString(@"Loading...",@"Loading...")
+#define CLOSE_BTN_TITLE NSLocalizedString(@"Close",@"Close")
+#define CANCEL_ACTIONSHEET_TITLE NSLocalizedString(@"Cancel",@"Cancel")
+
+#define ACTIONSHEET_TWITTER_BTN_TITLE NSLocalizedString(@"Tweet to Twitter",@"Tweet to Twitter")
+#define ACTIONSHEET_FACEBOOK_BTN_TITLE NSLocalizedString(@"Post to Facebook",@"Post to Facebook")
+#define ACTIONSHEET_MAIL_BTN_TITLE NSLocalizedString(@"Send link by Email",@"Send link by Email")
+#define ACTIONSHEET_COPY_BTN_TITLE NSLocalizedString(@"Copy link",@"Copy link")
+
+/**  */
 @interface DZWebBrowser : UIViewController <UIWebViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
 /**  */
