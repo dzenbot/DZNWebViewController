@@ -1,6 +1,6 @@
 # DZWebBrowser
 
-iPhone/iPad controller simple web browser with toolbar options (backward, forward, stop loading and export/share).
+iPhone/iPad controller simple web browser with toolbar controls (backward, forward, stop loading and export options).
 Feel free to fork it and make it more interesting!
 
 DZWebBrowser uses ARC and supports iOS6 and superior.
@@ -38,7 +38,9 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 
 ## Third party Frameworks and iOS Categories
 
-DZWebBrowser requires Apple's Reachability, but the ARC version from @tonymillion (https://github.com/tonymillion/Reachability).
+DZWebBrowser requires third party frameworks, added as submodules:
+- Apple's Reachability, but the ARC version from @tonymillion (https://github.com/tonymillion/Reachability).
+- NJKWebViewProgress from @ninjinkun (https://github.com/ninjinkun/NJKWebViewProgress).
 
 ## License
 (The MIT License)
