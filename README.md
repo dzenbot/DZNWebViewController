@@ -1,11 +1,11 @@
 # DZWebBrowser
 
-iPhone/iPad controller simple web browser with toolbar options (backward, forward, stop loading and export).
+iPhone/iPad controller simple web browser with toolbar options (backward, forward, stop loading and export/share).
 Feel free to fork it and make it more interesting!
 
-DZWebBrowser uses ARC and supports iOS6 and below.
+DZWebBrowser uses ARC and supports iOS6 and under.
 
-![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser2.png)
+![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
 
 ## How to use
@@ -29,7 +29,10 @@ You also need to embed the view controller into a UINavigationController.
 ```
 NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
 DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
+webBrowser.showProgress = YES;
+
 UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
+
 [self presentModalViewController:webBrowserNC animated:YES];
 ```
 
