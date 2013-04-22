@@ -179,14 +179,14 @@
 
 #pragma mark Setter Methods
 
-- (void)setNavBarBkgdImage:(UIImage *)navBarBkgdImage
+- (void)setNavBarBkgdImage:(UIImage *)image
 {
-    [self.navigationController.navigationBar setBackgroundImage:navBarBkgdImage forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
 }
 
-- (void)setToolBarBkgdImage:(UIImage *)toolBarBkgdImage
+- (void)setToolBarBkgdImage:(UIImage *)image
 {
-    [self.navigationController.toolbar setBackgroundImage:toolBarBkgdImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
+    [self.navigationController.toolbar setBackgroundImage:image forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
 - (void)setWebControlsBundle:(NSBundle *)bundle

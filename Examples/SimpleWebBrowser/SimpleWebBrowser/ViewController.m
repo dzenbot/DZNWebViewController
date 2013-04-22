@@ -44,7 +44,7 @@
 
 - (IBAction)openBrowser:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://www.techcrunch.com/"];
+    NSURL *URL = [NSURL URLWithString:@"http://www.dribbble.com/"];
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
     webBrowser.showProgress = YES;
