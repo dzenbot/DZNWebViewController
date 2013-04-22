@@ -7,9 +7,11 @@ DZWebBrowser uses ARC and supports iOS6 and below.
 
 ![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser2.png)
 
+
 ## How to use
-It is very easy to integrate into your projects.
-Take a look into the sample project.
+It is very easy to integrate into your projects. Take a look into the sample project.
+
+Enjoy it! Hopefully you saved a couple of hours xD
 
 ### Step 1
 ```
@@ -25,17 +27,11 @@ Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 Instantiate a DZWebBrowser object and init with a NSURL.
 You also need to embed the view controller into a UINavigationController.
 ```
-NSURL *url = [NSURL URLWithString:@"https://www.google.com/"];\n
-DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:url];\n
-UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];\n
+NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
+DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
+UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
 [self presentModalViewController:webBrowserNC animated:YES];
 ```
-
-### Step 4
-You can customize the navigation and tool bars with an UIImage pattern.
-
-### Step 5
-Enjoy it! Hopefully you saved a couple of hours xD
 
 ## Third party Frameworks and iOS Categories
 
