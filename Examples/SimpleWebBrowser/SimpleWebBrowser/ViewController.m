@@ -44,9 +44,10 @@
 
 - (IBAction)openBrowser:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://dribbble.com/"];
+    NSURL *URL = [NSURL URLWithString:@"http://www.techcrunch.com/"];
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
+    webBrowser.showProgress = YES;
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
     
     [self presentViewController:webBrowserNC animated:YES completion:NULL];

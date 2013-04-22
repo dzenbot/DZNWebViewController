@@ -1,3 +1,6 @@
 [submodule "Source/External/Reachability"]
 	path = Source/External/Reachability
 	url = https://github.com/tonymillion/Reachability.git
+[submodule "/Users/ignacio/Desktop/DZen/Personal Projects/DZWebBrowser2/Source/External/NJKWebViewProgress"]
+	path = /Users/ignacio/Desktop/DZen/Personal Projects/DZWebBrowser2/Source/External/NJKWebViewProgress
+	url = https://github.com/ninjinkun/NJKWebViewProgress.git

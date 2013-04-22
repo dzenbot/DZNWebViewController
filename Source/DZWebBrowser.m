@@ -18,10 +18,22 @@
 	UIBarButtonItem *backButton;
 	UIBarButtonItem *forwardButton;
     UIBarButtonItem *shareButton;
+    
+    UILabel *_titleLabel;
+    
+    UIActivityIndicatorView *_activityIndicator;
+    UIProgressView *_progressView;
+    
+    NJKWebViewProgress *_progressProxy;
 }
-
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
-
+/**  */
+@property(nonatomic, strong) UIImage *navBarBkgdImage;
+/**  */
+@property(nonatomic, strong) UIImage *toolBarBkgdImage;
+/**  */
+@property(nonatomic, strong) NSBundle *webControlsBundle;
+/**  */
+@property (nonatomic, strong) Reachability *netReach;
 @end
 
 @implementation DZWebBrowser
@@ -42,7 +54,6 @@
         _netReach = [Reachability reachabilityForInternetConnection];
         [_netReach startNotifier];
     }
-    
     return self;
 }
 
@@ -52,6 +63,8 @@
 {
     [super viewDidLoad];
     
+    _titleLabel = (UILabel *)self.navigationItem.titleView;
+    
     [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
     [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
     [self.navigationController setToolbarHidden:NO];
@@ -59,12 +72,20 @@
     
     [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
     
+    UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+    [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
+    
     backButton.enabled = NO;
 	forwardButton.enabled = NO;
     shareButton.enabled = NO;
     
     [self.view addSubview:self.webView];
     [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
+    
+    _progressProxy = [[NJKWebViewProgress alloc] init];
+    _webView.delegate = _progressProxy;
+    _progressProxy.webViewProxyDelegate = self;
+    _progressProxy.progressDelegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -94,11 +115,38 @@
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _webView.scalesPageToFit = YES;
         
-#ifndef __IPHONE_6_0
-        _webView.suppressesIncrementalRendering = YES;
-#endif
+        if (OS_SUPERIOR_OR_EQUAL_THAN(@"6.0")) {
+            _webView.suppressesIncrementalRendering = YES;
+        }
     }
     return _webView;
+}
+
+- (UIActivityIndicatorView *)activityIndicator
+{
+    if (!_activityIndicator) {
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        _activityIndicator.color = [UIColor whiteColor];
+        _activityIndicator.hidesWhenStopped = YES;
+    }
+    return _activityIndicator;
+}
+
+- (UIProgressView *)progressView
+{
+    if (!_progressView)
+    {
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+        _progressView.progressTintColor = [UIColor lightGrayColor];
+        _progressView.trackTintColor = [UIColor darkGrayColor];
+        [self.navigationItem setTitleView:_progressView];
+        
+//        CGSize size = self.navigationController.navigationBar.frame.size;
+//        UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width/2, size.height/2)];
+//        [titleView addSubview:_progressView];
+//        [self.navigationItem setTitleView:titleView];
+    }
+    return _progressView;
 }
 
 - (UIBarButtonItem *)closeButton
@@ -110,9 +158,19 @@
 {
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    stopButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webStopButton"] style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
-    backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webPrevButton"] style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    forwardButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webNextButton"] style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
+    if (!_webControlsBundle) {
+        
+        NSString *defaultPath = [[NSBundle mainBundle] pathForResource:NSStringFromClass([self class]) ofType:@"bundle"];
+        _webControlsBundle = [[NSBundle alloc] initWithPath:defaultPath];
+    }
+    
+    UIImage *stopImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webStopButton" ofType:@"png"]];
+    UIImage *backImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webPrevButton" ofType:@"png"]];
+    UIImage *forwardImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webNextButton" ofType:@"png"]];
+
+    stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
+    backButton = [[UIBarButtonItem alloc] initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    forwardButton = [[UIBarButtonItem alloc] initWithImage:forwardImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
     
     return [[NSArray alloc] initWithObjects:space, stopButton, space, backButton, space, forwardButton, space, shareButton, space, nil];
@@ -131,20 +189,26 @@
     [self.navigationController.toolbar setBackgroundImage:toolBarBkgdImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
-- (void)setRightButtonIndicator:(BOOL)show
+- (void)setWebControlsBundle:(NSBundle *)bundle
 {
-    if (show)
-    {
-        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityIndicator.color = [UIColor whiteColor];
-        [activityIndicator startAnimating];
-        
-        UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-        [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
-    }
-    else [self.navigationItem setRightBarButtonItem:nil animated:YES];
     
+}
+
+- (void)showLoadingIndicator:(BOOL)show
+{
     [UIApplication sharedApplication].networkActivityIndicatorVisible = show;
+    
+    if (!_showProgress) {
+        if (show) {
+            self.navigationItem.title = LOADING_TITLE;
+            [self.activityIndicator startAnimating];
+        }
+        else {
+            self.navigationItem.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+            [self.navigationItem setRightBarButtonItem:nil animated:NO];
+            [self.activityIndicator stopAnimating];
+        }
+    }
 }
 
 
@@ -154,7 +218,7 @@
 - (void)stopAction:(id)sender
 {
 	[_webView stopLoading];
-    [self setRightButtonIndicator:NO];
+    [self showLoadingIndicator:NO];
 }
 
 - (void)backAction:(id)sender
@@ -213,7 +277,7 @@
 
 - (void)browserWillClose
 {
-    [self setRightButtonIndicator:NO];
+    [self showLoadingIndicator:NO];
 
     [_webView stopLoading];
     _webView.delegate = nil;
@@ -243,28 +307,38 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webview
 {
-	self.navigationItem.title = LOADING_TITLE;
-    
-	[self setRightButtonIndicator:YES];
+	[self showLoadingIndicator:YES];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webview
 {
-	self.navigationItem.title = [webview stringByEvaluatingJavaScriptFromString:@"document.title"];
-    
     stopButton.enabled = NO;
     backButton.enabled = [webview canGoBack];
     forwardButton.enabled = [webview canGoForward];
     shareButton.enabled = YES;
     
-    [self setRightButtonIndicator:NO];
+    [self showLoadingIndicator:NO];
 }
 
 - (void)webView:(UIWebView *)webview didFailLoadWithError:(NSError *)error
 {
 	[self webViewDidFinishLoad:webview];
     
-    [self setRightButtonIndicator:NO];
+    [self showLoadingIndicator:NO];
+}
+
+
+#pragma mark - NJKWebViewProgressDelegate
+
+-(void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
+{
+    [self.progressView setProgress:progress animated:NO];
+    
+    if (progress == 1.0) {
+        _progressView = nil;
+        self.navigationItem.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+        [self.navigationItem setTitleView:_titleLabel];
+    }
 }
 
 
@@ -343,10 +417,10 @@
         forwardButton.enabled = NO;
         shareButton.enabled = NO;
         
-        UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:@"Internet Error"
-                                                                  message:@"No Internet detected. Please check your connection settings."
+        UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:ALERT_NO_INTERNET_TITLE
+                                                                  message:ALERT_NO_INTERNET_MESSAGE
                                                                  delegate:nil
-                                                        cancelButtonTitle:@"OK"
+                                                        cancelButtonTitle:ALERT_OK
                                                         otherButtonTitles:nil];
         [alertNoInternet show];
     }
