@@ -40,6 +40,8 @@
 @property(nonatomic, strong) NSURL *currentURL;
 /** If YES, when loading, the navigationBar will show a ProgressView with the loading progress. No private API: AppStore Safe. */
 @property(nonatomic) BOOL showProgress;
+/** If YES, the export icon will show on the ToolBar with sharing options (Tweet to Twitter, Post to Facebook, etc.) */
+@property(nonatomic, assign) BOOL allowSharing;
 
 /**
  *

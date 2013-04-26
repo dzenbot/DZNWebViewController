@@ -48,6 +48,7 @@
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
     webBrowser.showProgress = YES;
+    webBrowser.allowSharing = YES;
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
     
     [self presentViewController:webBrowserNC animated:YES completion:NULL];

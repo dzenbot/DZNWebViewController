@@ -156,24 +156,35 @@
 
 - (NSArray *)items
 {
-    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
     if (!_webControlsBundle) {
-        
-        NSString *defaultPath = [[NSBundle mainBundle] pathForResource:NSStringFromClass([self class]) ofType:@"bundle"];
-        _webControlsBundle = [[NSBundle alloc] initWithPath:defaultPath];
+        _webControlsBundle = [NSBundle mainBundle];
     }
     
-    UIImage *stopImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webStopButton" ofType:@"png"]];
-    UIImage *backImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webPrevButton" ofType:@"png"]];
-    UIImage *forwardImg = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webNextButton" ofType:@"png"]];
-
+    UIBarButtonItem *flexibleMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *innerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    innerMargin.width = 30;
+    
+    UIBarButtonItem *outerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    outerMargin.width = innerMargin.width/2;
+    
+    UIImage *stopImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webStopButton" ofType:@"png"]];
+    UIImage *backImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webPrevButton" ofType:@"png"]];
+    UIImage *forwardImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webNextButton" ofType:@"png"]];
+    
     stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
     backButton = [[UIBarButtonItem alloc] initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     forwardButton = [[UIBarButtonItem alloc] initWithImage:forwardImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
-    shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
     
-    return [[NSArray alloc] initWithObjects:space, stopButton, space, backButton, space, forwardButton, space, shareButton, space, nil];
+    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:outerMargin, stopButton, flexibleMargin, backButton, innerMargin, forwardButton, flexibleMargin, nil];
+    
+    if (_allowSharing) {
+        shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
+        [items addObject:shareButton];
+        [items addObject:outerMargin];
+    }
+    
+    return items;
 }
 
 
