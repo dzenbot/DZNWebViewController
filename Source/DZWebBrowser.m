@@ -140,11 +140,6 @@
         _progressView.progressTintColor = [UIColor lightGrayColor];
         _progressView.trackTintColor = [UIColor darkGrayColor];
         [self.navigationItem setTitleView:_progressView];
-        
-//        CGSize size = self.navigationController.navigationBar.frame.size;
-//        UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width/2, size.height/2)];
-//        [titleView addSubview:_progressView];
-//        [self.navigationItem setTitleView:titleView];
     }
     return _progressView;
 }
@@ -163,7 +158,7 @@
     UIBarButtonItem *flexibleMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     UIBarButtonItem *innerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    innerMargin.width = 30;
+    innerMargin.width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 100 : 30;
     
     UIBarButtonItem *outerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     outerMargin.width = innerMargin.width/2;
@@ -176,8 +171,8 @@
     backButton = [[UIBarButtonItem alloc] initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     forwardButton = [[UIBarButtonItem alloc] initWithImage:forwardImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     
-    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:outerMargin, stopButton, flexibleMargin, backButton, innerMargin, forwardButton, flexibleMargin, nil];
-    
+    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, backButton, flexibleMargin, forwardButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, backButton, innerMargin, forwardButton, flexibleMargin, nil];
+
     if (_allowSharing) {
         shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
         [items addObject:shareButton];
