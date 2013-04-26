@@ -12,6 +12,6 @@
 
 @interface ViewController : UIViewController
 
-//- (IBAction)openBrowser:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *textField;
 
 @end

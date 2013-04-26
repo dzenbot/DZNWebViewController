@@ -44,13 +44,14 @@
 
 - (IBAction)openBrowser:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://www.dribbble.com/"];
+    NSURL *URL = [NSURL URLWithString:_textField.text];
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
-    webBrowser.showProgress = YES;
+    webBrowser.showProgress = NO;
     webBrowser.allowSharing = YES;
+    webBrowser.controlsBundleName = @"custom-controls";
+
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
-    
     [self presentViewController:webBrowserNC animated:YES completion:NULL];
 }
 

@@ -26,6 +26,8 @@
 		4FE024851612C9480008D8BA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024811612C9480008D8BA /* CFNetwork.framework */; };
 		4FE024AB1612CDD20008D8BA /* DZWebBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */; };
 		4FE024AC1612CDD70008D8BA /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE024AA1612CDBF0008D8BA /* Reachability.m */; };
+		4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF5211E172B3731003D4E13 /* default-controls.bundle */; };
+		4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF52120172B3AA8003D4E13 /* custom-controls.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZWebBrowser.m; path = ../../../Source/DZWebBrowser.m; sourceTree = "<group>"; };
 		4FE024A91612CDBF0008D8BA /* Reachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../../../Source/External/Reachability/Reachability.h; sourceTree = "<group>"; };
 		4FE024AA1612CDBF0008D8BA /* Reachability.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../../../Source/External/Reachability/Reachability.m; sourceTree = "<group>"; };
+		4FF5211E172B3731003D4E13 /* default-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "default-controls.bundle"; path = "../../../Source/default-controls.bundle"; sourceTree = "<group>"; };
+		4FF52120172B3AA8003D4E13 /* custom-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "custom-controls.bundle"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +136,7 @@
 				4FE024681612C8D80008D8BA /* AppDelegate.m */,
 				4FE024701612C8D80008D8BA /* ViewController.h */,
 				4FE024711612C8D80008D8BA /* ViewController.m */,
+				4FF52120172B3AA8003D4E13 /* custom-controls.bundle */,
 				4FE024861612CA510008D8BA /* DZWebBrowser */,
 				4FE0245F1612C8D80008D8BA /* Supporting Files */,
 			);
@@ -159,6 +164,7 @@
 			children = (
 				4FE0249B1612CDB10008D8BA /* DZWebBrowser.h */,
 				4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */,
+				4FF5211E172B3731003D4E13 /* default-controls.bundle */,
 				4FE024901612CA750008D8BA /* External */,
 			);
 			name = DZWebBrowser;
@@ -230,6 +236,8 @@
 				4FE0246F1612C8D80008D8BA /* Default-568h@2x.png in Resources */,
 				4FE024751612C8D80008D8BA /* ViewController_iPhone.xib in Resources */,
 				4FE024781612C8D80008D8BA /* ViewController_iPad.xib in Resources */,
+				4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */,
+				4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +309,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -322,7 +330,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

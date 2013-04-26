@@ -11,12 +11,13 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define kWebLoadingTimout 10.0
+#define kDefaultControlsBundleName @"default-controls"
 
 @interface DZWebBrowser ()
 {
     UIBarButtonItem *stopButton;
-	UIBarButtonItem *backButton;
-	UIBarButtonItem *forwardButton;
+	UIBarButtonItem *previousButton;
+	UIBarButtonItem *nextButton;
     UIBarButtonItem *shareButton;
     
     UILabel *_titleLabel;
@@ -30,8 +31,6 @@
 @property(nonatomic, strong) UIImage *navBarBkgdImage;
 /**  */
 @property(nonatomic, strong) UIImage *toolBarBkgdImage;
-/**  */
-@property(nonatomic, strong) NSBundle *webControlsBundle;
 /**  */
 @property (nonatomic, strong) Reachability *netReach;
 @end
@@ -75,17 +74,19 @@
     UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
     [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
     
-    backButton.enabled = NO;
-	forwardButton.enabled = NO;
+    previousButton.enabled = NO;
+	nextButton.enabled = NO;
     shareButton.enabled = NO;
     
     [self.view addSubview:self.webView];
     [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
     
-    _progressProxy = [[NJKWebViewProgress alloc] init];
-    _webView.delegate = _progressProxy;
-    _progressProxy.webViewProxyDelegate = self;
-    _progressProxy.progressDelegate = self;
+    if (_showProgress) {
+        _progressProxy = [[NJKWebViewProgress alloc] init];
+        _webView.delegate = _progressProxy;
+        _progressProxy.webViewProxyDelegate = self;
+        _progressProxy.progressDelegate = self;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,6 +106,16 @@
 
 
 #pragma mark Getter Methods
+
+- (NSString *)title
+{
+    return [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+}
+
+- (NSString *)url
+{
+    return [_webView stringByEvaluatingJavaScriptFromString:@"document.URL"];
+}
 
 - (UIWebView *)webView
 {
@@ -151,8 +162,8 @@
 
 - (NSArray *)items
 {
-    if (!_webControlsBundle) {
-        _webControlsBundle = [NSBundle mainBundle];
+    if (!_controlsBundleName) {
+        _controlsBundleName = kDefaultControlsBundleName;
     }
     
     UIBarButtonItem *flexibleMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -163,15 +174,15 @@
     UIBarButtonItem *outerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     outerMargin.width = innerMargin.width/2;
     
-    UIImage *stopImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webStopButton" ofType:@"png"]];
-    UIImage *backImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webPrevButton" ofType:@"png"]];
-    UIImage *forwardImg = [[UIImage alloc] initWithContentsOfFile:[_webControlsBundle pathForResource:@"webNextButton" ofType:@"png"]];
+    UIImage *stopImg = [self imageNamed:@"stopButton" forBundleNamed:_controlsBundleName];
+    UIImage *nextImg = [self imageNamed:@"nextButton" forBundleNamed:_controlsBundleName];
+    UIImage *previousdImg = [self imageNamed:@"previousButton" forBundleNamed:_controlsBundleName];
     
     stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
-    backButton = [[UIBarButtonItem alloc] initWithImage:backImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    forwardButton = [[UIBarButtonItem alloc] initWithImage:forwardImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
+    nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     
-    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, backButton, flexibleMargin, forwardButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, backButton, innerMargin, forwardButton, flexibleMargin, nil];
+    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, previousButton, flexibleMargin, nextButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, previousButton, innerMargin, nextButton, flexibleMargin, nil];
 
     if (_allowSharing) {
         shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
@@ -180,6 +191,12 @@
     }
     
     return items;
+}
+
+- (UIImage *)imageNamed:(NSString *)imgName forBundleNamed:(NSString *)bundleName
+{
+    NSString *path = [NSString stringWithFormat:@"%@.bundle/images/%@",bundleName,imgName];
+    return [UIImage imageNamed:path];
 }
 
 
@@ -195,11 +212,6 @@
     [self.navigationController.toolbar setBackgroundImage:image forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
-- (void)setWebControlsBundle:(NSBundle *)bundle
-{
-    
-}
-
 - (void)showLoadingIndicator:(BOOL)show
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = show;
@@ -210,7 +222,7 @@
             [self.activityIndicator startAnimating];
         }
         else {
-            self.navigationItem.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+            self.navigationItem.title = [self title];
             [self.navigationItem setRightBarButtonItem:nil animated:NO];
             [self.activityIndicator stopAnimating];
         }
@@ -239,7 +251,7 @@
 
 - (void)shareAction:(id)sender
 {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:ACTIONSHEET_TWITTER_BTN_TITLE, ACTIONSHEET_FACEBOOK_BTN_TITLE, ACTIONSHEET_MAIL_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:ACTIONSHEET_TWITTER_BTN_TITLE, ACTIONSHEET_FACEBOOK_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, ACTIONSHEET_MAIL_BTN_TITLE, ACTIONSHEET_SAFARI_BTN_TITLE, nil];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [actionSheet showFromBarButtonItem:sender animated:YES];
@@ -319,8 +331,8 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webview
 {
     stopButton.enabled = NO;
-    backButton.enabled = [webview canGoBack];
-    forwardButton.enabled = [webview canGoForward];
+    previousButton.enabled = [webview canGoBack];
+    nextButton.enabled = [webview canGoForward];
     shareButton.enabled = YES;
     
     [self showLoadingIndicator:NO];
@@ -342,7 +354,7 @@
     
     if (progress == 1.0) {
         _progressView = nil;
-        self.navigationItem.title = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+        self.navigationItem.title = [self title];
         [self.navigationItem setTitleView:_titleLabel];
     }
 }
@@ -361,8 +373,8 @@
             MFMailComposeViewController *mailComposeVC = [[MFMailComposeViewController alloc] init];
             mailComposeVC.mailComposeDelegate = self;
             mailComposeVC.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
-            [mailComposeVC setSubject:self.navigationItem.title];
-            [mailComposeVC setMessageBody:_webView.request.URL.absoluteString isHTML:YES];
+            [mailComposeVC setSubject:[self title]];
+            [mailComposeVC setMessageBody:[self url] isHTML:YES];
             
             if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
                 mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -376,6 +388,10 @@
     {
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
         [pasteBoard setString:_webView.request.URL.absoluteString];
+    }
+    else if ([buttonTitle isEqualToString:ACTIONSHEET_SAFARI_BTN_TITLE])
+    {
+        [[UIApplication sharedApplication] openURL:_currentURL];
     }
     else
     {
@@ -396,7 +412,7 @@
         
         if (ServiceType) {
             SLComposeViewController *socialComposeVC = [SLComposeViewController composeViewControllerForServiceType:ServiceType];
-            [socialComposeVC setInitialText:[NSString stringWithFormat:@"%@\n%@",self.navigationItem.title,_webView.request.URL.absoluteString]];
+            [socialComposeVC setInitialText:[NSString stringWithFormat:@"%@\n%@",[self title],[self url]]];
             [socialComposeVC addImage:[self getThumbnailFromWebView]];
             [self.navigationController presentViewController:socialComposeVC animated:YES completion:NULL];
         }
@@ -420,7 +436,7 @@
     {
         [_webView stopLoading];
         
-        forwardButton.enabled = NO;
+        nextButton.enabled = NO;
         shareButton.enabled = NO;
         
         UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:ALERT_NO_INTERNET_TITLE
