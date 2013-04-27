@@ -1,10 +1,21 @@
 # DZWebBrowser
 
 iPhone/iPad controller simple web browser with toolbar controls (backward, forward, stop loading and export options).
-Feel free to fork it and make it more interesting!
+It also support localization and graphic customization by setting a custom bundle file containing the image assets.
 
 DZWebBrowser uses ARC and supports iOS6 and superior.
 Also support multiple orientations.
+
+Some additonal features ideas:
+- Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
+- LongPress gesture on links to show more options on ActionSheet.
+- LongPress on images to save to camera roll or share on social networks.
+- Optional way of searching a custom URL from the NavigationBar.
+- Keywords auto-completion when searching on bar.
+- Reload page.
+
+Feel free to fork it and make it more interesting!
+
 
 ![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
