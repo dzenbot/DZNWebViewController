@@ -1,17 +1,17 @@
 # DZWebBrowser
 
-iPhone/iPad controller simple web browser with toolbar options (backward, forward, stop loading and export).
+iPhone/iPad controller simple web browser with toolbar controls (backward, forward, stop loading and export options).
 Feel free to fork it and make it more interesting!
 
-DZWebBrowser uses ARC and supports iOS6 and below.
+DZWebBrowser uses ARC and supports iOS6 and superior.
+Also support multiple orientations.
 
-![DZWebBrowser](http://www.dzen.cl/github/DZWebBrowser2.png)
+![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
 
 ## How to use
-It is very easy to integrate into your projects. Take a look into the sample project.
-
-Enjoy it! Hopefully you saved a couple of hours xD
+It is very easy to add DZWebBrowser to your projects. Take a look into the sample project.
+Hopefully you saved a couple of hours!
 
 ### Step 1
 ```
@@ -24,18 +24,23 @@ Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 ```
 
 ### Step 3
-Instantiate a DZWebBrowser object and init with a NSURL.
+Create a new instance of DZWebBrowser and initialize with a NSURL.
 You also need to embed the view controller into a UINavigationController.
 ```
 NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
 DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
+webBrowser.showProgress = YES;
+
 UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
+
 [self presentModalViewController:webBrowserNC animated:YES];
 ```
 
-## Third party Frameworks and iOS Categories
+## Third party Frameworks
 
-DZWebBrowser requires Apple's Reachability, but the ARC version from @tonymillion (https://github.com/tonymillion/Reachability).
+DZWebBrowser requires third party frameworks, added as submodules:
+- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [@tonymillion](https://github.com/tonymillionn).
+- [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [@ninjinkun](https://github.com/ninjinkun).
 
 ## License
 (The MIT License)
