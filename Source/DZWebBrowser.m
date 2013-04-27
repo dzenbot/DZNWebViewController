@@ -13,6 +13,22 @@
 #define kWebLoadingTimout 10.0
 #define kDefaultControlsBundleName @"default-controls"
 
+#define TXT_LOADING NSLocalizedString(@"TXT_LOADING",nil)
+#define TXT_CLOSE NSLocalizedString(@"TXT_CLOSE",nil)
+#define TXT_CANCEL NSLocalizedString(@"TXT_CANCEL",nil)
+#define TXT_ACTIONSHEET_TWITTER NSLocalizedString(@"TXT_ACTIONSHEET_TWITTER",nil)
+#define TXT_ACTIONSHEET_FACEBOOK NSLocalizedString(@"TXT_ACTIONSHEET_FACEBOOK",nil)
+#define TXT_ACTIONSHEET_COPY NSLocalizedString(@"TXT_ACTIONSHEET_COPY",nil)
+#define TXT_ACTIONSHEET_MAIL NSLocalizedString(@"TXT_ACTIONSHEET_MAIL",nil)
+#define TXT_ACTIONSHEET_SAFARI NSLocalizedString(@"TXT_ACTIONSHEET_SAFARI",nil)
+#define TXT_ALERT_NO_INTERNET NSLocalizedString(@"TXT_ALERT_NO_INTERNET",nil)
+#define TXT_ALERT_NO_INTERNET_MESSAGE NSLocalizedString(@"TXT_ALERT_NO_INTERNET_MESSAGE",nil)
+#define TXT_ALERT_NO_MAIL NSLocalizedString(@"TXT_ALERT_NO_MAIL",nil)
+#define TXT_ALERT_NO_MAIL_MESSAGE NSLocalizedString(@"TXT_ALERT_NO_MAIL_MESSAGE",nil)
+#define TXT_ALERT_OK NSLocalizedString(@"TXT_ALERT_OK",nil)
+
+#define textForKey(key) [_resourceBundle localizedStringForKey:(key) value:@"" table:nil]
+
 @interface DZWebBrowser ()
 {
     UIBarButtonItem *_stopButton;
@@ -20,13 +36,15 @@
 	UIBarButtonItem *_nextButton;
     UIBarButtonItem *_shareButton;
     
-    UILabel *_titleLabel;
+    UILabel *Label;
     UILabel *_urlLabel;
     
     UIActivityIndicatorView *_activityIndicator;
     UIProgressView *_progressView;
     
     NJKWebViewProgress *_progressProxy;
+    
+    NSBundle *_resourceBundle;
 }
 /**  */
 @property(nonatomic, strong) UIImage *navBarBkgdImage;
@@ -129,9 +147,10 @@
     if (!_webView)
     {
         _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-        _webView.delegate = self;
+        _webView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _webView.scalesPageToFit = YES;
+        _webView.delegate = self;
         
         if (OS_SUPERIOR_OR_EQUAL_THAN(@"6.0")) {
             _webView.suppressesIncrementalRendering = YES;
@@ -153,37 +172,40 @@
 
 - (UIView *)titleView
 {
-    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 188.0, 44.0)];
-    
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self titleWidth], 44.0)];
     [titleView addSubview:self.titleLabel];
     [titleView addSubview:self.urlLabel];
-    
     return titleView;
+}
+
+- (CGFloat)titleWidth
+{
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 632.0 : 188.0;
 }
 
 - (UILabel *)titleLabel
 {
-    if (!_titleLabel)
+    if (!Label)
     {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 2.0, 188.0, 20.0)];
-        _titleLabel.backgroundColor = [UIColor clearColor];
-        _titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
-        _titleLabel.minimumScaleFactor = 3;
-        _titleLabel.adjustsFontSizeToFitWidth = YES;
-        _titleLabel.textColor = [UIColor whiteColor];
-        _titleLabel.shadowColor = [UIColor blackColor];
-        _titleLabel.shadowOffset = CGSizeMake(0, -1);
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 2.0, [self titleWidth], 20.0)];
+        Label.backgroundColor = [UIColor clearColor];
+        Label.font = [UIFont boldSystemFontOfSize:16.0];
+        Label.minimumScaleFactor = 3;
+        Label.adjustsFontSizeToFitWidth = YES;
+        Label.textColor = [UIColor whiteColor];
+        Label.shadowColor = [UIColor blackColor];
+        Label.shadowOffset = CGSizeMake(0, -1);
+        Label.textAlignment = NSTextAlignmentCenter;
+        Label.lineBreakMode = NSLineBreakByTruncatingTail;
     }
-    return _titleLabel;
+    return Label;
 }
 
 - (UILabel *)urlLabel
 {
     if (!_urlLabel)
     {
-        _urlLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20.0, 188.0, 20.0)];
+        _urlLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 22.0, [self titleWidth], 20.0)];
         _urlLabel.backgroundColor = [UIColor clearColor];
         _urlLabel.font = [UIFont systemFontOfSize:14.0];
         _urlLabel.textColor = [UIColor colorWithWhite:0.9 alpha:1.0];
@@ -209,38 +231,37 @@
 
 - (UIBarButtonItem *)closeButton
 {
-    return [[UIBarButtonItem alloc] initWithTitle:CLOSE_BTN_TITLE style:UIBarButtonItemStyleDone target:self action:@selector(closeAction:)];
+    return [[UIBarButtonItem alloc] initWithTitle:textForKey(TXT_CLOSE) style:UIBarButtonItemStyleDone target:self action:@selector(closeAction:)];
 }
 
 - (NSArray *)items
 {
-    if (!_controlsBundleName) {
-        _controlsBundleName = kDefaultControlsBundleName;
+    if (!_resourceBundleName) {
+        [self setResourceBundleName:kDefaultControlsBundleName];
     }
     
     UIBarButtonItem *flexibleMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    UIBarButtonItem *innerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    innerMargin.width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 100.0 : 30.0;
+    UIBarButtonItem *margin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    margin.width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 50.0 : 15.0;
     
-    UIBarButtonItem *outerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    outerMargin.width = innerMargin.width/2;
-    
-    UIImage *stopImg = [self imageNamed:@"stopButton" forBundleNamed:_controlsBundleName];
-    UIImage *nextImg = [self imageNamed:@"nextButton" forBundleNamed:_controlsBundleName];
-    UIImage *previousdImg = [self imageNamed:@"previousButton" forBundleNamed:_controlsBundleName];
+    UIImage *stopImg = [self imageNamed:@"stopButton" forBundleNamed:_resourceBundleName];
+    UIImage *nextImg = [self imageNamed:@"nextButton" forBundleNamed:_resourceBundleName];
+    UIImage *previousdImg = [self imageNamed:@"previousButton" forBundleNamed:_resourceBundleName];
     
     _stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
     _previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     _nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     
-    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, _stopButton, flexibleMargin, _previousButton, innerMargin, _nextButton, flexibleMargin, nil];
+    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil] : [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil];
 
     if (_allowSharing) {
+        [items addObject:flexibleMargin];
         _shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
         [items addObject:_shareButton];
-        [items addObject:outerMargin];
     }
+
+    [items addObject:margin];
     
     return items;
 }
@@ -281,16 +302,26 @@
     [self.navigationController.toolbar setBackgroundImage:image forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
+- (void)setResourceBundleName:(NSString *)name
+{
+    _resourceBundleName = name;
+    
+    if (!_resourceBundle) {
+        NSString *bundlePath = [[NSBundle mainBundle] pathForResource:_resourceBundleName ofType:@"bundle"];
+        _resourceBundle = [NSBundle bundleWithPath:bundlePath];
+    }
+}
+
 - (void)setLoadingTitle
 {
-    _titleLabel.text = LOADING_TITLE;
-    
-    CGRect rect = _titleLabel.frame;
+    Label.text = textForKey(TXT_LOADING);
+        
+    CGRect rect = Label.frame;
     rect.origin.y = 12.0;
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         _titleLabel.frame = rect;
+                         Label.frame = rect;
                          _urlLabel.alpha = 0;
                      }
                      completion:NULL];
@@ -298,15 +329,15 @@
 
 - (void)setDocumentTitle
 {
-    _titleLabel.text = [self title];
+    Label.text = [self title];
     _urlLabel.text = [self url];
     
-    CGRect rect = _titleLabel.frame;
+    CGRect rect = Label.frame;
     rect.origin.y = 2.0;
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         _titleLabel.frame = rect;
+                         Label.frame = rect;
                          _urlLabel.alpha = 1.0;
                      }
                      completion:NULL];
@@ -339,8 +370,6 @@
 
 - (void)backAction:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     if ([_webView canGoBack]) {
         [_webView goBack];
     }
@@ -348,16 +377,15 @@
 
 - (void)forwardAction:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     if ([_webView canGoForward]) {
         [_webView goForward];
     }
 }
 
 - (void)shareAction:(id)sender
-{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_ACTIONSHEET_TITLE destructiveButtonTitle:nil otherButtonTitles:ACTIONSHEET_TWITTER_BTN_TITLE, ACTIONSHEET_FACEBOOK_BTN_TITLE, ACTIONSHEET_COPY_BTN_TITLE, ACTIONSHEET_MAIL_BTN_TITLE, ACTIONSHEET_SAFARI_BTN_TITLE, nil];
+{    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:textForKey(TXT_CANCEL) destructiveButtonTitle:nil otherButtonTitles:textForKey(TXT_ACTIONSHEET_TWITTER), textForKey(TXT_ACTIONSHEET_FACEBOOK), textForKey(TXT_ACTIONSHEET_COPY), textForKey(TXT_ACTIONSHEET_MAIL), textForKey(TXT_ACTIONSHEET_SAFARI), nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [actionSheet showFromBarButtonItem:sender animated:YES];
@@ -425,15 +453,71 @@
 
 #pragma mark - NJKWebViewProgressDelegate
 
--(void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
+- (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
     [self.progressView setProgress:progress animated:NO];
     
     if (progress == 1.0) {
         _progressView = nil;
         [self.navigationItem setTitleView:self.titleLabel];
-        _titleLabel.text = [self title];
+        Label.text = [self title];
     }
+}
+
+
+#pragma mark - UIScrollViewDelegate
+#pragma mark Responding to Scrolling and Dragging
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    
+}
+
+#pragma mark Managing Zooming
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return nil;
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+{
+    
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+{
+    
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    
 }
 
 
@@ -443,7 +527,7 @@
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     
-    if ([buttonTitle isEqualToString:ACTIONSHEET_MAIL_BTN_TITLE])
+    if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_MAIL)])
     {
         if ([MFMailComposeViewController canSendMail])
         {
@@ -460,13 +544,21 @@
             mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.navigationController presentViewController:mailComposeVC animated:YES completion:NULL];
         }
+        else {
+            UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:textForKey(TXT_ALERT_NO_MAIL)
+                                                                      message:textForKey(TXT_ALERT_NO_MAIL_MESSAGE)
+                                                                     delegate:nil
+                                                            cancelButtonTitle:textForKey(TXT_ALERT_OK)
+                                                            otherButtonTitles:nil];
+            [alertNoInternet show];
+        }
     }
-    else if ([buttonTitle isEqualToString:ACTIONSHEET_COPY_BTN_TITLE])
+    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_COPY)])
     {
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
         [pasteBoard setString:_webView.request.URL.absoluteString];
     }
-    else if ([buttonTitle isEqualToString:ACTIONSHEET_SAFARI_BTN_TITLE])
+    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_SAFARI)])
     {
         [[UIApplication sharedApplication] openURL:_currentURL];
     }
@@ -474,13 +566,13 @@
     {
         NSString *ServiceType = nil;
         
-        if ([buttonTitle isEqualToString:ACTIONSHEET_TWITTER_BTN_TITLE])
+        if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_TWITTER)])
         {
             if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
                 ServiceType = SLServiceTypeTwitter;
             }
         }
-        else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:ACTIONSHEET_FACEBOOK_BTN_TITLE])
+        else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:textForKey(TXT_ACTIONSHEET_FACEBOOK)])
         {
             if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
                 ServiceType = SLServiceTypeFacebook;
@@ -516,10 +608,10 @@
         _nextButton.enabled = NO;
         _shareButton.enabled = NO;
         
-        UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:ALERT_NO_INTERNET_TITLE
-                                                                  message:ALERT_NO_INTERNET_MESSAGE
+        UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:textForKey(TXT_ALERT_NO_INTERNET)
+                                                                  message:textForKey(TXT_ALERT_NO_INTERNET_MESSAGE)
                                                                  delegate:nil
-                                                        cancelButtonTitle:ALERT_OK
+                                                        cancelButtonTitle:textForKey(TXT_ALERT_OK)
                                                         otherButtonTitles:nil];
         [alertNoInternet show];
     }

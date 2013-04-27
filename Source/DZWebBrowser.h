@@ -16,21 +16,6 @@
 
 #define OS_SUPERIOR_OR_EQUAL_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] == NSOrderedDescending || NSOrderedSame)
 
-#define LOADING_TITLE NSLocalizedString(@"Loading...",@"Loading...")
-#define CLOSE_BTN_TITLE NSLocalizedString(@"Close",@"Close")
-#define CANCEL_ACTIONSHEET_TITLE NSLocalizedString(@"Cancel",@"Cancel")
-
-#define ACTIONSHEET_TWITTER_BTN_TITLE NSLocalizedString(@"Tweet Link",@"Tweet Link")
-#define ACTIONSHEET_FACEBOOK_BTN_TITLE NSLocalizedString(@"Post Link to Facebook",@"Post Link to Facebook")
-#define ACTIONSHEET_COPY_BTN_TITLE NSLocalizedString(@"Copy link",@"Copy link")
-#define ACTIONSHEET_MAIL_BTN_TITLE NSLocalizedString(@"Mail link",@"Mail link")
-#define ACTIONSHEET_SAFARI_BTN_TITLE NSLocalizedString(@"Open in Safari",@"Open in Safari")
-
-#define ALERT_NO_INTERNET_TITLE NSLocalizedString(@"Internet Error",@"Internet Error")
-#define ALERT_NO_INTERNET_MESSAGE NSLocalizedString(@"No Internet detected. Please check your connection settings.",@"No Internet detected. Please check your connection settings.")
-#define ALERT_OK NSLocalizedString(@"OK",@"OK")
-
-
 /** A simple iPhone/iPad web browser controller.
  */
 @interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
@@ -43,9 +28,9 @@
 @property (nonatomic, assign) BOOL showProgress;
 /** If YES, the export icon will show on the ToolBar with sharing options (Tweet to Twitter, Post to Facebook, etc.) */
 @property (nonatomic, assign) BOOL allowSharing;
-/** The custom web controls bundle name.
+/** The custom resource bundle name.
  * Duplicate DZWebBrowser.bundle file into your project files, and replace its content keeping the same file names. You should also rename the *.bundle file. If no custom images are set, the default ones will be applied.*/
-@property (nonatomic, strong) NSString *controlsBundleName;
+@property (nonatomic, strong) NSString *resourceBundleName;
 
 
 /* Returns a DZWebBrowser instanced initialized with a specific URL.

@@ -11,7 +11,6 @@
 		4FE024591612C8D80008D8BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024581612C8D80008D8BA /* UIKit.framework */; };
 		4FE0245B1612C8D80008D8BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245A1612C8D80008D8BA /* Foundation.framework */; };
 		4FE0245D1612C8D80008D8BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */; };
-		4FE024631612C8D80008D8BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FE024611612C8D80008D8BA /* InfoPlist.strings */; };
 		4FE024651612C8D80008D8BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE024641612C8D80008D8BA /* main.m */; };
 		4FE024691612C8D80008D8BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE024681612C8D80008D8BA /* AppDelegate.m */; };
 		4FE0246B1612C8D80008D8BA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FE0246A1612C8D80008D8BA /* Default.png */; };
@@ -38,7 +37,6 @@
 		4FE0245A1612C8D80008D8BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		4FE024601612C8D80008D8BA /* SimpleWebBrowser-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SimpleWebBrowser-Info.plist"; sourceTree = "<group>"; };
-		4FE024621612C8D80008D8BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4FE024641612C8D80008D8BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4FE024661612C8D80008D8BA /* SimpleWebBrowser-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SimpleWebBrowser-Prefix.pch"; sourceTree = "<group>"; };
 		4FE024671612C8D80008D8BA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 				4FE024731612C8D80008D8BA /* ViewController_iPhone.xib */,
 				4FE024761612C8D80008D8BA /* ViewController_iPad.xib */,
 				4FE024601612C8D80008D8BA /* SimpleWebBrowser-Info.plist */,
-				4FE024611612C8D80008D8BA /* InfoPlist.strings */,
 				4FE024641612C8D80008D8BA /* main.m */,
 				4FE024661612C8D80008D8BA /* SimpleWebBrowser-Prefix.pch */,
 				4FE0246A1612C8D80008D8BA /* Default.png */,
@@ -230,7 +227,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FE024631612C8D80008D8BA /* InfoPlist.strings in Resources */,
 				4FE0246B1612C8D80008D8BA /* Default.png in Resources */,
 				4FE0246D1612C8D80008D8BA /* Default@2x.png in Resources */,
 				4FE0246F1612C8D80008D8BA /* Default-568h@2x.png in Resources */,
@@ -260,14 +256,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		4FE024611612C8D80008D8BA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4FE024621612C8D80008D8BA /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		4FE024731612C8D80008D8BA /* ViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
