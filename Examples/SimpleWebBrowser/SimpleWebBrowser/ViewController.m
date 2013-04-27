@@ -19,9 +19,9 @@
     NSURL *URL = [NSURL URLWithString:_textField.text];
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
-    webBrowser.showProgress = NO;
+    webBrowser.showProgress = YES;
     webBrowser.allowSharing = YES;
-    webBrowser.resourceBundleName = @"custom-controls";
+//    webBrowser.resourceBundleName = @"custom-controls";
 
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
     [self presentViewController:webBrowserNC animated:YES completion:NULL];

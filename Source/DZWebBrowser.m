@@ -36,7 +36,7 @@
 	UIBarButtonItem *_nextButton;
     UIBarButtonItem *_shareButton;
     
-    UILabel *Label;
+    UILabel *_titleLabel;
     UILabel *_urlLabel;
     
     UIActivityIndicatorView *_activityIndicator;
@@ -99,6 +99,9 @@
     
     UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
     [self.navigationItem setRightBarButtonItem:indicatorButton animated:NO];
+        
+    [self.view addSubview:self.webView];
+    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
     
     if (_showProgress) {
         _progressProxy = [[NJKWebViewProgress alloc] init];
@@ -109,9 +112,6 @@
     else {
         [self.navigationItem setTitleView:self.titleView];
     }
-    
-    [self.view addSubview:self.webView];
-    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -185,20 +185,20 @@
 
 - (UILabel *)titleLabel
 {
-    if (!Label)
+    if (!_titleLabel)
     {
-        Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 2.0, [self titleWidth], 20.0)];
-        Label.backgroundColor = [UIColor clearColor];
-        Label.font = [UIFont boldSystemFontOfSize:16.0];
-        Label.minimumScaleFactor = 3;
-        Label.adjustsFontSizeToFitWidth = YES;
-        Label.textColor = [UIColor whiteColor];
-        Label.shadowColor = [UIColor blackColor];
-        Label.shadowOffset = CGSizeMake(0, -1);
-        Label.textAlignment = NSTextAlignmentCenter;
-        Label.lineBreakMode = NSLineBreakByTruncatingTail;
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 2.0, [self titleWidth], 20.0)];
+        _titleLabel.backgroundColor = [UIColor clearColor];
+        _titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        _titleLabel.minimumScaleFactor = 3;
+        _titleLabel.adjustsFontSizeToFitWidth = YES;
+        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.shadowColor = [UIColor blackColor];
+        _titleLabel.shadowOffset = CGSizeMake(0, -1);
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
-    return Label;
+    return _titleLabel;
 }
 
 - (UILabel *)urlLabel
@@ -314,14 +314,14 @@
 
 - (void)setLoadingTitle
 {
-    Label.text = textForKey(TXT_LOADING);
+    _titleLabel.text = textForKey(TXT_LOADING);
         
-    CGRect rect = Label.frame;
+    CGRect rect = _titleLabel.frame;
     rect.origin.y = 12.0;
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         Label.frame = rect;
+                         _titleLabel.frame = rect;
                          _urlLabel.alpha = 0;
                      }
                      completion:NULL];
@@ -329,15 +329,15 @@
 
 - (void)setDocumentTitle
 {
-    Label.text = [self title];
+    _titleLabel.text = [self title];
     _urlLabel.text = [self url];
     
-    CGRect rect = Label.frame;
+    CGRect rect = _titleLabel.frame;
     rect.origin.y = 2.0;
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         Label.frame = rect;
+                         _titleLabel.frame = rect;
                          _urlLabel.alpha = 1.0;
                      }
                      completion:NULL];
@@ -455,12 +455,14 @@
 
 - (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
+    NSLog(@"%s",__FUNCTION__);
+    
     [self.progressView setProgress:progress animated:NO];
     
     if (progress == 1.0) {
         _progressView = nil;
         [self.navigationItem setTitleView:self.titleLabel];
-        Label.text = [self title];
+        _titleLabel.text = [self title];
     }
 }
 
