@@ -81,12 +81,16 @@
 {
     [super loadView];
     
+    self.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
     [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
     [self.navigationController setToolbarHidden:NO];
     [self setToolbarItems:self.items animated:NO];
     
     [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
+    
+    UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+    [self.navigationItem setRightBarButtonItem:indicatorButton animated:NO];
     
     _previousButton.enabled = NO;
 	_nextButton.enabled = NO;
@@ -97,11 +101,7 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-    [self.navigationItem setRightBarButtonItem:indicatorButton animated:NO];
-        
-    [self.view addSubview:self.webView];
-    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
+    [self loadWebView];
     
     if (_showProgress) {
         _progressProxy = [[NJKWebViewProgress alloc] init];
@@ -155,6 +155,8 @@
         if (OS_SUPERIOR_OR_EQUAL_THAN(@"6.0")) {
             _webView.suppressesIncrementalRendering = YES;
         }
+        
+        [self.view addSubview:_webView];
     }
     return _webView;
 }
@@ -249,9 +251,9 @@
     UIImage *nextImg = [self imageNamed:@"nextButton" forBundleNamed:_resourceBundleName];
     UIImage *previousdImg = [self imageNamed:@"previousButton" forBundleNamed:_resourceBundleName];
     
-    _stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
-    _previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    _nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
+    _stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopWebView)];
+    _previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(backWebView)];
+    _nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardWebView)];
     
     NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil] : [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil];
 
@@ -362,24 +364,34 @@
 
 #pragma mark - WebViewController Methods
 
-- (void)stopAction:(id)sender
+- (void)stopWebView
 {
 	[_webView stopLoading];
     [self showLoadingIndicator:NO];
 }
 
-- (void)backAction:(id)sender
+- (void)backWebView
 {
     if ([_webView canGoBack]) {
         [_webView goBack];
     }
 }
 
-- (void)forwardAction:(id)sender
+- (void)forwardWebView
 {
     if ([_webView canGoForward]) {
         [_webView goForward];
     }
+}
+
+- (void)loadWebView
+{
+    [self.webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
+}
+
+- (void)reloadWebView
+{
+    [self.webView reload];
 }
 
 - (void)shareAction:(id)sender
@@ -633,27 +645,42 @@
 
 #pragma mark - View lifeterm
 
-- (void)didReceiveMemoryWarning
-{
-    _webView.delegate = nil;
-    _webView = nil;
-    
-    [super didReceiveMemoryWarning];
-}
-
-- (void)viewWillUnload
+- (void)emptyCache
 {
     NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
     [NSURLCache setSharedURLCache:sharedCache];
     [sharedCache removeAllCachedResponses];
     sharedCache = nil;
-    
-    [super viewWillUnload];
 }
 
-- (void)viewDidUnload
+- (void)didReceiveMemoryWarning
 {
-    [super viewDidUnload];
+    [super didReceiveMemoryWarning];
+    
+    _currentURL = [NSURL URLWithString:[self url]];
+    
+    [_webView removeFromSuperview];
+    [self setWebView:nil];
+    [self emptyCache];
+    
+    [self loadWebView];
+}
+
+- (void)viewWillUnload
+{
+    [super viewWillUnload];
+    
+    [self emptyCache];
+}
+
+- (void)dealloc
+{
+    [self setWebView:nil];
+    [self setCurrentURL:nil];
+    [self setResourceBundleName:nil];
+    [self setNavBarBkgdImage:nil];
+    [self setToolBarBkgdImage:nil];
+    [self setNetReach:nil];
 }
 
 @end
