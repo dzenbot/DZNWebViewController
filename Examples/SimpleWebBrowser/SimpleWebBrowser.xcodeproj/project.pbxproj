@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F81B88817257AFF00DBDB27 /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F81B88717257AFF00DBDB27 /* NJKWebViewProgress.m */; };
+		4F6B0D1A172C91DE0049BC9A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D19172C91DE0049BC9A /* Reachability.m */; };
+		4F6B0D1D172C91EE0049BC9A /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */; };
 		4FE024591612C8D80008D8BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024581612C8D80008D8BA /* UIKit.framework */; };
 		4FE0245B1612C8D80008D8BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245A1612C8D80008D8BA /* Foundation.framework */; };
 		4FE0245D1612C8D80008D8BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */; };
@@ -24,14 +25,15 @@
 		4FE024841612C9480008D8BA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024801612C9480008D8BA /* SystemConfiguration.framework */; };
 		4FE024851612C9480008D8BA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024811612C9480008D8BA /* CFNetwork.framework */; };
 		4FE024AB1612CDD20008D8BA /* DZWebBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */; };
-		4FE024AC1612CDD70008D8BA /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE024AA1612CDBF0008D8BA /* Reachability.m */; };
 		4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF5211E172B3731003D4E13 /* default-controls.bundle */; };
 		4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF52120172B3AA8003D4E13 /* custom-controls.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4F81B88617257AFF00DBDB27 /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NJKWebViewProgress.h; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.h; sourceTree = "<group>"; };
-		4F81B88717257AFF00DBDB27 /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NJKWebViewProgress.m; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.m; sourceTree = "<group>"; };
+		4F6B0D18172C91DE0049BC9A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../../../Source/External/Reachability/Reachability.h; sourceTree = "<group>"; };
+		4F6B0D19172C91DE0049BC9A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../../../Source/External/Reachability/Reachability.m; sourceTree = "<group>"; };
+		4F6B0D1B172C91EE0049BC9A /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NJKWebViewProgress.h; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.h; sourceTree = "<group>"; };
+		4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NJKWebViewProgress.m; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.m; sourceTree = "<group>"; };
 		4FE024541612C8D80008D8BA /* SimpleWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FE024581612C8D80008D8BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4FE0245A1612C8D80008D8BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -54,8 +56,6 @@
 		4FE024811612C9480008D8BA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4FE0249B1612CDB10008D8BA /* DZWebBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DZWebBrowser.h; path = ../../../Source/DZWebBrowser.h; sourceTree = "<group>"; };
 		4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZWebBrowser.m; path = ../../../Source/DZWebBrowser.m; sourceTree = "<group>"; };
-		4FE024A91612CDBF0008D8BA /* Reachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../../../Source/External/Reachability/Reachability.h; sourceTree = "<group>"; };
-		4FE024AA1612CDBF0008D8BA /* Reachability.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../../../Source/External/Reachability/Reachability.m; sourceTree = "<group>"; };
 		4FF5211E172B3731003D4E13 /* default-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "default-controls.bundle"; path = "../../../Source/default-controls.bundle"; sourceTree = "<group>"; };
 		4FF52120172B3AA8003D4E13 /* custom-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "custom-controls.bundle"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,22 +78,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4F81B88517257AE700DBDB27 /* Reachability */ = {
+		4F6B0D12172C91770049BC9A /* NJKWebViewProgress */ = {
 			isa = PBXGroup;
 			children = (
-				4FE024A91612CDBF0008D8BA /* Reachability.h */,
-				4FE024AA1612CDBF0008D8BA /* Reachability.m */,
+				4F6B0D1B172C91EE0049BC9A /* NJKWebViewProgress.h */,
+				4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */,
+			);
+			name = NJKWebViewProgress;
+			sourceTree = "<group>";
+		};
+		4F6B0D16172C91B00049BC9A /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				4F6B0D18172C91DE0049BC9A /* Reachability.h */,
+				4F6B0D19172C91DE0049BC9A /* Reachability.m */,
 			);
 			name = Reachability;
 			sourceTree = "<group>";
 		};
-		4F81B88917257B0500DBDB27 /* NJKWebViewProgress */ = {
+		4F6B0D17172C91BC0049BC9A /* External */ = {
 			isa = PBXGroup;
 			children = (
-				4F81B88617257AFF00DBDB27 /* NJKWebViewProgress.h */,
-				4F81B88717257AFF00DBDB27 /* NJKWebViewProgress.m */,
+				4F6B0D12172C91770049BC9A /* NJKWebViewProgress */,
+				4F6B0D16172C91B00049BC9A /* Reachability */,
 			);
-			name = NJKWebViewProgress;
+			name = External;
 			sourceTree = "<group>";
 		};
 		4FE024491612C8D80008D8BA = {
@@ -162,18 +171,9 @@
 				4FE0249B1612CDB10008D8BA /* DZWebBrowser.h */,
 				4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */,
 				4FF5211E172B3731003D4E13 /* default-controls.bundle */,
-				4FE024901612CA750008D8BA /* External */,
+				4F6B0D17172C91BC0049BC9A /* External */,
 			);
 			name = DZWebBrowser;
-			sourceTree = "<group>";
-		};
-		4FE024901612CA750008D8BA /* External */ = {
-			isa = PBXGroup;
-			children = (
-				4F81B88517257AE700DBDB27 /* Reachability */,
-				4F81B88917257B0500DBDB27 /* NJKWebViewProgress */,
-			);
-			name = External;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,12 +244,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FE024AC1612CDD70008D8BA /* Reachability.m in Sources */,
 				4FE024AB1612CDD20008D8BA /* DZWebBrowser.m in Sources */,
 				4FE024651612C8D80008D8BA /* main.m in Sources */,
 				4FE024691612C8D80008D8BA /* AppDelegate.m in Sources */,
 				4FE024721612C8D80008D8BA /* ViewController.m in Sources */,
-				4F81B88817257AFF00DBDB27 /* NJKWebViewProgress.m in Sources */,
+				4F6B0D1A172C91DE0049BC9A /* Reachability.m in Sources */,
+				4F6B0D1D172C91EE0049BC9A /* NJKWebViewProgress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
