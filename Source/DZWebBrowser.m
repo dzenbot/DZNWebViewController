@@ -88,9 +88,6 @@
     
     [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
     
-    UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-    [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
-    
     _previousButton.enabled = NO;
 	_nextButton.enabled = NO;
     _shareButton.enabled = NO;
@@ -99,6 +96,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+    [self.navigationItem setRightBarButtonItem:indicatorButton animated:NO];
     
     if (_showProgress) {
         _progressProxy = [[NJKWebViewProgress alloc] init];

@@ -18,7 +18,9 @@
 
 /** A simple iPhone/iPad web browser controller.
  */
-@interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+@interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate,
+                                            UISearchBarDelegate, UISearchDisplayDelegate,
+                                            UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
 /** The WebView control rendering the web contents. */
 @property (nonatomic, strong) UIWebView *webView;
@@ -28,8 +30,13 @@
 @property (nonatomic, assign) BOOL showProgress;
 /** If YES, the export icon will show on the ToolBar with sharing options (Tweet to Twitter, Post to Facebook, etc.) */
 @property (nonatomic, assign) BOOL allowSharing;
+/** If YES, a search icon is placed on the right top corner inside the navigation bar, so the user can search for a specific URL address. */
+@property (nonatomic, assign) BOOL allowSearch;
 /** The custom resource bundle name.
- * Duplicate DZWebBrowser.bundle file into your project files, and replace its content keeping the same file names. You should also rename the *.bundle file. If no custom images are set, the default ones will be applied.*/
+ * Duplicate DZWebBrowser.bundle file into your project files, and replace its contents (images and localized strings) keeping the same file names or keys.
+ * You should also rename the *.bundle file.
+ * If no custom resource bundle name is set, the default one will be applied.
+ */
 @property (nonatomic, strong) NSString *resourceBundleName;
 
 
