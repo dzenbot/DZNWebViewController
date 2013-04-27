@@ -31,7 +31,7 @@
 #define ALERT_OK NSLocalizedString(@"OK",@"OK")
 
 
-/** A simple iPhone/iPad web browser control.
+/** A simple iPhone/iPad web browser controller.
  */
 @interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
@@ -47,9 +47,12 @@
  * Duplicate DZWebBrowser.bundle file into your project files, and replace its content keeping the same file names. You should also rename the *.bundle file. If no custom images are set, the default ones will be applied.*/
 @property (nonatomic, strong) NSString *controlsBundleName;
 
-/**
+
+/* Returns a DZWebBrowser instanced initialized with a specific URL.
  *
-*/
+ * @param URL An NSURL object.
+ * @returns The new instance.
+ */
 - (id)initWebBrowserWithURL:(NSURL *)URL;
 
 /**

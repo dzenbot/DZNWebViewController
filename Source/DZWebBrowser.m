@@ -15,12 +15,13 @@
 
 @interface DZWebBrowser ()
 {
-    UIBarButtonItem *stopButton;
-	UIBarButtonItem *previousButton;
-	UIBarButtonItem *nextButton;
-    UIBarButtonItem *shareButton;
+    UIBarButtonItem *_stopButton;
+	UIBarButtonItem *_previousButton;
+	UIBarButtonItem *_nextButton;
+    UIBarButtonItem *_shareButton;
     
     UILabel *_titleLabel;
+    UILabel *_urlLabel;
     
     UIActivityIndicatorView *_activityIndicator;
     UIProgressView *_progressView;
@@ -47,22 +48,20 @@
     self = [super init];
     if (self) 
     {
-        _currentURL = URL;
-        
         //Init Internet Reachability
         _netReach = [Reachability reachabilityForInternetConnection];
         [_netReach startNotifier];
+        
+        _currentURL = URL;
     }
     return self;
 }
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+- (void)loadView
 {
-    [super viewDidLoad];
-    
-    _titleLabel = (UILabel *)self.navigationItem.titleView;
+    [super loadView];
     
     [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
     [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
@@ -74,12 +73,14 @@
     UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
     [self.navigationItem setRightBarButtonItem:indicatorButton animated:YES];
     
-    previousButton.enabled = NO;
-	nextButton.enabled = NO;
-    shareButton.enabled = NO;
-    
-    [self.view addSubview:self.webView];
-    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
+    _previousButton.enabled = NO;
+	_nextButton.enabled = NO;
+    _shareButton.enabled = NO;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
     if (_showProgress) {
         _progressProxy = [[NJKWebViewProgress alloc] init];
@@ -87,6 +88,12 @@
         _progressProxy.webViewProxyDelegate = self;
         _progressProxy.progressDelegate = self;
     }
+    else {
+        [self.navigationItem setTitleView:self.titleView];
+    }
+    
+    [self.view addSubview:self.webView];
+    [_webView loadRequest:[NSURLRequest requestWithURL:_currentURL]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,7 +112,7 @@
 }
 
 
-#pragma mark Getter Methods
+#pragma mark - Getter Methods
 
 - (NSString *)title
 {
@@ -135,12 +142,57 @@
 
 - (UIActivityIndicatorView *)activityIndicator
 {
-    if (!_activityIndicator) {
+    if (!_activityIndicator)
+    {
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         _activityIndicator.color = [UIColor whiteColor];
         _activityIndicator.hidesWhenStopped = YES;
     }
     return _activityIndicator;
+}
+
+- (UIView *)titleView
+{
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 188.0, 44.0)];
+    
+    [titleView addSubview:self.titleLabel];
+    [titleView addSubview:self.urlLabel];
+    
+    return titleView;
+}
+
+- (UILabel *)titleLabel
+{
+    if (!_titleLabel)
+    {
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 2.0, 188.0, 20.0)];
+        _titleLabel.backgroundColor = [UIColor clearColor];
+        _titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        _titleLabel.minimumScaleFactor = 3;
+        _titleLabel.adjustsFontSizeToFitWidth = YES;
+        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.shadowColor = [UIColor blackColor];
+        _titleLabel.shadowOffset = CGSizeMake(0, -1);
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    }
+    return _titleLabel;
+}
+
+- (UILabel *)urlLabel
+{
+    if (!_urlLabel)
+    {
+        _urlLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20.0, 188.0, 20.0)];
+        _urlLabel.backgroundColor = [UIColor clearColor];
+        _urlLabel.font = [UIFont systemFontOfSize:14.0];
+        _urlLabel.textColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        _urlLabel.shadowColor = [UIColor blackColor];
+        _urlLabel.shadowOffset = CGSizeMake(0, -1);
+        _urlLabel.textAlignment = NSTextAlignmentCenter;
+        _urlLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    }
+    return _urlLabel;
 }
 
 - (UIProgressView *)progressView
@@ -169,7 +221,7 @@
     UIBarButtonItem *flexibleMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     UIBarButtonItem *innerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    innerMargin.width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 100 : 30;
+    innerMargin.width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 100.0 : 30.0;
     
     UIBarButtonItem *outerMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     outerMargin.width = innerMargin.width/2;
@@ -178,15 +230,15 @@
     UIImage *nextImg = [self imageNamed:@"nextButton" forBundleNamed:_controlsBundleName];
     UIImage *previousdImg = [self imageNamed:@"previousButton" forBundleNamed:_controlsBundleName];
     
-    stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
-    nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
+    _stopButton = [[UIBarButtonItem alloc] initWithImage:stopImg style:UIBarButtonItemStylePlain target:self action:@selector(stopAction:)];
+    _previousButton = [[UIBarButtonItem alloc] initWithImage:previousdImg style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
+    _nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardAction:)];
     
-    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, previousButton, flexibleMargin, nextButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, stopButton, flexibleMargin, previousButton, innerMargin, nextButton, flexibleMargin, nil];
+    NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:outerMargin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, flexibleMargin, nil] : [NSMutableArray arrayWithObjects:outerMargin, _stopButton, flexibleMargin, _previousButton, innerMargin, _nextButton, flexibleMargin, nil];
 
     if (_allowSharing) {
-        shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
-        [items addObject:shareButton];
+        _shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
+        [items addObject:_shareButton];
         [items addObject:outerMargin];
     }
     
@@ -199,8 +251,25 @@
     return [UIImage imageNamed:path];
 }
 
+- (UIImage *)getThumbnailFromWebView
+{
+    UIImage *image = nil;
+    UIGraphicsBeginImageContextWithOptions(_webView.frame.size,NO,0.0);
+    {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextTranslateCTM(context, 0, 0);
+        for (UIView *subview in _webView.scrollView.subviews)
+        {
+            [subview.layer renderInContext:context];
+            image = UIGraphicsGetImageFromCurrentImageContext();
+        }
+    }
+    UIGraphicsEndImageContext();
+    return image;
+}
 
-#pragma mark Setter Methods
+
+#pragma mark - Setter Methods
 
 - (void)setNavBarBkgdImage:(UIImage *)image
 {
@@ -212,26 +281,55 @@
     [self.navigationController.toolbar setBackgroundImage:image forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
 }
 
+- (void)setLoadingTitle
+{
+    _titleLabel.text = LOADING_TITLE;
+    
+    CGRect rect = _titleLabel.frame;
+    rect.origin.y = 12.0;
+    
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         _titleLabel.frame = rect;
+                         _urlLabel.alpha = 0;
+                     }
+                     completion:NULL];
+}
+
+- (void)setDocumentTitle
+{
+    _titleLabel.text = [self title];
+    _urlLabel.text = [self url];
+    
+    CGRect rect = _titleLabel.frame;
+    rect.origin.y = 2.0;
+    
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         _titleLabel.frame = rect;
+                         _urlLabel.alpha = 1.0;
+                     }
+                     completion:NULL];
+}
+
 - (void)showLoadingIndicator:(BOOL)show
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = show;
     
     if (!_showProgress) {
         if (show) {
-            self.navigationItem.title = LOADING_TITLE;
-            [self.activityIndicator startAnimating];
+            [self setLoadingTitle];
+            [_activityIndicator startAnimating];
         }
         else {
-            self.navigationItem.title = [self title];
-            [self.navigationItem setRightBarButtonItem:nil animated:NO];
-            [self.activityIndicator stopAnimating];
+            [self setDocumentTitle];
+            [_activityIndicator stopAnimating];
         }
     }
 }
 
 
-#pragma mark -
-#pragma mark WebViewController Methods
+#pragma mark - WebViewController Methods
 
 - (void)stopAction:(id)sender
 {
@@ -241,12 +339,20 @@
 
 - (void)backAction:(id)sender
 {
-	[_webView goBack];
+    NSLog(@"%s",__FUNCTION__);
+    
+    if ([_webView canGoBack]) {
+        [_webView goBack];
+    }
 }
 
 - (void)forwardAction:(id)sender
 {
-	[_webView goForward];
+    NSLog(@"%s",__FUNCTION__);
+    
+    if ([_webView canGoForward]) {
+        [_webView goForward];
+    }
 }
 
 - (void)shareAction:(id)sender
@@ -261,32 +367,6 @@
     }
 }
 
-/**
- * Renders a graphic context form the browser's webview.
- * Scale factor and offset are taken in consideration.
- *
- * @params view The view from which to render the graphic context.
- * @returns An image from the graphic context of the specified view.
-*/
-- (UIImage *)getThumbnailFromWebView
-{
-    UIImage *image = nil;
-    UIGraphicsBeginImageContextWithOptions(_webView.frame.size,NO,0.0);
-    {
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextTranslateCTM(context, 0, 0);
-        for (UIView *subview in _webView.scrollView.subviews)
-        {
-            [subview.layer renderInContext:context];
-            
-            //// Renders the viewport snapshot
-            image = UIGraphicsGetImageFromCurrentImageContext();
-        }
-    }
-    UIGraphicsEndImageContext();
-    return image;
-}
-
 - (void)closeAction:(id)sender
 {
     [self browserWillClose];
@@ -296,15 +376,14 @@
 - (void)browserWillClose
 {
     [self showLoadingIndicator:NO];
-
+    
     [_webView stopLoading];
     _webView.delegate = nil;
     _webView = nil;
 }
 
 
-#pragma mark -
-#pragma mark UIWebViewDelegate
+#pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webview shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -317,8 +396,7 @@
     [[NSRunLoop mainRunLoop] addTimer:webTimer forMode:NSDefaultRunLoopMode];
     
     self.currentURL = request.URL;
-    
-    stopButton.enabled = YES;
+    _stopButton.enabled = YES;
     
 	return YES;
 }
@@ -330,10 +408,10 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webview
 {
-    stopButton.enabled = NO;
-    previousButton.enabled = [webview canGoBack];
-    nextButton.enabled = [webview canGoForward];
-    shareButton.enabled = YES;
+    _stopButton.enabled = NO;
+    _previousButton.enabled = [webview canGoBack];
+    _nextButton.enabled = [webview canGoForward];
+    _shareButton.enabled = YES;
     
     [self showLoadingIndicator:NO];
 }
@@ -341,7 +419,6 @@
 - (void)webView:(UIWebView *)webview didFailLoadWithError:(NSError *)error
 {
 	[self webViewDidFinishLoad:webview];
-    
     [self showLoadingIndicator:NO];
 }
 
@@ -354,13 +431,13 @@
     
     if (progress == 1.0) {
         _progressView = nil;
-        self.navigationItem.title = [self title];
-        [self.navigationItem setTitleView:_titleLabel];
+        [self.navigationItem setTitleView:self.titleLabel];
+        _titleLabel.text = [self title];
     }
 }
 
 
-#pragma mark UIActionSheetDelegate Methods
+#pragma mark - UIActionSheetDelegate Methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -419,7 +496,8 @@
     }
 }
 
-#pragma mark MFMailComposeViewControllerDelegate Methods
+
+#pragma mark - MFMailComposeViewControllerDelegate Methods
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
@@ -427,8 +505,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Reachability Notification
+#pragma mark - Reachability Notification
 
 - (void)reachabilityChanged
 {
@@ -436,8 +513,8 @@
     {
         [_webView stopLoading];
         
-        nextButton.enabled = NO;
-        shareButton.enabled = NO;
+        _nextButton.enabled = NO;
+        _shareButton.enabled = NO;
         
         UIAlertView *alertNoInternet = [[UIAlertView alloc] initWithTitle:ALERT_NO_INTERNET_TITLE
                                                                   message:ALERT_NO_INTERNET_MESSAGE
