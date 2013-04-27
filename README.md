@@ -6,6 +6,8 @@ It also support localization and graphic customization by setting a custom bundl
 DZWebBrowser uses ARC and supports iOS6 and superior.
 Also support multiple orientations.
 
+![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
+
 Some additonal features ideas:
 - Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
 - LongPress gesture on links to show more options on ActionSheet.
@@ -15,9 +17,6 @@ Some additonal features ideas:
 - Reload page.
 
 Feel free to fork it and make it more interesting!
-
-
-![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
 
 ## How to use
@@ -38,13 +37,16 @@ Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 Create a new instance of DZWebBrowser and initialize with a NSURL.
 You also need to embed the view controller into a UINavigationController.
 ```
-NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
+NSURL *URL = [NSURL URLWithString:@"http://www.google.com/"];
+
 DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
 webBrowser.showProgress = YES;
+webBrowser.allowSharing = YES;
+webBrowser.resourceBundleName = @"custom-controls";
 
 UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
 
-[self presentModalViewController:webBrowserNC animated:YES];
+[self presentViewController:webBrowserNC animated:YES completion:NULL];
 ```
 
 ## Third party Frameworks
