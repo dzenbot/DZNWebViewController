@@ -1,11 +1,6 @@
 # DZWebBrowser
 
 An iPhone/iPad simple web browser controller with navigation controls and sharing features.
-It also support localization and graphic customization by setting a custom bundle file containing the image assets.
-
-DZWebBrowser uses ARC and supports iOS6 and superior.
-Also support multiple orientations.
-
 Features:
 * Progress bar embeded on the navigation bar (optional).
 * Navigation bar shows title animated, à la Twitter official app.
@@ -16,6 +11,9 @@ Features:
 * NSURLCache support.
 
 ![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
+
+DZWebBrowser uses ARC and supports iOS6 and superior.
+Also support multiple orientations.
 
 Some additonal feature ideas:
 - Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
@@ -59,7 +57,7 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 ## Third party Frameworks
 
 DZWebBrowser requires third party frameworks, added as submodules:
-- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [Tony Million](https://github.com/tonymillionn).
+- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [Tony Million](https://github.com/tonymillion).
 - [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [Satoshi Asano](https://github.com/ninjinkun).
 - [SDURLCache](https://github.com/rs/SDURLCache) from [Olivier Poitrey](https://github.com/rs)
 
