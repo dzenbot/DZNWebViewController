@@ -191,7 +191,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         _webView.scalesPageToFit = YES;
         _webView.delegate = self;
         
-        DZLongPressGestureRecognizer *gesture = [[DZLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(openContextualMenu:)];
+        DZLongPressGestureRecognizer *gesture = [[DZLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(shouldPresentActionSheet:)];
         gesture.allowableMovement = 20;
         gesture.delegate = self;
         [_webView addGestureRecognizer:gesture];
@@ -308,6 +308,14 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     return items;
 }
 
+- (CGSize)windowSize
+{
+    CGSize size;
+    size.width = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] integerValue];
+    size.height = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerHeight"] integerValue];
+    return size;
+}
+
 - (UIImage *)imageNamed:(NSString *)imgName forBundleNamed:(NSString *)bundleName
 {
     NSString *path = [NSString stringWithFormat:@"%@.bundle/images/%@",bundleName,imgName];
@@ -422,7 +430,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     [self presentActionSheetFromView:sender];
 }
 
-- (void)openContextualMenu:(DZLongPressGestureRecognizer *)gesture
+- (void)shouldPresentActionSheet:(DZLongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
@@ -440,6 +448,11 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
                 
         NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
+        
+        NSLog(@"point : %@",NSStringFromCGPoint(point));
+        NSLog(@"dict : %@",dict);
+        
+        gesture.view.accessibilityActivationPoint = point;
         
         if (!dict || dict.count == 0) {
             [self presentActionSheetFromView:gesture.view];
@@ -498,7 +511,16 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [actionSheet showFromRect:view.frame inView:self.view animated:YES];
+        if ([view isKindOfClass:[UIBarButtonItem class]]) {
+            [actionSheet showFromBarButtonItem:(UIBarButtonItem *)view animated:YES];
+        }
+        else if ([view isEqual:_webView]) {
+            CGPoint point = view.accessibilityActivationPoint;
+            [actionSheet showFromRect:CGRectMake(point.x, point.y, 1, 1) inView:self.view animated:YES];
+        }
+        else {
+            [actionSheet showFromRect:view.frame inView:self.view animated:YES];
+        }
     }
     else {
         [actionSheet showFromToolbar:self.navigationController.toolbar];
