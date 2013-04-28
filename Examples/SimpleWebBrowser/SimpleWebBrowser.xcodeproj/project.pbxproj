@@ -10,6 +10,8 @@
 		4F6B0D1A172C91DE0049BC9A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D19172C91DE0049BC9A /* Reachability.m */; };
 		4F6B0D1D172C91EE0049BC9A /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */; };
 		4F6B0D25172CA5B90049BC9A /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6B0D24172CA5B90049BC9A /* script.js */; };
+		4F6B0D3D172CB8DB0049BC9A /* SDCachedURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D3A172CB8DB0049BC9A /* SDCachedURLResponse.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4F6B0D3E172CB8DB0049BC9A /* SDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D3C172CB8DB0049BC9A /* SDURLCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4FE024591612C8D80008D8BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024581612C8D80008D8BA /* UIKit.framework */; };
 		4FE0245B1612C8D80008D8BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245A1612C8D80008D8BA /* Foundation.framework */; };
 		4FE0245D1612C8D80008D8BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */; };
@@ -36,6 +38,10 @@
 		4F6B0D1B172C91EE0049BC9A /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NJKWebViewProgress.h; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.h; sourceTree = "<group>"; };
 		4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NJKWebViewProgress.m; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.m; sourceTree = "<group>"; };
 		4F6B0D24172CA5B90049BC9A /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = script.js; path = ../../../Source/script.js; sourceTree = "<group>"; };
+		4F6B0D39172CB8DB0049BC9A /* SDCachedURLResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDCachedURLResponse.h; path = ../../../Source/External/SDURLCache/SDCachedURLResponse.h; sourceTree = "<group>"; };
+		4F6B0D3A172CB8DB0049BC9A /* SDCachedURLResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDCachedURLResponse.m; path = ../../../Source/External/SDURLCache/SDCachedURLResponse.m; sourceTree = "<group>"; };
+		4F6B0D3B172CB8DB0049BC9A /* SDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDURLCache.h; path = ../../../Source/External/SDURLCache/SDURLCache.h; sourceTree = "<group>"; };
+		4F6B0D3C172CB8DB0049BC9A /* SDURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDURLCache.m; path = ../../../Source/External/SDURLCache/SDURLCache.m; sourceTree = "<group>"; };
 		4FE024541612C8D80008D8BA /* SimpleWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FE024581612C8D80008D8BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4FE0245A1612C8D80008D8BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -101,10 +107,22 @@
 		4F6B0D17172C91BC0049BC9A /* External */ = {
 			isa = PBXGroup;
 			children = (
+				4F6B0D26172CB79A0049BC9A /* SDURLCache */,
 				4F6B0D12172C91770049BC9A /* NJKWebViewProgress */,
 				4F6B0D16172C91B00049BC9A /* Reachability */,
 			);
 			name = External;
+			sourceTree = "<group>";
+		};
+		4F6B0D26172CB79A0049BC9A /* SDURLCache */ = {
+			isa = PBXGroup;
+			children = (
+				4F6B0D39172CB8DB0049BC9A /* SDCachedURLResponse.h */,
+				4F6B0D3A172CB8DB0049BC9A /* SDCachedURLResponse.m */,
+				4F6B0D3B172CB8DB0049BC9A /* SDURLCache.h */,
+				4F6B0D3C172CB8DB0049BC9A /* SDURLCache.m */,
+			);
+			name = SDURLCache;
 			sourceTree = "<group>";
 		};
 		4FE024491612C8D80008D8BA = {
@@ -254,6 +272,8 @@
 				4FE024721612C8D80008D8BA /* ViewController.m in Sources */,
 				4F6B0D1A172C91DE0049BC9A /* Reachability.m in Sources */,
 				4F6B0D1D172C91EE0049BC9A /* NJKWebViewProgress.m in Sources */,
+				4F6B0D3D172CB8DB0049BC9A /* SDCachedURLResponse.m in Sources */,
+				4F6B0D3E172CB8DB0049BC9A /* SDURLCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

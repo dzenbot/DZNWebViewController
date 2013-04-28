@@ -9,6 +9,8 @@
 
 #import "DZWebBrowser.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SDURLCache.h"
+#import "SDCachedURLResponse.h"
 
 #define kWebLoadingTimout 10.0
 #define kDefaultControlsBundleName @"default-controls"
@@ -76,9 +78,15 @@
     self = [super init];
     if (self) 
     {
-        //Init Internet Reachability
+        //Initializes the Internet reachability
         _netReach = [Reachability reachabilityForInternetConnection];
         [_netReach startNotifier];
+        
+        //Initializes the NSURLRequest Cache
+        SDURLCache *cache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024   // 1MB mem cache
+                                                          diskCapacity:1024*1024*5 // 5MB disk cache
+                                                              diskPath:[SDURLCache defaultCachePath]];
+        [NSURLCache setSharedURLCache:cache];
         
         _currentURL = URL;
     }
@@ -647,14 +655,6 @@
 
 #pragma mark - View lifeterm
 
-- (void)emptyCache
-{
-    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
-    [NSURLCache setSharedURLCache:sharedCache];
-    [sharedCache removeAllCachedResponses];
-    sharedCache = nil;
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -663,7 +663,7 @@
     
     [_webView removeFromSuperview];
     [self setWebView:nil];
-    [self emptyCache];
+    [[SDURLCache sharedURLCache] removeAllCachedResponses];
     
     [self loadWebView];
 }
@@ -671,8 +671,7 @@
 - (void)viewWillUnload
 {
     [super viewWillUnload];
-    
-    [self emptyCache];
+    [[SDURLCache sharedURLCache] removeAllCachedResponses];
 }
 
 - (void)dealloc
