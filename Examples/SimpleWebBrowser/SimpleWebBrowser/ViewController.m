@@ -20,7 +20,7 @@
     
     DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initWebBrowserWithURL:URL];
     webBrowser.showProgress = NO;
-    webBrowser.allowSharing = YES;
+    webBrowser.allowSharing = NO;
 //    webBrowser.resourceBundleName = @"custom-controls";
 
     UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];

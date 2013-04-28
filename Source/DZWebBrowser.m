@@ -191,10 +191,12 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         _webView.scalesPageToFit = YES;
         _webView.delegate = self;
         
-        DZLongPressGestureRecognizer *gesture = [[DZLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(shouldPresentActionSheet:)];
-        gesture.allowableMovement = 20;
-        gesture.delegate = self;
-        [_webView addGestureRecognizer:gesture];
+        if (_allowSharing) {
+            DZLongPressGestureRecognizer *gesture = [[DZLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(shouldPresentActionSheet:)];
+            gesture.allowableMovement = 20;
+            gesture.delegate = self;
+            [_webView addGestureRecognizer:gesture];
+        }
 
         [self.view addSubview:_webView];
     }
@@ -235,7 +237,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         _titleLabel.minimumScaleFactor = 3;
         _titleLabel.adjustsFontSizeToFitWidth = YES;
         _titleLabel.textColor = [UIColor whiteColor];
-        _titleLabel.shadowColor = [UIColor blackColor];
+        _titleLabel.shadowColor = [UIColor colorWithWhite:0 alpha:0.75];
         _titleLabel.shadowOffset = CGSizeMake(0, -1);
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -250,8 +252,8 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         _urlLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 22.0, [self titleWidth], 20.0)];
         _urlLabel.backgroundColor = [UIColor clearColor];
         _urlLabel.font = [UIFont systemFontOfSize:14.0];
-        _urlLabel.textColor = [UIColor colorWithWhite:0.9 alpha:1.0];
-        _urlLabel.shadowColor = [UIColor blackColor];
+        _urlLabel.textColor = [UIColor whiteColor];
+        _urlLabel.shadowColor = [UIColor colorWithWhite:0 alpha:0.75];
         _urlLabel.shadowOffset = CGSizeMake(0, -1);
         _urlLabel.textAlignment = NSTextAlignmentCenter;
         _urlLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
@@ -301,9 +303,12 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         [items addObject:flexibleMargin];
         _shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
         [items addObject:_shareButton];
+        [items addObject:margin];
     }
-
-    [items addObject:margin];
+    else {
+        [items addObject:flexibleMargin];
+        [items addObject:flexibleMargin];
+    }
     
     return items;
 }
@@ -448,9 +453,6 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
                 
         NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
-        
-        NSLog(@"point : %@",NSStringFromCGPoint(point));
-        NSLog(@"dict : %@",dict);
         
         gesture.view.accessibilityActivationPoint = point;
         
