@@ -1,17 +1,24 @@
 # DZWebBrowser
 
-iPhone/iPad controller simple web browser with toolbar controls (backward, forward, stop loading and export options).
+An iPhone/iPad simple web browser controller with navigation controls and sharing features.
 It also support localization and graphic customization by setting a custom bundle file containing the image assets.
 
 DZWebBrowser uses ARC and supports iOS6 and superior.
 Also support multiple orientations.
 
+Features:
+* Progress bar embeded on the navigation bar (optional).
+* Navigation bar shows title animated, à la Twitter official app.
+* Sharing options like posting on Twitter, Facebook, Mail, etc. (optional).
+* Long press gesture for capturing links and images (optional).
+* Customizable toolbar icons.
+* Localization support.
+* NSURLCache support.
+
 ![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
-Some additonal features ideas:
+Some additonal feature ideas:
 - Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
-- LongPress gesture on links to show more options on ActionSheet.
-- LongPress on images to save to camera roll or share on social networks.
 - Optional way of searching a custom URL from the NavigationBar.
 - Keywords auto-completion when searching on bar.
 - Reload page.
@@ -52,8 +59,9 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 ## Third party Frameworks
 
 DZWebBrowser requires third party frameworks, added as submodules:
-- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [@tonymillion](https://github.com/tonymillionn).
-- [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [@ninjinkun](https://github.com/ninjinkun).
+- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [Tony Million](https://github.com/tonymillionn).
+- [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [Satoshi Asano](https://github.com/ninjinkun).
+- [SDURLCache](https://github.com/rs/SDURLCache) from [Olivier Poitrey](https://github.com/rs)
 
 ## License
 (The MIT License)
