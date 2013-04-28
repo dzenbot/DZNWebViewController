@@ -11,18 +11,27 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SDURLCache.h"
 #import "SDCachedURLResponse.h"
+#import <objc/runtime.h>
 
 #define kWebLoadingTimout 10.0
 #define kDefaultControlsBundleName @"default-controls"
+
+#define kImageTypeKey @"image"
+#define kLinkTypeKey @"link"
+#define kTypeKey @"type"
+#define kTitleKey @"title"
+#define kUrlKey @"url"
 
 #define TXT_LOADING NSLocalizedString(@"TXT_LOADING",nil)
 #define TXT_CLOSE NSLocalizedString(@"TXT_CLOSE",nil)
 #define TXT_CANCEL NSLocalizedString(@"TXT_CANCEL",nil)
 #define TXT_ACTIONSHEET_TWITTER NSLocalizedString(@"TXT_ACTIONSHEET_TWITTER",nil)
 #define TXT_ACTIONSHEET_FACEBOOK NSLocalizedString(@"TXT_ACTIONSHEET_FACEBOOK",nil)
-#define TXT_ACTIONSHEET_COPY NSLocalizedString(@"TXT_ACTIONSHEET_COPY",nil)
+#define TXT_ACTIONSHEET_COPYLINK NSLocalizedString(@"TXT_ACTIONSHEET_COPYLINK",nil)
 #define TXT_ACTIONSHEET_MAIL NSLocalizedString(@"TXT_ACTIONSHEET_MAIL",nil)
 #define TXT_ACTIONSHEET_SAFARI NSLocalizedString(@"TXT_ACTIONSHEET_SAFARI",nil)
+#define TXT_ACTIONSHEET_COPYIMG NSLocalizedString(@"TXT_ACTIONSHEET_COPYIMG",nil)
+#define TXT_ACTIONSHEET_SAVEIMG NSLocalizedString(@"TXT_ACTIONSHEET_SAVEIMG",nil)
 #define TXT_ALERT_NO_INTERNET NSLocalizedString(@"TXT_ALERT_NO_INTERNET",nil)
 #define TXT_ALERT_NO_INTERNET_MESSAGE NSLocalizedString(@"TXT_ALERT_NO_INTERNET_MESSAGE",nil)
 #define TXT_ALERT_NO_MAIL NSLocalizedString(@"TXT_ALERT_NO_MAIL",nil)
@@ -38,7 +47,20 @@
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer {
     return NO;
 }
+@end
 
+@interface UIActionSheet (Attachment)
+@property (nonatomic, retain) NSMutableDictionary *userInfo;
+@end
+NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
+@implementation UIActionSheet (Attachment)
+@dynamic userInfo;
+- (void)setUserInfo:(NSMutableDictionary *)userInfo {
+    objc_setAssociatedObject(self, (__bridge const void *)(kNewAttachmentKey),userInfo,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSMutableDictionary *)userInfo {
+    return objc_getAssociatedObject(self, (__bridge const void *)(kNewAttachmentKey));
+}
 @end
 
 @interface DZWebBrowser ()
@@ -78,17 +100,15 @@
     self = [super init];
     if (self) 
     {
+        _currentURL = URL;
+        
         //Initializes the Internet reachability
         _netReach = [Reachability reachabilityForInternetConnection];
         [_netReach startNotifier];
         
         //Initializes the NSURLRequest Cache
-        SDURLCache *cache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024   // 1MB mem cache
-                                                          diskCapacity:1024*1024*5 // 5MB disk cache
-                                                              diskPath:[SDURLCache defaultCachePath]];
+        SDURLCache *cache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024 diskCapacity:1024*1024*5 diskPath:[SDURLCache defaultCachePath]];
         [NSURLCache setSharedURLCache:cache];
-        
-        _currentURL = URL;
     }
     return self;
 }
@@ -294,23 +314,6 @@
     return [UIImage imageNamed:path];
 }
 
-- (UIImage *)getThumbnailFromWebView
-{
-    UIImage *image = nil;
-    UIGraphicsBeginImageContextWithOptions(_webView.frame.size,NO,0.0);
-    {
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextTranslateCTM(context, 0, 0);
-        for (UIView *subview in _webView.scrollView.subviews)
-        {
-            [subview.layer renderInContext:context];
-            image = UIGraphicsGetImageFromCurrentImageContext();
-        }
-    }
-    UIGraphicsEndImageContext();
-    return image;
-}
-
 
 #pragma mark - Setter Methods
 
@@ -416,7 +419,7 @@
 
 - (void)shareAction:(id)sender
 {    
-    [self presentActionSheetFromView:sender withTitle:nil];
+    [self presentActionSheetFromView:sender];
 }
 
 - (void)openContextualMenu:(DZLongPressGestureRecognizer *)gesture
@@ -432,10 +435,18 @@
         CGPoint point = [gesture locationInView:_webView];
         
         //// Get the URL link at the touch location
-        NSString *function = [NSString stringWithFormat:@"script.getLink(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
+        NSString *function = [NSString stringWithFormat:@"script.getElement(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
         NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
+                
+        NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
         
-        [self presentActionSheetFromView:gesture.view withTitle:result];
+        if (!dict || dict.count == 0) {
+            [self presentActionSheetFromView:gesture.view];
+        }
+        else {
+            [self presentActionSheetFromView:gesture.view withUserInfo:dict];
+        }
     }
 }
 
@@ -454,16 +465,57 @@
     _webView = nil;
 }
 
-- (void)presentActionSheetFromView:(UIView *)view withTitle:(NSString *)title
+- (void)presentActionSheetFromView:(UIView *)view
 {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:textForKey(TXT_CANCEL) destructiveButtonTitle:nil otherButtonTitles:textForKey(TXT_ACTIONSHEET_TWITTER), textForKey(TXT_ACTIONSHEET_FACEBOOK), textForKey(TXT_ACTIONSHEET_COPY), textForKey(TXT_ACTIONSHEET_MAIL), textForKey(TXT_ACTIONSHEET_SAFARI), nil];
-    actionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:kLinkTypeKey,kTypeKey,[self title],kTitleKey,[self url],kUrlKey,nil];
+    [self presentActionSheetFromView:view withUserInfo:dict];
+}
+
+- (void)presentActionSheetFromView:(UIView *)view withUserInfo:(NSMutableDictionary *)userInfo
+{    
+    NSString *type = [userInfo objectForKey:kTypeKey];
+    NSString *title = [userInfo objectForKey:kTitleKey];
+    NSString *url = [userInfo objectForKey:kUrlKey];
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:textForKey(TXT_ACTIONSHEET_TWITTER), textForKey(TXT_ACTIONSHEET_FACEBOOK),nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    actionSheet.userInfo = userInfo;
+    
+    if ([type isEqualToString:kImageTypeKey]) {
+        [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_COPYIMG)];
+        [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_SAVEIMG)];
+        
+        [actionSheet addButtonWithTitle:textForKey(TXT_CANCEL)];
+        actionSheet.cancelButtonIndex = 4;
+    }
+    else {
+        [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_COPYLINK)];
+        [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_MAIL)];
+        [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_SAFARI)];
+
+        [actionSheet addButtonWithTitle:textForKey(TXT_CANCEL)];
+        actionSheet.cancelButtonIndex = 5;
+    }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [actionSheet showFromRect:view.frame inView:self.view animated:YES];
     }
     else {
         [actionSheet showFromToolbar:self.navigationController.toolbar];
+    }
+    
+    if ([type isEqualToString:kImageTypeKey]) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0ul);
+        dispatch_async(queue, ^{
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            UIImage *image = [UIImage imageWithData:data];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [actionSheet.userInfo setObject:image forKey:kImageTypeKey];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+            });
+        });
     }
 }
 
@@ -542,22 +594,20 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString *title = [self title];
-    NSString *link = [actionSheet title];
-    if (!link) link = [self url];
-    else title = nil;
-    
+    UIImage *attachment = [actionSheet.userInfo objectForKey:kImageTypeKey];
+    NSString *title = [actionSheet.userInfo objectForKey:kTitleKey];
+    NSString *url = [actionSheet.userInfo objectForKey:kUrlKey];
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     
     if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_MAIL)])
     {
-        if ([MFMailComposeViewController canSendMail])
-        {
+        if ([MFMailComposeViewController canSendMail]) {
             MFMailComposeViewController *mailComposeVC = [[MFMailComposeViewController alloc] init];
             mailComposeVC.mailComposeDelegate = self;
             mailComposeVC.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
-            [mailComposeVC setSubject:title];
-            [mailComposeVC setMessageBody:link isHTML:YES];
+            NSString *subject = attachment ? title : [self title];
+            [mailComposeVC setSubject:subject];
+            [mailComposeVC setMessageBody:url isHTML:YES];
             
             if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
                 mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -575,38 +625,45 @@
             [alertNoInternet show];
         }
     }
-    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_COPY)])
+    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_COPYLINK)])
     {
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-        [pasteBoard setString:link];
+        [pasteBoard setString:url];
     }
     else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_SAFARI)])
     {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_SAVEIMG)])
+    {
+        UIImageWriteToSavedPhotosAlbum(attachment, nil, nil, nil);
+    }
+    else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_COPYIMG)])
+    {
+        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+        [pasteBoard setImage:attachment];
     }
     else
     {
         NSString *ServiceType = nil;
-        
-        if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_TWITTER)])
-        {
+        if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_TWITTER)]) {
             if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
                 ServiceType = SLServiceTypeTwitter;
             }
         }
-        else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:textForKey(TXT_ACTIONSHEET_FACEBOOK)])
-        {
+        else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:textForKey(TXT_ACTIONSHEET_FACEBOOK)]) {
             if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
                 ServiceType = SLServiceTypeFacebook;
             }
         }
-        
+    
         if (ServiceType) {
             SLComposeViewController *socialComposeVC = [SLComposeViewController composeViewControllerForServiceType:ServiceType];
-            NSMutableString *message = [[NSMutableString alloc] initWithString:link];
-            if (title) [message insertString:[NSString stringWithFormat:@"%@\n",title] atIndex:0];
-            [socialComposeVC setInitialText:message];
-            [socialComposeVC addImage:[self getThumbnailFromWebView]];
+            NSMutableString *text = [[NSMutableString alloc] initWithFormat:@"%@",[self title]];
+            if (![[self title] isEqualToString:title] && title) [text appendFormat:@" - %@",title];
+            if (attachment) [socialComposeVC addImage:attachment];
+            else if (url) [text appendFormat:@"\n%@",url];
+            [socialComposeVC setInitialText:text];
             [self.navigationController presentViewController:socialComposeVC animated:YES completion:NULL];
         }
     }

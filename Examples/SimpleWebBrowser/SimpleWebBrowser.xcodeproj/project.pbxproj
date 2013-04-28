@@ -12,6 +12,7 @@
 		4F6B0D25172CA5B90049BC9A /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6B0D24172CA5B90049BC9A /* script.js */; };
 		4F6B0D3D172CB8DB0049BC9A /* SDCachedURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D3A172CB8DB0049BC9A /* SDCachedURLResponse.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4F6B0D3E172CB8DB0049BC9A /* SDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D3C172CB8DB0049BC9A /* SDURLCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4F6B0D47172CFC8F0049BC9A /* custom-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4F6B0D46172CFC8E0049BC9A /* custom-controls.bundle */; };
 		4FE024591612C8D80008D8BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024581612C8D80008D8BA /* UIKit.framework */; };
 		4FE0245B1612C8D80008D8BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245A1612C8D80008D8BA /* Foundation.framework */; };
 		4FE0245D1612C8D80008D8BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */; };
@@ -29,7 +30,6 @@
 		4FE024851612C9480008D8BA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024811612C9480008D8BA /* CFNetwork.framework */; };
 		4FE024AB1612CDD20008D8BA /* DZWebBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */; };
 		4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF5211E172B3731003D4E13 /* default-controls.bundle */; };
-		4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4FF52120172B3AA8003D4E13 /* custom-controls.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +42,7 @@
 		4F6B0D3A172CB8DB0049BC9A /* SDCachedURLResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDCachedURLResponse.m; path = ../../../Source/External/SDURLCache/SDCachedURLResponse.m; sourceTree = "<group>"; };
 		4F6B0D3B172CB8DB0049BC9A /* SDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDURLCache.h; path = ../../../Source/External/SDURLCache/SDURLCache.h; sourceTree = "<group>"; };
 		4F6B0D3C172CB8DB0049BC9A /* SDURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDURLCache.m; path = ../../../Source/External/SDURLCache/SDURLCache.m; sourceTree = "<group>"; };
+		4F6B0D46172CFC8E0049BC9A /* custom-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "custom-controls.bundle"; sourceTree = "<group>"; };
 		4FE024541612C8D80008D8BA /* SimpleWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FE024581612C8D80008D8BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4FE0245A1612C8D80008D8BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -65,7 +66,6 @@
 		4FE0249B1612CDB10008D8BA /* DZWebBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DZWebBrowser.h; path = ../../../Source/DZWebBrowser.h; sourceTree = "<group>"; };
 		4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZWebBrowser.m; path = ../../../Source/DZWebBrowser.m; sourceTree = "<group>"; };
 		4FF5211E172B3731003D4E13 /* default-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "default-controls.bundle"; path = "../../../Source/default-controls.bundle"; sourceTree = "<group>"; };
-		4FF52120172B3AA8003D4E13 /* custom-controls.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "custom-controls.bundle"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,7 +163,7 @@
 				4FE024681612C8D80008D8BA /* AppDelegate.m */,
 				4FE024701612C8D80008D8BA /* ViewController.h */,
 				4FE024711612C8D80008D8BA /* ViewController.m */,
-				4FF52120172B3AA8003D4E13 /* custom-controls.bundle */,
+				4F6B0D46172CFC8E0049BC9A /* custom-controls.bundle */,
 				4FE024861612CA510008D8BA /* DZWebBrowser */,
 				4FE0245F1612C8D80008D8BA /* Supporting Files */,
 			);
@@ -254,8 +254,8 @@
 				4FE024751612C8D80008D8BA /* ViewController_iPhone.xib in Resources */,
 				4FE024781612C8D80008D8BA /* ViewController_iPad.xib in Resources */,
 				4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */,
-				4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */,
 				4F6B0D25172CA5B90049BC9A /* script.js in Resources */,
+				4F6B0D47172CFC8F0049BC9A /* custom-controls.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
