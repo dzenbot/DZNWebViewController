@@ -29,6 +29,16 @@
 
 #define textForKey(key) [_resourceBundle localizedStringForKey:(key) value:@"" table:nil]
 
+@interface DZLongPressGestureRecognizer : UILongPressGestureRecognizer
+@end
+
+@implementation DZLongPressGestureRecognizer
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer {
+    return NO;
+}
+
+@end
+
 @interface DZWebBrowser ()
 {
     UIBarButtonItem *_stopButton;
@@ -149,13 +159,15 @@
         _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         _webView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _webView.suppressesIncrementalRendering = YES;
         _webView.scalesPageToFit = YES;
         _webView.delegate = self;
         
-        if (OS_SUPERIOR_OR_EQUAL_THAN(@"6.0")) {
-            _webView.suppressesIncrementalRendering = YES;
-        }
-        
+        DZLongPressGestureRecognizer *gesture = [[DZLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(openContextualMenu:)];
+        gesture.allowableMovement = 20;
+        gesture.delegate = self;
+        [_webView addGestureRecognizer:gesture];
+
         [self.view addSubview:_webView];
     }
     return _webView;
@@ -396,14 +408,26 @@
 
 - (void)shareAction:(id)sender
 {    
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:textForKey(TXT_CANCEL) destructiveButtonTitle:nil otherButtonTitles:textForKey(TXT_ACTIONSHEET_TWITTER), textForKey(TXT_ACTIONSHEET_FACEBOOK), textForKey(TXT_ACTIONSHEET_COPY), textForKey(TXT_ACTIONSHEET_MAIL), textForKey(TXT_ACTIONSHEET_SAFARI), nil];
-    actionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [actionSheet showFromBarButtonItem:sender animated:YES];
-    }
-    else {
-        [actionSheet showFromToolbar:self.navigationController.toolbar];
+    [self presentActionSheetFromView:sender withTitle:nil];
+}
+
+- (void)openContextualMenu:(DZLongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        [self stopWebView];
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"script" ofType:@"js"];
+        NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+        [_webView stringByEvaluatingJavaScriptFromString:script];
+        
+        CGPoint point = [gesture locationInView:_webView];
+        
+        //// Get the URL link at the touch location
+        NSString *function = [NSString stringWithFormat:@"script.getLink(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
+        NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
+        
+        [self presentActionSheetFromView:gesture.view withTitle:result];
     }
 }
 
@@ -420,6 +444,19 @@
     [_webView stopLoading];
     _webView.delegate = nil;
     _webView = nil;
+}
+
+- (void)presentActionSheetFromView:(UIView *)view withTitle:(NSString *)title
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:textForKey(TXT_CANCEL) destructiveButtonTitle:nil otherButtonTitles:textForKey(TXT_ACTIONSHEET_TWITTER), textForKey(TXT_ACTIONSHEET_FACEBOOK), textForKey(TXT_ACTIONSHEET_COPY), textForKey(TXT_ACTIONSHEET_MAIL), textForKey(TXT_ACTIONSHEET_SAFARI), nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [actionSheet showFromRect:view.frame inView:self.view animated:YES];
+    }
+    else {
+        [actionSheet showFromToolbar:self.navigationController.toolbar];
+    }
 }
 
 
@@ -467,8 +504,6 @@
 
 - (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     [self.progressView setProgress:progress animated:NO];
     
     if (progress == 1.0) {
@@ -479,59 +514,19 @@
 }
 
 
-#pragma mark - UIScrollViewDelegate
-#pragma mark Responding to Scrolling and Dragging
+#pragma mark - UIGestureRecognizerDelegate Methods
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    
+    return YES;
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    
-}
-
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-    
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    
-}
-
-#pragma mark Managing Zooming
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-    return nil;
-}
-
-- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
-{
-    
-}
-
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
-{
-    
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView
-{
-    
+    if ([gestureRecognizer isKindOfClass:[DZLongPressGestureRecognizer class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 
@@ -539,6 +534,11 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    NSString *title = [self title];
+    NSString *link = [actionSheet title];
+    if (!link) link = [self url];
+    else title = nil;
+    
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     
     if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_MAIL)])
@@ -548,8 +548,8 @@
             MFMailComposeViewController *mailComposeVC = [[MFMailComposeViewController alloc] init];
             mailComposeVC.mailComposeDelegate = self;
             mailComposeVC.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
-            [mailComposeVC setSubject:[self title]];
-            [mailComposeVC setMessageBody:[self url] isHTML:YES];
+            [mailComposeVC setSubject:title];
+            [mailComposeVC setMessageBody:link isHTML:YES];
             
             if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
                 mailComposeVC.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -570,11 +570,11 @@
     else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_COPY)])
     {
         UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-        [pasteBoard setString:_webView.request.URL.absoluteString];
+        [pasteBoard setString:link];
     }
     else if ([buttonTitle isEqualToString:textForKey(TXT_ACTIONSHEET_SAFARI)])
     {
-        [[UIApplication sharedApplication] openURL:_currentURL];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
     }
     else
     {
@@ -595,7 +595,9 @@
         
         if (ServiceType) {
             SLComposeViewController *socialComposeVC = [SLComposeViewController composeViewControllerForServiceType:ServiceType];
-            [socialComposeVC setInitialText:[NSString stringWithFormat:@"%@\n%@",[self title],[self url]]];
+            NSMutableString *message = [[NSMutableString alloc] initWithString:link];
+            if (title) [message insertString:[NSString stringWithFormat:@"%@\n",title] atIndex:0];
+            [socialComposeVC setInitialText:message];
             [socialComposeVC addImage:[self getThumbnailFromWebView]];
             [self.navigationController presentViewController:socialComposeVC animated:YES completion:NULL];
         }

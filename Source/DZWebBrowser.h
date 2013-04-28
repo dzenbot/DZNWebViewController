@@ -14,13 +14,12 @@
 #import "Reachability.h"
 #import "NJKWebViewProgress.h"
 
-#define OS_SUPERIOR_OR_EQUAL_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] == NSOrderedDescending || NSOrderedSame)
-
 /** A simple iPhone/iPad web browser controller.
  */
 @interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate,
                                             UISearchBarDelegate, UISearchDisplayDelegate,
-                                            UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+                                            UIActionSheetDelegate, MFMailComposeViewControllerDelegate,
+                                            UIGestureRecognizerDelegate>
 
 /** The WebView control rendering the web contents. */
 @property (nonatomic, strong) UIWebView *webView;

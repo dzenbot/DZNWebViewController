@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4F6B0D1A172C91DE0049BC9A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D19172C91DE0049BC9A /* Reachability.m */; };
 		4F6B0D1D172C91EE0049BC9A /* NJKWebViewProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */; };
+		4F6B0D25172CA5B90049BC9A /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6B0D24172CA5B90049BC9A /* script.js */; };
 		4FE024591612C8D80008D8BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE024581612C8D80008D8BA /* UIKit.framework */; };
 		4FE0245B1612C8D80008D8BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245A1612C8D80008D8BA /* Foundation.framework */; };
 		4FE0245D1612C8D80008D8BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FE0245C1612C8D80008D8BA /* CoreGraphics.framework */; };
@@ -34,6 +35,7 @@
 		4F6B0D19172C91DE0049BC9A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../../../Source/External/Reachability/Reachability.m; sourceTree = "<group>"; };
 		4F6B0D1B172C91EE0049BC9A /* NJKWebViewProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NJKWebViewProgress.h; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.h; sourceTree = "<group>"; };
 		4F6B0D1C172C91EE0049BC9A /* NJKWebViewProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NJKWebViewProgress.m; path = ../../../Source/External/NJKWebViewProgress/NJKWebViewProgress/NJKWebViewProgress.m; sourceTree = "<group>"; };
+		4F6B0D24172CA5B90049BC9A /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = script.js; path = ../../../Source/script.js; sourceTree = "<group>"; };
 		4FE024541612C8D80008D8BA /* SimpleWebBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWebBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FE024581612C8D80008D8BA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4FE0245A1612C8D80008D8BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -170,6 +172,7 @@
 			children = (
 				4FE0249B1612CDB10008D8BA /* DZWebBrowser.h */,
 				4FE0249C1612CDB10008D8BA /* DZWebBrowser.m */,
+				4F6B0D24172CA5B90049BC9A /* script.js */,
 				4FF5211E172B3731003D4E13 /* default-controls.bundle */,
 				4F6B0D17172C91BC0049BC9A /* External */,
 			);
@@ -234,6 +237,7 @@
 				4FE024781612C8D80008D8BA /* ViewController_iPad.xib in Resources */,
 				4FF5211F172B3732003D4E13 /* default-controls.bundle in Resources */,
 				4FF52121172B3AA8003D4E13 /* custom-controls.bundle in Resources */,
+				4F6B0D25172CA5B90049BC9A /* script.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
