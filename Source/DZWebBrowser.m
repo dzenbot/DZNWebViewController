@@ -98,7 +98,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
 - (id)initWebBrowserWithURL:(NSURL *)URL
 {
     self = [super init];
-    if (self) 
+    if (self)
     {
         _currentURL = URL;
         
@@ -122,10 +122,15 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     self.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
     [self.navigationController.toolbar setTintColor:[UIColor blackColor]];
-    [self.navigationController setToolbarHidden:NO];
     [self setToolbarItems:self.items animated:NO];
     
-    [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
+    if ([self isPushed]) {
+        [self.navigationController setToolbarHidden:NO animated:YES];
+    }
+    else {
+        [self.navigationItem setLeftBarButtonItem:self.closeButton animated:NO];
+        [self.navigationController setToolbarHidden:NO animated:NO];
+    }
     
     UIBarButtonItem *indicatorButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
     [self.navigationItem setRightBarButtonItem:indicatorButton animated:NO];
@@ -165,6 +170,10 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    if ([self isPushed]) {
+        [self.navigationController setToolbarHidden:YES animated:YES];
+    }
 }
 
 
@@ -197,7 +206,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
             gesture.delegate = self;
             [_webView addGestureRecognizer:gesture];
         }
-
+        
         [self.view addSubview:_webView];
     }
     return _webView;
@@ -298,7 +307,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     _nextButton = [[UIBarButtonItem alloc] initWithImage:nextImg style:UIBarButtonItemStylePlain target:self action:@selector(forwardWebView)];
     
     NSMutableArray *items = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil] : [NSMutableArray arrayWithObjects:margin, _stopButton, flexibleMargin, _previousButton, flexibleMargin, _nextButton, nil];
-
+    
     if (_allowSharing) {
         [items addObject:flexibleMargin];
         _shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareAction:)];
@@ -327,7 +336,6 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
     return [UIImage imageNamed:path];
 }
 
-
 #pragma mark - Setter Methods
 
 - (void)setNavBarBkgdImage:(UIImage *)image
@@ -353,7 +361,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
 - (void)setLoadingTitle
 {
     _titleLabel.text = textForKey(TXT_LOADING);
-        
+    
     CGRect rect = _titleLabel.frame;
     rect.origin.y = 12.0;
     
@@ -431,7 +439,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
 }
 
 - (void)shareAction:(id)sender
-{    
+{
     [self presentActionSheetFromView:sender];
 }
 
@@ -450,7 +458,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         //// Get the URL link at the touch location
         NSString *function = [NSString stringWithFormat:@"script.getElement(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
         NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
-                
+        
         NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
         
@@ -487,7 +495,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
 }
 
 - (void)presentActionSheetFromView:(UIView *)view withUserInfo:(NSMutableDictionary *)userInfo
-{    
+{
     NSString *type = [userInfo objectForKey:kTypeKey];
     NSString *title = [userInfo objectForKey:kTitleKey];
     NSString *url = [userInfo objectForKey:kUrlKey];
@@ -507,7 +515,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
         [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_COPYLINK)];
         [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_MAIL)];
         [actionSheet addButtonWithTitle:textForKey(TXT_ACTIONSHEET_SAFARI)];
-
+        
         [actionSheet addButtonWithTitle:textForKey(TXT_CANCEL)];
         actionSheet.cancelButtonIndex = 5;
     }
@@ -680,7 +688,7 @@ NSString * const kNewAttachmentKey = @"kNewAttachmentKey";
                 ServiceType = SLServiceTypeFacebook;
             }
         }
-    
+        
         if (ServiceType) {
             SLComposeViewController *socialComposeVC = [SLComposeViewController composeViewControllerForServiceType:ServiceType];
             NSMutableString *text = [[NSMutableString alloc] initWithFormat:@"%@",[self title]];

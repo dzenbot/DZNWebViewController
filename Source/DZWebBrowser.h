@@ -17,9 +17,9 @@
 /** A simple iPhone/iPad web browser controller.
  */
 @interface DZWebBrowser : UIViewController <UIWebViewDelegate, NJKWebViewProgressDelegate,
-                                            UISearchBarDelegate, UISearchDisplayDelegate,
-                                            UIActionSheetDelegate, MFMailComposeViewControllerDelegate,
-                                            UIGestureRecognizerDelegate>
+UISearchBarDelegate, UISearchDisplayDelegate,
+UIActionSheetDelegate, MFMailComposeViewControllerDelegate,
+UIGestureRecognizerDelegate>
 
 /** The WebView control rendering the web contents. */
 @property (nonatomic, strong) UIWebView *webView;
@@ -37,7 +37,8 @@
  * If no custom resource bundle name is set, the default one will be applied.
  */
 @property (nonatomic, strong) NSString *resourceBundleName;
-
+/** Set this value to YES, if the browser is pushed inside a UINavigationController stack. */
+@property (nonatomic, getter=isPushed) BOOL pushed;
 
 /* Returns a DZWebBrowser instanced initialized with a specific URL.
  *
