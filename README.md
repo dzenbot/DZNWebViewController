@@ -1,7 +1,6 @@
 # DZWebBrowser
 
-An iPhone/iPad simple web browser controller with navigation controls and sharing features.
-Features:
+An iPhone/iPad simple web browser controller with navigation controls and sharing features:
 * Progress bar embeded on the navigation bar (optional).
 * Navigation bar shows title animated, à la Twitter official app.
 * Sharing options like posting on Twitter, Facebook, Mail, etc. (optional).
