@@ -11,4 +11,5 @@ Pod::Spec.new do |s|
   s.resource     = "DZWebBrowser/Source/default-controls.bundle"
   s.framework    = 'SystemConfiguration', 'CFNetwork', 'MessageUI', 'Social'
   s.requires_arc = true
+  s.platform     = :ios
 end
