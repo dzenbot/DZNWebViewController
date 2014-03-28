@@ -7,12 +7,12 @@
 //
 
 #import "DZNWebViewController.h"
+#import "DZNPolyActivity.h"
 
 #import <NJKWebViewProgress/NJKWebViewProgressView.h>
 #import <NJKWebViewProgress/NJKWebViewProgress.h>
 
-//#import <UIBarButtonItem-SystemItem/UIBarButtonItem+SystemItem.h>
-//#import <iOSBlocks/iOSBlocks.h>
+#import "UIBarButtonItem+SystemGlyph.h"
 
 @interface DZNWebViewController () <UIWebViewDelegate, NJKWebViewProgressDelegate>
 {
@@ -40,24 +40,14 @@
     self = [super init];
     if (self) {
         _URL = URL;
+        _toolbarBackgroundColor = [UIColor blackColor];
+        _toolbarTintColor = [UIColor whiteColor];
     }
     return self;
 }
 
 
 #pragma mark - View lifecycle
-
-- (void)loadView
-{
-    [super loadView];
-    
-    self.view = self.webView;
-    self.automaticallyAdjustsScrollViewInsets = YES;
-    
-//    [UIApplication sharedApplication].keyWindow.tintColor = [UIColor whiteColor];
-    self.toolbarItems = self.controlItems;
-//    [UIApplication sharedApplication].keyWindow.tintColor = [UIColor windowTintColor];
-}
 
 - (void)viewDidLoad
 {
@@ -67,6 +57,11 @@
         _actionBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActivityController:)];
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
+    
+    self.toolbarItems = self.navigationItems;
+    
+    self.view = self.webView;
+    self.automaticallyAdjustsScrollViewInsets = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -74,9 +69,11 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setToolbarHidden:NO];
-    
-//    UIImage *toolbarBkgd = [UIImage imageWithColor:[UIColor colorWithWhite:0.1 alpha:1.0] andSize:CGSizeMake(44.0, 44.0)];
-//    [self.navigationController.toolbar setBackgroundImage:toolbarBkgd forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+
+    self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
+    self.navigationController.toolbar.tintColor = [UIColor whiteColor];
+
+    self.navigationController.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -115,6 +112,7 @@
         _webView.paginationBreakingMode = UIWebPaginationBreakingModePage;
         _webView.scalesPageToFit = YES;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        _webView.backgroundColor = [UIColor whiteColor];
         
         if (_loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
         {
@@ -150,27 +148,33 @@
     {
         _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         _activityIndicatorView.hidesWhenStopped = YES;
+        _activityIndicatorView.color = _toolbarTintColor;
     }
     return _activityIndicatorView;
 }
 
-- (NSArray *)controlItems
+- (NSArray *)navigationItems
 {
-//    _backwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemItemBackward target:self action:@selector(goBack:)];
-//    _backwardBarItem.enabled = NO;
-//    
-//    _forwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemItemForward target:self action:@selector(goForward:)];
-//    _forwardBarItem.enabled = NO;
-//    
-//    _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
-//    
-//    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-//    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-//    fixedSpace.width = kMarginMedium;
-//    
-//    return @[_backwardBarItem,fixedSpace,_forwardBarItem,flexibleSpace,_loadingBarItem];
+    _backwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemGlyphBackward target:self action:@selector(goBack:)];
+    _backwardBarItem.enabled = NO;
     
-    return nil;
+    _forwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemGlyphForward target:self action:@selector(goForward:)];
+    _forwardBarItem.enabled = NO;
+    
+    if (_loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
+        _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
+    }
+    
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
+    fixedSpace.width = 20.0;
+    
+    NSMutableArray *items = [NSMutableArray arrayWithArray:@[_backwardBarItem,fixedSpace,_forwardBarItem,flexibleSpace]];
+    if (_loadingBarItem) {
+        [items addObject:_loadingBarItem];
+    }
+    
+    return items;
 }
 
 - (NSURL *)URL
@@ -237,12 +241,12 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
     
-    if (visible) {
-        [_activityIndicatorView startAnimating];
+    if (_loadingStyle != DZNWebViewControllerLoadingStyleActivityIndicator) {
+        return;
     }
-    else {
-        [_activityIndicatorView stopAnimating];
-    }
+    
+    if (visible) [_activityIndicatorView startAnimating];
+    else [_activityIndicatorView stopAnimating];
 }
 
 
@@ -268,43 +272,56 @@
     }
 }
 
-- (void)presentActivityController:(id)sender
+- (NSArray *)excludedActivityTypes
 {
-//    NSMutableArray *titles = [[NSMutableArray alloc] initWithObjects:NSLocalizedString(@"Mail Link", nil), NSLocalizedString(@"Copy Link", nil),NSLocalizedString(@"Open in Safari", nil), nil];
-//    
-//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"googlechrome://"]]) {
-//        [titles addObject:NSLocalizedString(@"Open in Chrome", nil)];
-//    }
-//
-//    [UIActionSheet actionSheetWithTitle:nil buttonTitles:titles
-//                             showInView:self.navigationController.toolbar
-//                              onDismiss:^(int buttonIndex, NSString *buttonTitle) {
-//                                  if (buttonIndex == 0) [self mailLink];
-//                                  else if (buttonIndex == 1) [self copyLink];
-//                                  else if (buttonIndex == 2) [self openInSafari];
-//                                  else if (buttonIndex == 3) [self openInChrome];
-//                              }];
+    NSMutableArray *types = [NSMutableArray arrayWithArray:@[UIActivityTypePrint, UIActivityTypeAssignToContact,
+                                                             UIActivityTypeSaveToCameraRoll, UIActivityTypePostToVimeo,
+                                                             UIActivityTypePostToFlickr, UIActivityTypeCopyToPasteboard]];
+    
+    if ((_supportedActions & DZNWebViewControllerActionShareLink) == 0) {
+        [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
+                                     UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
+                                     UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
+                                     UIActivityTypeAirDrop]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionReadLater) == 0) {
+        [types addObject:UIActivityTypeAddToReadingList];
+    }
+
+    return types;
 }
 
-- (void)mailLink
+- (NSArray *)applicationActivities
 {
-//    NSMutableString *message = [NSMutableString stringWithFormat:@"<a href=%@>%@</a>", [self.URL absoluteString], [self.URL absoluteString]];
-//    
-//    if (_applicationUrl.length > 0) {
-//        [message appendString:@"</br></br>"];
-//        [message appendFormat:NSLocalizedString(@"Download the official %@ app <a href=%@>here</a>", nil), _applicationName, _applicationUrl];
-//    }
-//    
-//    NSString *subject = (_applicationName.length > 0) ? [NSString stringWithFormat:NSLocalizedString(@"Link from %@", nil), _applicationName] : @"";
-//    
-//    [MFMailComposeViewController mailWithSubject:subject
-//                                         message:message
-//                                      recipients:nil
-//                                      onCreation:^(UIViewController *controller) {
-//                                          [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:controller animated:YES completion:NULL];
-//                                      } onFinish:^(UIViewController *controller, NSError *error) {
-//                                          [controller dismissViewControllerAnimated:YES completion:NULL];
-//                                      }];
+    NSMutableArray *activities = [NSMutableArray new];
+    
+    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeCopyLink]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
+    }
+    
+    NSLog(@"activities : %@", activities);
+    
+    return activities;
+}
+
+- (void)presentActivityController:(id)sender
+{
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[[self URL]] applicationActivities:[self applicationActivities]];
+    
+    controller.excludedActivityTypes = [self excludedActivityTypes];
+    [controller setValue:[self title] forKey:@"subject"];
+    
+    [self presentViewController:controller animated:YES completion:nil];
+    
+    controller.completionHandler = ^(NSString *activityType, BOOL completed) {
+        NSLog(@"completed dialog - activity: %@ - finished flag: %d", activityType, completed);
+    };
 }
 
 - (void)copyLink
@@ -381,8 +398,7 @@
     _loadBalance++;
     
     if (_loadBalance == 1) {
-        [_activityIndicatorView startAnimating];
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+        [self setActivityIndicatorsVisible:YES];
     }
     
     _backwardBarItem.enabled = [_webView canGoBack];
@@ -396,8 +412,7 @@
 
     if (_loadBalance == 0) {
         _didLoadContent = YES;
-        [_activityIndicatorView stopAnimating];
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [self setActivityIndicatorsVisible:NO];
     }
     
     _backwardBarItem.enabled = [_webView canGoBack];

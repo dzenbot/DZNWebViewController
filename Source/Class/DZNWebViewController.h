@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
+//    DZNWebViewControllerActionAll = -1,
     DZNWebViewControllerActionShareLink = (1 << 0),
     DZNWebViewControllerActionCopyLink = (1 << 1),
     DZNWebViewControllerActionOpenSafari = (1 << 2),
-    DZNWebViewControllerActionOpenChrome = (1 << 3)
+    DZNWebViewControllerActionOpenChrome = (1 << 3),
+    DZNWebViewControllerActionReadLater = (1 << 4)
 };
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
@@ -38,6 +40,10 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, copy) NSString *applicationUrl;
 /**  */
 @property (nonatomic) DZNWebViewControllerActions supportedActions;
+/**  */
+@property (nonatomic, strong) UIColor *toolbarBackgroundColor;
+/**  */
+@property (nonatomic, strong) UIColor *toolbarTintColor;
 
 /**
  * Initializes and returns a newly created webview controller with an initial URL to be requested as soon as the view appears.

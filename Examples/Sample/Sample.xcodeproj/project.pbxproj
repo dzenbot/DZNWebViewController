@@ -19,7 +19,14 @@
 		4FB8461E18E50C450056BDFB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460618E50C450056BDFB /* UIKit.framework */; };
 		4FB8462618E50C450056BDFB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FB8462418E50C450056BDFB /* InfoPlist.strings */; };
 		4FB8462818E50C450056BDFB /* SampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8462718E50C450056BDFB /* SampleTests.m */; };
-		4FB8463718E5119C0056BDFB /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8463618E5119C0056BDFB /* DZNWebViewController.m */; };
+		4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */; };
+		4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */; };
+		4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */; };
+		4FDD61B718E6308400E23A69 /* UIImage+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */; };
+		4FDD61B818E6308400E23A69 /* Safari7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B018E6308400E23A69 /* Safari7.png */; };
+		4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B118E6308400E23A69 /* Safari7@2x.png */; };
+		4FDD61BA18E6308400E23A69 /* Safari7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */; };
+		4FDD61BB18E6308400E23A69 /* Safari7~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B318E6308400E23A69 /* Safari7~ipad.png */; };
 		AA22BA647F7D4AA39B479ABC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9934BD31402B4CBE9A91C229 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -50,8 +57,18 @@
 		4FB8462318E50C450056BDFB /* SampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleTests-Info.plist"; sourceTree = "<group>"; };
 		4FB8462518E50C450056BDFB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4FB8462718E50C450056BDFB /* SampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleTests.m; sourceTree = "<group>"; };
-		4FB8463518E5119C0056BDFB /* DZNWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DZNWebViewController.h; path = ../../Source/DZNWebViewController.h; sourceTree = "<group>"; };
-		4FB8463618E5119C0056BDFB /* DZNWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DZNWebViewController.m; path = ../../Source/DZNWebViewController.m; sourceTree = "<group>"; };
+		4FDD61A718E6308400E23A69 /* DZNPolyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNPolyActivity.h; sourceTree = "<group>"; };
+		4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNPolyActivity.m; sourceTree = "<group>"; };
+		4FDD61A918E6308400E23A69 /* DZNWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNWebViewController.h; sourceTree = "<group>"; };
+		4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebViewController.m; sourceTree = "<group>"; };
+		4FDD61AB18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+SystemGlyph.h"; sourceTree = "<group>"; };
+		4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+SystemGlyph.m"; sourceTree = "<group>"; };
+		4FDD61AD18E6308400E23A69 /* UIImage+SystemGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SystemGlyph.h"; sourceTree = "<group>"; };
+		4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SystemGlyph.m"; sourceTree = "<group>"; };
+		4FDD61B018E6308400E23A69 /* Safari7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Safari7.png; sourceTree = "<group>"; };
+		4FDD61B118E6308400E23A69 /* Safari7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Safari7@2x.png"; sourceTree = "<group>"; };
+		4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Safari7@2x~ipad.png"; sourceTree = "<group>"; };
+		4FDD61B318E6308400E23A69 /* Safari7~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Safari7~ipad.png"; sourceTree = "<group>"; };
 		9934BD31402B4CBE9A91C229 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5E646D097304E9BAD2496A6 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,10 +174,38 @@
 		4FB8463418E50D7D0056BDFB /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				4FB8463518E5119C0056BDFB /* DZNWebViewController.h */,
-				4FB8463618E5119C0056BDFB /* DZNWebViewController.m */,
+				4FDD61A618E6308400E23A69 /* Class */,
+				4FDD61AF18E6308400E23A69 /* Resources */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		4FDD61A618E6308400E23A69 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				4FDD61A918E6308400E23A69 /* DZNWebViewController.h */,
+				4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */,
+				4FDD61A718E6308400E23A69 /* DZNPolyActivity.h */,
+				4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */,
+				4FDD61AB18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.h */,
+				4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */,
+				4FDD61AD18E6308400E23A69 /* UIImage+SystemGlyph.h */,
+				4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */,
+			);
+			name = Class;
+			path = ../../Source/Class;
+			sourceTree = "<group>";
+		};
+		4FDD61AF18E6308400E23A69 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4FDD61B018E6308400E23A69 /* Safari7.png */,
+				4FDD61B118E6308400E23A69 /* Safari7@2x.png */,
+				4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */,
+				4FDD61B318E6308400E23A69 /* Safari7~ipad.png */,
+			);
+			name = Resources;
+			path = ../../Source/Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +285,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDD61BB18E6308400E23A69 /* Safari7~ipad.png in Resources */,
+				4FDD61BA18E6308400E23A69 /* Safari7@2x~ipad.png in Resources */,
+				4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */,
 				4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */,
+				4FDD61B818E6308400E23A69 /* Safari7.png in Resources */,
 				4FB8461518E50C450056BDFB /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,7 +343,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FB8461318E50C450056BDFB /* AppDelegate.m in Sources */,
-				4FB8463718E5119C0056BDFB /* DZNWebViewController.m in Sources */,
+				4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */,
+				4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */,
+				4FDD61B718E6308400E23A69 /* UIImage+SystemGlyph.m in Sources */,
+				4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */,
 				4FB8460F18E50C450056BDFB /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
