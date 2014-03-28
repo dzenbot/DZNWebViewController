@@ -15,6 +15,7 @@ DZWebBrowser uses ARC and supports iOS6 and superior.
 Also support multiple orientations.
 
 Some additonal feature ideas:
+- iOS7 support
 - Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
 - Optional way of searching a custom URL from the NavigationBar.
 - Keywords auto-completion when searching on bar.
@@ -22,6 +23,11 @@ Some additonal feature ideas:
 
 Feel free to fork it and make it more interesting!
 
+## Installation
+Available in [Cocoa Pods](http://cocoapods.org/?q=DZWebBrowser)
+```
+pod 'DZWebBrowser', '~> 0.0.1'
+```
 
 ## How to use
 It is very easy to add DZWebBrowser to your projects. Take a look into the sample project.
@@ -33,6 +39,7 @@ Import "DZWebBrowser.h" to your view controller subclass.
 ```
 
 ### Step 2
+If not installed with Cocoa Pods:
 ```
 Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 ```
@@ -55,7 +62,7 @@ UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithR
 
 ## Third party Frameworks
 
-DZWebBrowser requires third party frameworks, added as submodules:
+DZWebBrowser requires third party frameworks, if not installed with Cocoa Pods you must add them as submodules:
 - Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [Tony Million](https://github.com/tonymillion).
 - [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [Satoshi Asano](https://github.com/ninjinkun).
 - [SDURLCache](https://github.com/rs/SDURLCache) from [Olivier Poitrey](https://github.com/rs)
