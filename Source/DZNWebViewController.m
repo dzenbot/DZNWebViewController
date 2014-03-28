@@ -7,10 +7,16 @@
 //
 
 #import "DZNWebViewController.h"
+
+#import <NJKWebViewProgress/NJKWebViewProgressView.h>
+#import <NJKWebViewProgress/NJKWebViewProgress.h>
+
 //#import <UIBarButtonItem-SystemItem/UIBarButtonItem+SystemItem.h>
 //#import <iOSBlocks/iOSBlocks.h>
 
-@interface DZNWebViewController () <UIWebViewDelegate> {
+@interface DZNWebViewController () <UIWebViewDelegate, NJKWebViewProgressDelegate>
+{
+    NJKWebViewProgress *_progressProxy;
     
     UIBarButtonItem *_actionBarItem;
     UIBarButtonItem *_backwardBarItem;
@@ -20,6 +26,7 @@
     int _loadBalance;
     BOOL _didLoadContent;
 }
+@property (nonatomic, strong) NJKWebViewProgressView *progressView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 @end
 
@@ -86,6 +93,7 @@
 	[super viewWillDisappear:animated];
     
     [self.navigationController setToolbarHidden:YES animated:animated];
+    [self cleanProgressViewAnimated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -107,9 +115,33 @@
         _webView.paginationBreakingMode = UIWebPaginationBreakingModePage;
         _webView.scalesPageToFit = YES;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        _webView.delegate = self;
+        
+        if (_loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
+        {
+            _progressProxy = [[NJKWebViewProgress alloc] init];
+            _webView.delegate = _progressProxy;
+            _progressProxy.webViewProxyDelegate = self;
+            _progressProxy.progressDelegate = self;
+        }
+        else {
+            _webView.delegate = self;
+        }
     }
     return _webView;
+}
+
+- (NJKWebViewProgressView *)progressView
+{
+    if (!_progressView && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
+    {
+        CGFloat progressBarHeight = 2.5f;
+        CGSize navigationBarSize = self.navigationController.navigationBar.bounds.size;
+        CGRect barFrame = CGRectMake(0, navigationBarSize.height - progressBarHeight, navigationBarSize.width, progressBarHeight);
+        _progressView = [[NJKWebViewProgressView alloc] initWithFrame:barFrame];
+        
+        [self.navigationController.navigationBar addSubview:_progressView];
+    }
+    return _progressView;
 }
 
 - (UIActivityIndicatorView *)activityIndicatorView
@@ -149,10 +181,10 @@
 
 #pragma mark - Setter methods
 
-- (void)setTitle:(NSString *)title
+- (NSString *)title
 {
     NSString *js = @"document.body.style.webkitTouchCallout = 'none'; document.getElementsByTagName('title')[0].textContent;";
-    [self setViewTitle:[_webView stringByEvaluatingJavaScriptFromString:js]];
+    return [_webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 - (void)setURL:(NSURL *)URL
@@ -164,19 +196,19 @@
 {
     UILabel *label = (UILabel *)self.navigationItem.titleView;
     
-    if (!label) {
+    if (!label || ![label isKindOfClass:[UILabel class]]) {
         label = [UILabel new];
         label.numberOfLines = 2;
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
         label.textColor = [[UINavigationBar appearance].titleTextAttributes objectForKey:NSForegroundColorAttributeName];
-        label.adjustsFontSizeToFitWidth = self.navigationController.navigationBar.frame.size.width/2;
         self.navigationItem.titleView = label;
     }
     
     if (title) {
         label.text = title;
-        [label sizeToFit];
+        CGSize barSize = self.navigationController.navigationBar.frame.size;
+        label.frame = CGRectMake(0, 0, roundf(barSize.width/2), barSize.height);
     }
 }
 
@@ -311,6 +343,20 @@
     }
 }
 
+- (void)cleanProgressViewAnimated:(BOOL)animated
+{
+    if (!_progressView) {
+        return;
+    }
+    
+    [UIView animateWithDuration:animated ? 0.25 : 0.0
+                     animations:^{
+                         _progressView.alpha = 0;
+                     } completion:^(BOOL finished) {
+                         [_progressView removeFromSuperview];
+                     }];
+}
+
 - (void)stopLoading
 {
     [self.webView stopLoading];
@@ -357,13 +403,21 @@
     _backwardBarItem.enabled = [_webView canGoBack];
     _forwardBarItem.enabled = [_webView canGoForward];
     
-    [self updateTitle];
+    [self setViewTitle:[self title]];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     _loadBalance = 0;
     [self setLoadingError:error];
+}
+
+
+#pragma mark - View lifeterm
+
+- (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
+{
+    [self.progressView setProgress:progress animated:YES];
 }
 
 
