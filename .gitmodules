@@ -1,9 +1,0 @@
-[submodule "Source/External/Reachability"]
-	path = Source/External/Reachability
-	url = https://github.com/tonymillion/Reachability.git
-[submodule "Source/External/NJKWebViewProgress"]
-	path = Source/External/NJKWebViewProgress
-	url = https://github.com/ninjinkun/NJKWebViewProgress.git
-[submodule "Source/External/SDURLCache"]
-	path = Source/External/SDURLCache
-	url = https://github.com/rs/SDURLCache.git
