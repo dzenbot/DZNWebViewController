@@ -1,9 +1,11 @@
 //
 //  DZNPolyActivity.h
-//  Sample
+//  DZNWebViewController
+//  https://github.com/dzenbot/DZNWebViewController
 //
-//  Created by Ignacio on 3/28/14.
+//  Created by Ignacio Romero Zurbuchen on 3/28/14.
 //  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Licence: MIT-Licence
 //
 
 #import <UIKit/UIKit.h>

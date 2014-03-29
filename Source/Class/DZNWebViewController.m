@@ -1,9 +1,11 @@
 //
 //  DZNWebViewController.m
 //  DZNWebViewController
+//  https://github.com/dzenbot/DZNWebViewController
 //
-//  Created by Ignacio on 10/25/13.
-//  Copyright (c) 2013 DZN Labs. All rights reserved.
+//  Created by Ignacio Romero Zurbuchen on 10/25/13.
+//  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Licence: MIT-Licence
 //
 
 #import "DZNWebViewController.h"
@@ -14,7 +16,19 @@
 
 #import "UIBarButtonItem+SystemGlyph.h"
 
-@interface DZNWebViewController () <UIWebViewDelegate, NJKWebViewProgressDelegate>
+#define kContentTypeImage @"image"
+#define kContentTypeLink @"link"
+
+@interface DZNLongPressGestureRecognizer : UILongPressGestureRecognizer
+@end
+
+@implementation DZNLongPressGestureRecognizer
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer {
+    return NO;
+}
+@end
+
+@interface DZNWebViewController () <UIWebViewDelegate, UIGestureRecognizerDelegate, NJKWebViewProgressDelegate>
 {
     NJKWebViewProgress *_progressProxy;
     
@@ -25,6 +39,7 @@
     
     int _loadBalance;
     BOOL _didLoadContent;
+    BOOL _presentingActivities;
 }
 @property (nonatomic, strong) NJKWebViewProgressView *progressView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
@@ -48,7 +63,9 @@
 - (id)initWithURL:(NSURL *)URL
 {
     NSParameterAssert(URL);
-    
+    NSAssert(URL != nil, @"Invalid URL");
+    NSAssert(URL.scheme != nil, @"URL has no scheme");
+
     self = [self init];
     if (self) {
         _URL = URL;
@@ -82,7 +99,8 @@
 
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
     self.navigationController.toolbar.tintColor = [UIColor whiteColor];
-
+    [self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handleInteractivePopGesture:)];
+    
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
 }
 
@@ -100,7 +118,7 @@
 	[super viewWillDisappear:animated];
     
     [self.navigationController setToolbarHidden:YES animated:animated];
-    [self cleanProgressViewAnimated:animated];
+    [self clearProgressViewAnimated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -118,9 +136,6 @@
     if (!_webView)
     {
         _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-        _webView.suppressesIncrementalRendering = NO;
-        _webView.paginationBreakingMode = UIWebPaginationBreakingModePage;
-        _webView.scalesPageToFit = YES;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         _webView.backgroundColor = [UIColor whiteColor];
         
@@ -134,6 +149,11 @@
         else {
             _webView.delegate = self;
         }
+        
+        DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+        gesture.allowableMovement = 20;
+        gesture.delegate = self;
+        [_webView addGestureRecognizer:gesture];
     }
     return _webView;
 }
@@ -192,6 +212,60 @@
     return _webView.request.URL;
 }
 
+- (NSArray *)excludedActivityTypesForItem:(id)item
+{
+    NSMutableArray *types = [NSMutableArray new];
+    
+    if (![item isKindOfClass:[UIImage class]]) {
+        [types addObjectsFromArray:@[UIActivityTypeCopyToPasteboard, UIActivityTypeSaveToCameraRoll, UIActivityTypePostToFlickr, UIActivityTypePrint, UIActivityTypeAssignToContact]];
+    }
+    
+    if (self.supportsAllActions) {
+        return types;
+    }
+    
+    if ((_supportedActions & DZNWebViewControllerActionShareLink) == 0) {
+        [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
+                                     UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
+                                     UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
+                                     UIActivityTypeAirDrop]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
+        [types addObject:UIActivityTypeAddToReadingList];
+    }
+    
+    return types;
+}
+
+- (NSArray *)applicationActivitiesForItem:(id)item
+{
+    NSMutableArray *activities = [NSMutableArray new];
+    
+    if ([item isKindOfClass:[UIImage class]]) {
+        return activities;
+    }
+    
+    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
+    }
+    
+    return activities;
+}
+
+- (BOOL)supportsAllActions
+{
+    return (_supportedActions == DZNWebViewControllerActionAll) ? YES : NO;
+}
+
 
 #pragma mark - Setter methods
 
@@ -221,8 +295,11 @@
     
     if (title) {
         label.text = title;
-        CGSize barSize = self.navigationController.navigationBar.frame.size;
-        label.frame = CGRectMake(0, 0, roundf(barSize.width/2), barSize.height);
+        [label sizeToFit];
+        
+        CGRect frame = label.frame;
+        frame.size.height = self.navigationController.navigationBar.frame.size.height;
+        label.frame = frame;
     }
 }
 
@@ -232,7 +309,7 @@
 - (void)setLoadingError:(NSError *)error
 {
     switch (error.code) {
-        case NSURLErrorTimedOut:
+//        case NSURLErrorTimedOut:
         case NSURLErrorUnknown:
         case NSURLErrorCancelled:
             return;
@@ -282,101 +359,99 @@
     }
 }
 
-- (NSArray *)excludedActivityTypes
-{
-    NSMutableArray *types = [NSMutableArray arrayWithArray:@[UIActivityTypePrint, UIActivityTypeAssignToContact,
-                                                             UIActivityTypeSaveToCameraRoll, UIActivityTypePostToVimeo,
-                                                             UIActivityTypePostToFlickr, UIActivityTypeCopyToPasteboard]];
-    
-    if (_supportedActions == DZNWebViewControllerActionAll) {
-        NSLog(@"_supportedActions : %d", _supportedActions);
-        return types;
-    }
-    
-    if ((_supportedActions & DZNWebViewControllerActionShareLink) == 0) {
-        [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
-                                     UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
-                                     UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
-                                     UIActivityTypeAirDrop]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionReadLater) == 0) {
-        [types addObject:UIActivityTypeAddToReadingList];
-    }
-
-    return types;
-}
-
-- (NSArray *)applicationActivities
-{
-    NSMutableArray *activities = [NSMutableArray new];
-    
-    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
-    }
-    
-    return activities;
-}
-
 - (void)presentActivityController:(id)sender
 {
-    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[[self URL]] applicationActivities:[self applicationActivities]];
+    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString};
+    [self presentActivityControllerWithContent:content];
+}
+
+- (void)presentActivityControllerWithContent:(NSDictionary *)content
+{
+    if (!content) {
+        return;
+    }
     
-    controller.excludedActivityTypes = [self excludedActivityTypes];
-    [controller setValue:[self title] forKey:@"subject"];
+    NSString *type = [content objectForKey:@"type"];
+    NSString *title = [content objectForKey:@"title"];
+    NSString *url = [content objectForKey:@"url"];
+    
+    if ([type isEqualToString:kContentTypeLink]) {
+        
+        [self presentActivityControllerWithItem:url andTitle:title];
+    }
+    if ([type isEqualToString:kContentTypeImage]) {
+        
+        [self setActivityIndicatorsVisible:YES];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0ul);
+        dispatch_async(queue, ^{
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            UIImage *image = [UIImage imageWithData:data];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self presentActivityControllerWithItem:image andTitle:title];
+                [self setActivityIndicatorsVisible:NO];
+            });
+        });
+    }
+}
+
+- (void)presentActivityControllerWithItem:(id)item andTitle:(NSString *)title
+{
+    if (!item) {
+        return;
+    }
+    
+    _presentingActivities = YES;
+    
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
+    
+    controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
+    [controller setValue:title forKey:@"subject"];
     
     [self presentViewController:controller animated:YES completion:nil];
     
     controller.completionHandler = ^(NSString *activityType, BOOL completed) {
         NSLog(@"completed dialog - activity: %@ - finished flag: %d", activityType, completed);
+
+        _presentingActivities = NO;
     };
 }
 
-- (void)copyLink
+- (void)handleLongPressGesture:(UIGestureRecognizer *)gesture
 {
-    if (self.URL) {
-        [[UIPasteboard generalPasteboard] setURL:self.URL];
-    }
-}
-
-- (void)openInSafari
-{
-    if ([[UIApplication sharedApplication] canOpenURL:self.URL]) {
-        [[UIApplication sharedApplication] openURL:self.URL];
-    }
-}
-
-- (void)openInChrome
-{
-    NSString *scheme = self.URL.scheme;
-    
-    // Replace the URL Scheme with the Chrome equivalent.
-    NSString *chromeScheme = nil;
-    if ([scheme isEqualToString:@"http"]) chromeScheme = @"googlechrome";
-    else if ([scheme isEqualToString:@"https"]) chromeScheme = @"googlechromes";
-    
-    // Proceed only if a valid Google Chrome URI Scheme is available.
-    if (chromeScheme) {
-        NSString *absoluteString = [self.URL absoluteString];
-        NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
-        NSString *urlNoScheme = [absoluteString substringFromIndex:rangeForScheme.location];
-        NSString *chromeURLString = [chromeScheme stringByAppendingString:urlNoScheme];
-        NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        [self stopLoading];
         
-        // Open the URL with Chrome.
-        [[UIApplication sharedApplication] openURL:chromeURL];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"script" ofType:@"js"];
+        NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+        
+        [_webView stringByEvaluatingJavaScriptFromString:script];
+        
+        CGPoint point = [gesture locationInView:_webView];
+        
+        //// Get the URL link at the touch location
+        NSString *function = [NSString stringWithFormat:@"script.getElement(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
+        NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
+        
+        NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
+        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
+        
+        NSLog(@"content : %@", content);
+        
+        if (content.allValues.count > 0) {
+            [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];
+            [self presentActivityControllerWithContent:content];
+        }
     }
 }
 
-- (void)cleanProgressViewAnimated:(BOOL)animated
+- (void)handleInteractivePopGesture:(UIGestureRecognizer *)gesture
+{
+    NSLog(@"%s : %@",__FUNCTION__, gesture);
+}
+
+- (void)clearProgressViewAnimated:(BOOL)animated
 {
     if (!_progressView) {
         return;
@@ -401,7 +476,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if (request.URL) {
+    if (request.URL && !_presentingActivities) {
         return YES;
     }
     
@@ -444,7 +519,32 @@
 }
 
 
-#pragma mark - View lifeterm
+#pragma mark - UIGestureRecognizerDelegate methods
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([gestureRecognizer isKindOfClass:[DZNLongPressGestureRecognizer class]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    Class class = [DZNLongPressGestureRecognizer class];
+    if ([gestureRecognizer isKindOfClass:class] || [otherGestureRecognizer isKindOfClass:class]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+#pragma mark - NJKWebViewProgressDelegate methods
 
 - (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
 {

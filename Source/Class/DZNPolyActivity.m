@@ -1,9 +1,11 @@
 //
 //  DZNPolyActivity.m
-//  Sample
+//  DZNWebViewController
+//  https://github.com/dzenbot/DZNWebViewController
 //
-//  Created by Ignacio on 3/28/14.
+//  Created by Ignacio Romero Zurbuchen on 3/28/14.
 //  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Licence: MIT-Licence
 //
 
 #import "DZNPolyActivity.h"
@@ -104,22 +106,25 @@
 {
 	for (UIActivity *item in activityItems) {
         
-		if ([item isKindOfClass:[NSURL class]]) {
+		if ([item isKindOfClass:[NSString class]]) {
             
-			NSURL *activityURL = (NSURL *)item;
+			NSURL *URL = [NSURL URLWithString:(NSString *)item];
+            if (!URL) continue;
             
             if (_type == DZNPolyActivityTypeLink) {
-                return activityURL ? YES : NO;
+                return URL ? YES : NO;
             }
             if (_type == DZNPolyActivityTypeSafari) {
-                return [[UIApplication sharedApplication] canOpenURL:activityURL];
+                return [[UIApplication sharedApplication] canOpenURL:URL];
             }
             if (_type == DZNPolyActivityTypeChrome) {
-                return [[UIApplication sharedApplication] canOpenURL:[self chromeURLWithURL:activityURL]];
+                return [[UIApplication sharedApplication] canOpenURL:[self chromeURLWithURL:URL]];
             }
             if (_type == DZNPolyActivityTypeOpera) {
-                return [[UIApplication sharedApplication] canOpenURL:[self operaURLWithURL:activityURL]];
+                return [[UIApplication sharedApplication] canOpenURL:[self operaURLWithURL:URL]];
             }
+            
+            break;
 		}
 	}
 
@@ -128,10 +133,12 @@
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems
 {
-	for (id activityItem in activityItems) {
+	for (id item in activityItems) {
         
-		if ([activityItem isKindOfClass:[NSURL class]]) {
-			_URL = activityItem;
+		if ([item isKindOfClass:[NSString class]]) {
+			_URL = [NSURL URLWithString:(NSString *)item];
+            if (!_URL) continue;
+            else break;
 		}
 	}
 }
@@ -139,6 +146,11 @@
 - (void)performActivity
 {
     BOOL completed = NO;
+    
+    if (!_URL) {
+        [self activityDidFinish:completed];
+        return;
+    }
     
     switch (_type) {
         case DZNPolyActivityTypeLink:

@@ -1,9 +1,11 @@
 //
 //  DZNWebViewController.h
 //  DZNWebViewController
+//  https://github.com/dzenbot/DZNWebViewController
 //
-//  Created by Ignacio on 10/25/13.
-//  Copyright (c) 2013 DZN Labs. All rights reserved.
+//  Created by Ignacio Romero Zurbuchen on 10/25/13.
+//  Copyright (c) 2014 DZN Labs. All rights reserved.
+//  Licence: MIT-Licence
 //
 
 #import <UIKit/UIKit.h>
