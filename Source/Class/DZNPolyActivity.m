@@ -31,45 +31,70 @@
 
 #pragma mark - Getter methods
 
++ (UIActivityCategory)activityCategory
+{
+    return UIActivityCategoryAction;
+}
+
 - (NSString *)activityType
 {
     switch (_type) {
+        case DZNPolyActivityTypeLink:           return @"com.dzn.DZNWebViewController.activity.CopyLink";
         case DZNPolyActivityTypeSafari:         return @"com.dzn.DZNWebViewController.activity.OpenInSafari";
         case DZNPolyActivityTypeChrome:         return @"com.dzn.DZNWebViewController.activity.OpenInChrome";
-        case DZNPolyActivityTypeCopyLink:       return @"com.dzn.DZNWebViewController.activity.CopyLink";
+        case DZNPolyActivityTypeOpera:          return @"com.dzn.DZNWebViewController.activity.OpenInOperaMini";
     }
 }
 
 - (NSString *)activityTitle
 {
     switch (_type) {
+        case DZNPolyActivityTypeLink:           return NSLocalizedString(@"Copy Link", nil);
         case DZNPolyActivityTypeSafari:         return NSLocalizedString(@"Open in Safari", nil);
         case DZNPolyActivityTypeChrome:         return NSLocalizedString(@"Open in Chrome", nil);
-        case DZNPolyActivityTypeCopyLink:       return NSLocalizedString(@"Copy Link", nil);
+        case DZNPolyActivityTypeOpera:          return NSLocalizedString(@"Open in Opera", nil);
     }
 }
 
 - (UIImage *)activityImage
 {
     switch (_type) {
+        case DZNPolyActivityTypeLink:           return [UIImage imageNamed:@"Link7"];
         case DZNPolyActivityTypeSafari:         return [UIImage imageNamed:@"Safari7"];
+        case DZNPolyActivityTypeChrome:         return [UIImage imageNamed:@"Chrome7"];
+        case DZNPolyActivityTypeOpera:          return [UIImage imageNamed:@"Opera7"];
         default:                                return nil;
     }
 }
 
 - (NSURL *)chromeURLWithURL:(NSURL *)URL
 {
-    // Replace the URL Scheme with the Chrome equivalent.
-    NSString *chromeScheme = nil;
-    if ([URL.scheme isEqualToString:@"http"]) chromeScheme = @"googlechrome";
-    else if ([URL.scheme isEqualToString:@"https"]) chromeScheme = @"googlechromes";
+    return [self customURLWithURL:URL andType:DZNPolyActivityTypeChrome];
+}
+
+- (NSURL *)operaURLWithURL:(NSURL *)URL
+{
+    return [self customURLWithURL:URL andType:DZNPolyActivityTypeOpera];
+}
+
+- (NSURL *)customURLWithURL:(NSURL *)URL andType:(DZNPolyActivityType)type
+{
+    // Replaces the URL Scheme with the type equivalent.
+    NSString *scheme = nil;
+    if ([URL.scheme isEqualToString:@"http"]) {
+        if (type == DZNPolyActivityTypeChrome) scheme = @"googlechrome";
+        if (type == DZNPolyActivityTypeOpera) scheme = @"ohttp";
+    }
+    else if ([URL.scheme isEqualToString:@"https"]) {
+        if (type == DZNPolyActivityTypeChrome) scheme = @"googlechromes";
+        if (type == DZNPolyActivityTypeOpera) scheme = @"ohttps";
+    }
     
-    // Proceed only if a valid Google Chrome URI Scheme is available.
-    if (chromeScheme) {
-        NSString *absoluteString = [URL absoluteString];
-        NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
-        NSString *urlNoScheme = [absoluteString substringFromIndex:rangeForScheme.location];
-        return [NSURL URLWithString:[chromeScheme stringByAppendingString:urlNoScheme]];
+    // Proceeds only if a valid URI Scheme is available.
+    if (scheme) {
+        NSRange range = [[URL absoluteString] rangeOfString:@":"];
+        NSString *urlNoScheme = [[URL absoluteString] substringFromIndex:range.location];
+        return [NSURL URLWithString:[scheme stringByAppendingString:urlNoScheme]];
     }
     
     return nil;
@@ -77,20 +102,23 @@
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems
 {
-    if (_type == DZNPolyActivityTypeCopyLink) {
-        return [UIPasteboard generalPasteboard] ? YES : NO;
-    }
-        
 	for (UIActivity *item in activityItems) {
         
 		if ([item isKindOfClass:[NSURL class]]) {
             
 			NSURL *activityURL = (NSURL *)item;
+            
+            if (_type == DZNPolyActivityTypeLink) {
+                return activityURL ? YES : NO;
+            }
             if (_type == DZNPolyActivityTypeSafari) {
                 return [[UIApplication sharedApplication] canOpenURL:activityURL];
             }
             if (_type == DZNPolyActivityTypeChrome) {
                 return [[UIApplication sharedApplication] canOpenURL:[self chromeURLWithURL:activityURL]];
+            }
+            if (_type == DZNPolyActivityTypeOpera) {
+                return [[UIApplication sharedApplication] canOpenURL:[self operaURLWithURL:activityURL]];
             }
 		}
 	}
@@ -101,6 +129,7 @@
 - (void)prepareWithActivityItems:(NSArray *)activityItems
 {
 	for (id activityItem in activityItems) {
+        
 		if ([activityItem isKindOfClass:[NSURL class]]) {
 			_URL = activityItem;
 		}
@@ -112,15 +141,18 @@
     BOOL completed = NO;
     
     switch (_type) {
+        case DZNPolyActivityTypeLink:
+            [[UIPasteboard generalPasteboard] setURL:_URL];
+            completed = YES;
+            break;
         case DZNPolyActivityTypeSafari:
             completed = [[UIApplication sharedApplication] openURL:_URL];
             break;
         case DZNPolyActivityTypeChrome:
             completed = [[UIApplication sharedApplication] openURL:[self chromeURLWithURL:_URL]];
             break;
-        case DZNPolyActivityTypeCopyLink:
-            [[UIPasteboard generalPasteboard] setURL:_URL];
-            completed = YES;
+        case DZNPolyActivityTypeOpera:
+            completed = [[UIApplication sharedApplication] openURL:[self operaURLWithURL:_URL]];
             break;
     }
     

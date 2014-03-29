@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
-//    DZNWebViewControllerActionAll = -1,
+    DZNWebViewControllerActionAll = -1,
+    DZNWebViewControllerActionNone = 0,
     DZNWebViewControllerActionShareLink = (1 << 0),
     DZNWebViewControllerActionCopyLink = (1 << 1),
-    DZNWebViewControllerActionOpenSafari = (1 << 2),
-    DZNWebViewControllerActionOpenChrome = (1 << 3),
-    DZNWebViewControllerActionReadLater = (1 << 4)
+    DZNWebViewControllerActionReadLater = (1 << 2),
+    DZNWebViewControllerActionOpenSafari = (1 << 3),
+    DZNWebViewControllerActionOpenChrome = (1 << 4),
+    DZNWebViewControllerActionOpenOperaMini = (1 << 5)
 };
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {

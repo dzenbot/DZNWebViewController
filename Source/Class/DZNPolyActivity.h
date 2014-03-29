@@ -11,7 +11,8 @@
 typedef NS_OPTIONS(NSUInteger, DZNPolyActivityType) {
     DZNPolyActivityTypeSafari,
     DZNPolyActivityTypeChrome,
-    DZNPolyActivityTypeCopyLink
+    DZNPolyActivityTypeOpera,
+    DZNPolyActivityTypeLink
 };
 
 @interface DZNPolyActivity : UIActivity

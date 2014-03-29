@@ -19,6 +19,18 @@
 		4FB8461E18E50C450056BDFB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460618E50C450056BDFB /* UIKit.framework */; };
 		4FB8462618E50C450056BDFB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FB8462418E50C450056BDFB /* InfoPlist.strings */; };
 		4FB8462818E50C450056BDFB /* SampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB8462718E50C450056BDFB /* SampleTests.m */; };
+		4FC763D818E65A160009F375 /* Opera7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763D418E65A160009F375 /* Opera7.png */; };
+		4FC763D918E65A160009F375 /* Opera7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763D518E65A160009F375 /* Opera7@2x.png */; };
+		4FC763DA18E65A160009F375 /* Opera7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763D618E65A160009F375 /* Opera7@2x~ipad.png */; };
+		4FC763DB18E65A160009F375 /* Opera7~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763D718E65A160009F375 /* Opera7~ipad.png */; };
+		4FC763E018E65E590009F375 /* Chrome7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763DC18E65E590009F375 /* Chrome7.png */; };
+		4FC763E118E65E590009F375 /* Chrome7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763DD18E65E590009F375 /* Chrome7@2x.png */; };
+		4FC763E218E65E590009F375 /* Chrome7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763DE18E65E590009F375 /* Chrome7@2x~ipad.png */; };
+		4FC763E318E65E590009F375 /* Chrome7~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763DF18E65E590009F375 /* Chrome7~ipad.png */; };
+		4FC763E818E662900009F375 /* Link7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763E418E662900009F375 /* Link7.png */; };
+		4FC763E918E662900009F375 /* Link7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763E518E662900009F375 /* Link7@2x.png */; };
+		4FC763EA18E662900009F375 /* Link7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763E618E662900009F375 /* Link7@2x~ipad.png */; };
+		4FC763EB18E662900009F375 /* Link7~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763E718E662900009F375 /* Link7~ipad.png */; };
 		4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */; };
 		4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */; };
 		4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */; };
@@ -57,6 +69,18 @@
 		4FB8462318E50C450056BDFB /* SampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SampleTests-Info.plist"; sourceTree = "<group>"; };
 		4FB8462518E50C450056BDFB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4FB8462718E50C450056BDFB /* SampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleTests.m; sourceTree = "<group>"; };
+		4FC763D418E65A160009F375 /* Opera7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Opera7.png; sourceTree = "<group>"; };
+		4FC763D518E65A160009F375 /* Opera7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera7@2x.png"; sourceTree = "<group>"; };
+		4FC763D618E65A160009F375 /* Opera7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera7@2x~ipad.png"; sourceTree = "<group>"; };
+		4FC763D718E65A160009F375 /* Opera7~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Opera7~ipad.png"; sourceTree = "<group>"; };
+		4FC763DC18E65E590009F375 /* Chrome7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Chrome7.png; sourceTree = "<group>"; };
+		4FC763DD18E65E590009F375 /* Chrome7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Chrome7@2x.png"; sourceTree = "<group>"; };
+		4FC763DE18E65E590009F375 /* Chrome7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Chrome7@2x~ipad.png"; sourceTree = "<group>"; };
+		4FC763DF18E65E590009F375 /* Chrome7~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Chrome7~ipad.png"; sourceTree = "<group>"; };
+		4FC763E418E662900009F375 /* Link7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Link7.png; sourceTree = "<group>"; };
+		4FC763E518E662900009F375 /* Link7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Link7@2x.png"; sourceTree = "<group>"; };
+		4FC763E618E662900009F375 /* Link7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Link7@2x~ipad.png"; sourceTree = "<group>"; };
+		4FC763E718E662900009F375 /* Link7~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Link7~ipad.png"; sourceTree = "<group>"; };
 		4FDD61A718E6308400E23A69 /* DZNPolyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNPolyActivity.h; sourceTree = "<group>"; };
 		4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNPolyActivity.m; sourceTree = "<group>"; };
 		4FDD61A918E6308400E23A69 /* DZNWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNWebViewController.h; sourceTree = "<group>"; };
@@ -199,10 +223,22 @@
 		4FDD61AF18E6308400E23A69 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4FC763E418E662900009F375 /* Link7.png */,
+				4FC763E518E662900009F375 /* Link7@2x.png */,
+				4FC763E618E662900009F375 /* Link7@2x~ipad.png */,
+				4FC763E718E662900009F375 /* Link7~ipad.png */,
+				4FC763DC18E65E590009F375 /* Chrome7.png */,
+				4FC763DD18E65E590009F375 /* Chrome7@2x.png */,
+				4FC763DE18E65E590009F375 /* Chrome7@2x~ipad.png */,
+				4FC763DF18E65E590009F375 /* Chrome7~ipad.png */,
 				4FDD61B018E6308400E23A69 /* Safari7.png */,
 				4FDD61B118E6308400E23A69 /* Safari7@2x.png */,
 				4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */,
 				4FDD61B318E6308400E23A69 /* Safari7~ipad.png */,
+				4FC763D418E65A160009F375 /* Opera7.png */,
+				4FC763D518E65A160009F375 /* Opera7@2x.png */,
+				4FC763D618E65A160009F375 /* Opera7@2x~ipad.png */,
+				4FC763D718E65A160009F375 /* Opera7~ipad.png */,
 			);
 			name = Resources;
 			path = ../../Source/Resources;
@@ -285,12 +321,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FC763E118E65E590009F375 /* Chrome7@2x.png in Resources */,
+				4FC763D918E65A160009F375 /* Opera7@2x.png in Resources */,
 				4FDD61BB18E6308400E23A69 /* Safari7~ipad.png in Resources */,
 				4FDD61BA18E6308400E23A69 /* Safari7@2x~ipad.png in Resources */,
+				4FC763EB18E662900009F375 /* Link7~ipad.png in Resources */,
 				4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */,
+				4FC763DB18E65A160009F375 /* Opera7~ipad.png in Resources */,
 				4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */,
+				4FC763EA18E662900009F375 /* Link7@2x~ipad.png in Resources */,
+				4FC763DA18E65A160009F375 /* Opera7@2x~ipad.png in Resources */,
+				4FC763D818E65A160009F375 /* Opera7.png in Resources */,
+				4FC763E818E662900009F375 /* Link7.png in Resources */,
 				4FDD61B818E6308400E23A69 /* Safari7.png in Resources */,
+				4FC763E318E65E590009F375 /* Chrome7~ipad.png in Resources */,
+				4FC763E018E65E590009F375 /* Chrome7.png in Resources */,
 				4FB8461518E50C450056BDFB /* Images.xcassets in Resources */,
+				4FC763E918E662900009F375 /* Link7@2x.png in Resources */,
+				4FC763E218E65E590009F375 /* Chrome7@2x~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,15 +33,25 @@
 @implementation DZNWebViewController
 @synthesize URL = _URL;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
+        _supportedActions = DZNWebViewControllerActionAll;
+        _toolbarBackgroundColor = [UIColor blackColor];
+        _toolbarTintColor = [UIColor whiteColor];
+    }
+    return self;
+}
+
 - (id)initWithURL:(NSURL *)URL
 {
     NSParameterAssert(URL);
     
-    self = [super init];
+    self = [self init];
     if (self) {
         _URL = URL;
-        _toolbarBackgroundColor = [UIColor blackColor];
-        _toolbarTintColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -278,6 +288,11 @@
                                                              UIActivityTypeSaveToCameraRoll, UIActivityTypePostToVimeo,
                                                              UIActivityTypePostToFlickr, UIActivityTypeCopyToPasteboard]];
     
+    if (_supportedActions == DZNWebViewControllerActionAll) {
+        NSLog(@"_supportedActions : %d", _supportedActions);
+        return types;
+    }
+    
     if ((_supportedActions & DZNWebViewControllerActionShareLink) == 0) {
         [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
                                      UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
@@ -295,17 +310,18 @@
 {
     NSMutableArray *activities = [NSMutableArray new];
     
-    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeCopyLink]];
+    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0) {
+    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0) {
+    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
     }
-    
-    NSLog(@"activities : %@", activities);
+    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || _supportedActions == DZNWebViewControllerActionAll) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
+    }
     
     return activities;
 }

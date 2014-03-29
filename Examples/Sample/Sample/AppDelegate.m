@@ -22,9 +22,7 @@
     
     NSURL *URL = [NSURL URLWithString:@"https://github.com/"];
     self.webViewController = [[DZNWebViewController alloc] initWithURL:URL];
-    self.webViewController.loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
-    self.webViewController.supportedActions = DZNWebViewControllerActionCopyLink|DZNWebViewControllerActionReadLater|DZNWebViewControllerActionOpenSafari;
-    self.webViewController.toolbarTintColor = [UIColor redColor];
+    self.webViewController.toolbarTintColor = [UIColor whiteColor];
     self.webViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:nil action:NULL];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.webViewController];
