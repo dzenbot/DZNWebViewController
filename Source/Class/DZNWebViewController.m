@@ -212,6 +212,28 @@
     return _webView.request.URL;
 }
 
+- (CGSize)HTLMWindowSize
+{
+    CGSize size = CGSizeZero;
+    size.width = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
+    size.height = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerHeight"] floatValue];
+    return size;
+}
+
+- (CGPoint)convertPointToHTMLSystem:(CGPoint)point
+{
+    CGSize viewSize = _webView.frame.size;
+    CGSize windowSize = [self HTLMWindowSize];
+    
+    CGPoint scaledPoint = CGPointZero;
+    CGFloat factor = windowSize.width / viewSize.width;
+    
+    scaledPoint.x = point.x * factor;
+    scaledPoint.y = point.y * factor;
+    
+    return scaledPoint;
+}
+
 - (NSArray *)excludedActivityTypesForItem:(id)item
 {
     NSMutableArray *types = [NSMutableArray new];
@@ -256,6 +278,9 @@
     }
     if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenDolphin) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeDolphin]];
     }
     
     return activities;
@@ -361,7 +386,7 @@
 
 - (void)presentActivityController:(id)sender
 {
-    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString};
+    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString, @"type": kContentTypeLink};
     [self presentActivityControllerWithContent:content];
 }
 
@@ -421,29 +446,30 @@
 {
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
-        [self stopLoading];
+        [self injectJavaScript];
         
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"script" ofType:@"js"];
-        NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-        
-        [_webView stringByEvaluatingJavaScriptFromString:script];
-        
-        CGPoint point = [gesture locationInView:_webView];
+        CGPoint point = [self convertPointToHTMLSystem:[gesture locationInView:_webView]];
         
         //// Get the URL link at the touch location
-        NSString *function = [NSString stringWithFormat:@"script.getElement(%i,%i);", (NSInteger)point.x, (NSInteger)point.y];
+        NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
         NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
         
         NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
         NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
-        
-        NSLog(@"content : %@", content);
         
         if (content.allValues.count > 0) {
             [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];
             [self presentActivityControllerWithContent:content];
         }
     }
+}
+
+- (void)injectJavaScript
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"inpector-script" ofType:@"js"];
+    NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    
+    [_webView stringByEvaluatingJavaScriptFromString:script];
 }
 
 - (void)handleInteractivePopGesture:(UIGestureRecognizer *)gesture

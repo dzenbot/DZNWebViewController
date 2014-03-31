@@ -11,10 +11,11 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, DZNPolyActivityType) {
+    DZNPolyActivityTypeLink,
     DZNPolyActivityTypeSafari,
     DZNPolyActivityTypeChrome,
     DZNPolyActivityTypeOpera,
-    DZNPolyActivityTypeLink
+    DZNPolyActivityTypeDolphin
 };
 
 @interface DZNPolyActivity : UIActivity

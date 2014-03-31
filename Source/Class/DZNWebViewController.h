@@ -18,7 +18,9 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
     DZNWebViewControllerActionReadLater = (1 << 2),
     DZNWebViewControllerActionOpenSafari = (1 << 3),
     DZNWebViewControllerActionOpenChrome = (1 << 4),
-    DZNWebViewControllerActionOpenOperaMini = (1 << 5)
+    DZNWebViewControllerActionOpenOperaMini = (1 << 5),
+    DZNWebViewControllerActionOpenDolphin = (1 << 6)
+
 };
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
@@ -42,11 +44,11 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, copy) NSString *applicationName;
 /** The application's store url to be used for promotion when sending link by email. */
 @property (nonatomic, copy) NSString *applicationUrl;
-/**  */
+/** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
 @property (nonatomic) DZNWebViewControllerActions supportedActions;
-/**  */
+/** The toolbar background color. Default is black, translucent. */
 @property (nonatomic, strong) UIColor *toolbarBackgroundColor;
-/**  */
+/** The toolbar item's tint color. Default is white. */
 @property (nonatomic, strong) UIColor *toolbarTintColor;
 
 /**

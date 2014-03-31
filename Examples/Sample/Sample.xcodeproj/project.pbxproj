@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4F66DC1C18E73CBF007A78D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F66DC1B18E73CBF007A78D8 /* ViewController.m */; };
+		4F66DC2118E752E0007A78D8 /* Dolphin7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC1D18E752E0007A78D8 /* Dolphin7.png */; };
+		4F66DC2218E752E0007A78D8 /* Dolphin7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC1E18E752E0007A78D8 /* Dolphin7@2x.png */; };
+		4F66DC2318E752E0007A78D8 /* Dolphin7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC1F18E752E0007A78D8 /* Dolphin7@2x~ipad.png */; };
+		4F66DC2418E752E0007A78D8 /* Dolphin7~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC2018E752E0007A78D8 /* Dolphin7~ipad.png */; };
 		4FB8460318E50C450056BDFB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460218E50C450056BDFB /* Foundation.framework */; };
 		4FB8460518E50C450056BDFB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460418E50C450056BDFB /* CoreGraphics.framework */; };
 		4FB8460718E50C450056BDFB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460618E50C450056BDFB /* UIKit.framework */; };
@@ -34,7 +38,7 @@
 		4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EE18E725C60009F375 /* Default-568h@2x.png */; };
 		4FC763F218E725C60009F375 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EF18E725C60009F375 /* Default.png */; };
 		4FC763F318E725C60009F375 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F018E725C60009F375 /* Default@2x.png */; };
-		4FC763F618E72A610009F375 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F518E72A610009F375 /* script.js */; };
+		4FC763F618E72A610009F375 /* inpector-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F518E72A610009F375 /* inpector-script.js */; };
 		4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */; };
 		4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */; };
 		4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */; };
@@ -59,6 +63,10 @@
 /* Begin PBXFileReference section */
 		4F66DC1A18E73CBF007A78D8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F66DC1B18E73CBF007A78D8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4F66DC1D18E752E0007A78D8 /* Dolphin7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dolphin7.png; sourceTree = "<group>"; };
+		4F66DC1E18E752E0007A78D8 /* Dolphin7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dolphin7@2x.png"; sourceTree = "<group>"; };
+		4F66DC1F18E752E0007A78D8 /* Dolphin7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dolphin7@2x~ipad.png"; sourceTree = "<group>"; };
+		4F66DC2018E752E0007A78D8 /* Dolphin7~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dolphin7~ipad.png"; sourceTree = "<group>"; };
 		4FB845FF18E50C450056BDFB /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB8460218E50C450056BDFB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4FB8460418E50C450056BDFB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -89,7 +97,7 @@
 		4FC763EE18E725C60009F375 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4FC763EF18E725C60009F375 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4FC763F018E725C60009F375 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		4FC763F518E72A610009F375 /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		4FC763F518E72A610009F375 /* inpector-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "inpector-script.js"; sourceTree = "<group>"; };
 		4FDD61A718E6308400E23A69 /* DZNPolyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNPolyActivity.h; sourceTree = "<group>"; };
 		4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNPolyActivity.m; sourceTree = "<group>"; };
 		4FDD61A918E6308400E23A69 /* DZNWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNWebViewController.h; sourceTree = "<group>"; };
@@ -221,7 +229,7 @@
 		4FC763F418E72A610009F375 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
-				4FC763F518E72A610009F375 /* script.js */,
+				4FC763F518E72A610009F375 /* inpector-script.js */,
 			);
 			name = Scripts;
 			path = ../../Source/Scripts;
@@ -254,6 +262,10 @@
 				4FC763DD18E65E590009F375 /* Chrome7@2x.png */,
 				4FC763DE18E65E590009F375 /* Chrome7@2x~ipad.png */,
 				4FC763DF18E65E590009F375 /* Chrome7~ipad.png */,
+				4F66DC1D18E752E0007A78D8 /* Dolphin7.png */,
+				4F66DC1E18E752E0007A78D8 /* Dolphin7@2x.png */,
+				4F66DC1F18E752E0007A78D8 /* Dolphin7@2x~ipad.png */,
+				4F66DC2018E752E0007A78D8 /* Dolphin7~ipad.png */,
 				4FDD61B018E6308400E23A69 /* Safari7.png */,
 				4FDD61B118E6308400E23A69 /* Safari7@2x.png */,
 				4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */,
@@ -344,7 +356,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FC763F618E72A610009F375 /* script.js in Resources */,
+				4FC763F618E72A610009F375 /* inpector-script.js in Resources */,
 				4FC763E118E65E590009F375 /* Chrome7@2x.png in Resources */,
 				4FC763D918E65A160009F375 /* Opera7@2x.png in Resources */,
 				4FDD61BB18E6308400E23A69 /* Safari7~ipad.png in Resources */,
@@ -352,10 +364,14 @@
 				4FC763EB18E662900009F375 /* Link7~ipad.png in Resources */,
 				4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */,
 				4FC763DB18E65A160009F375 /* Opera7~ipad.png in Resources */,
+				4F66DC2218E752E0007A78D8 /* Dolphin7@2x.png in Resources */,
 				4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */,
+				4F66DC2318E752E0007A78D8 /* Dolphin7@2x~ipad.png in Resources */,
 				4FC763EA18E662900009F375 /* Link7@2x~ipad.png in Resources */,
 				4FC763DA18E65A160009F375 /* Opera7@2x~ipad.png in Resources */,
+				4F66DC2418E752E0007A78D8 /* Dolphin7~ipad.png in Resources */,
 				4FC763D818E65A160009F375 /* Opera7.png in Resources */,
+				4F66DC2118E752E0007A78D8 /* Dolphin7.png in Resources */,
 				4FC763F318E725C60009F375 /* Default@2x.png in Resources */,
 				4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */,
 				4FC763E818E662900009F375 /* Link7.png in Resources */,

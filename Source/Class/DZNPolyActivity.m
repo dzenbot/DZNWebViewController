@@ -45,6 +45,7 @@
         case DZNPolyActivityTypeSafari:         return @"com.dzn.DZNWebViewController.activity.OpenInSafari";
         case DZNPolyActivityTypeChrome:         return @"com.dzn.DZNWebViewController.activity.OpenInChrome";
         case DZNPolyActivityTypeOpera:          return @"com.dzn.DZNWebViewController.activity.OpenInOperaMini";
+        case DZNPolyActivityTypeDolphin:        return @"com.dzn.DZNWebViewController.activity.OpenInDolphin";
     }
 }
 
@@ -55,6 +56,7 @@
         case DZNPolyActivityTypeSafari:         return NSLocalizedString(@"Open in Safari", nil);
         case DZNPolyActivityTypeChrome:         return NSLocalizedString(@"Open in Chrome", nil);
         case DZNPolyActivityTypeOpera:          return NSLocalizedString(@"Open in Opera", nil);
+        case DZNPolyActivityTypeDolphin:        return NSLocalizedString(@"Open in Dolphin", nil);
     }
 }
 
@@ -65,6 +67,7 @@
         case DZNPolyActivityTypeSafari:         return [UIImage imageNamed:@"Safari7"];
         case DZNPolyActivityTypeChrome:         return [UIImage imageNamed:@"Chrome7"];
         case DZNPolyActivityTypeOpera:          return [UIImage imageNamed:@"Opera7"];
+        case DZNPolyActivityTypeDolphin:        return [UIImage imageNamed:@"Dolphin7"];
         default:                                return nil;
     }
 }
@@ -79,6 +82,11 @@
     return [self customURLWithURL:URL andType:DZNPolyActivityTypeOpera];
 }
 
+- (NSURL *)dolphinURLWithURL:(NSURL *)URL
+{
+    return [self customURLWithURL:URL andType:DZNPolyActivityTypeDolphin];
+}
+
 - (NSURL *)customURLWithURL:(NSURL *)URL andType:(DZNPolyActivityType)type
 {
     // Replaces the URL Scheme with the type equivalent.
@@ -86,10 +94,12 @@
     if ([URL.scheme isEqualToString:@"http"]) {
         if (type == DZNPolyActivityTypeChrome) scheme = @"googlechrome";
         if (type == DZNPolyActivityTypeOpera) scheme = @"ohttp";
+        if (type == DZNPolyActivityTypeDolphin) scheme = @"dolphin";
     }
     else if ([URL.scheme isEqualToString:@"https"]) {
         if (type == DZNPolyActivityTypeChrome) scheme = @"googlechromes";
         if (type == DZNPolyActivityTypeOpera) scheme = @"ohttps";
+        if (type == DZNPolyActivityTypeDolphin) scheme = @"dolphin";
     }
     
     // Proceeds only if a valid URI Scheme is available.
@@ -122,6 +132,9 @@
             }
             if (_type == DZNPolyActivityTypeOpera) {
                 return [[UIApplication sharedApplication] canOpenURL:[self operaURLWithURL:URL]];
+            }
+            if (_type == DZNPolyActivityTypeDolphin) {
+                return [[UIApplication sharedApplication] canOpenURL:[self dolphinURLWithURL:URL]];
             }
             
             break;
@@ -165,6 +178,9 @@
             break;
         case DZNPolyActivityTypeOpera:
             completed = [[UIApplication sharedApplication] openURL:[self operaURLWithURL:_URL]];
+            break;
+        case DZNPolyActivityTypeDolphin:
+            completed = [[UIApplication sharedApplication] openURL:[self dolphinURLWithURL:_URL]];
             break;
     }
     
