@@ -96,7 +96,7 @@
     [self.navigationController setToolbarHidden:NO];
 
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
-    self.navigationController.toolbar.tintColor = [UIColor whiteColor];
+    self.navigationController.toolbar.tintColor = _toolbarTintColor;
     self.navigationController.toolbar.translucent = NO;
     [self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handleInteractivePopGesture:)];
     

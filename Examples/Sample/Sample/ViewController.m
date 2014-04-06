@@ -38,6 +38,7 @@
     
     _controller = [[DZNWebViewController alloc] initWithURL:URL];
     _controller.toolbarTintColor = [UIColor whiteColor];
+    _controller.toolbarBackgroundColor = [UIColor blackColor];
     _controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissWebViewController:)];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_controller];
