@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F36438618F20ACA0088176A /* toolbar_backward.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F36438218F20ACA0088176A /* toolbar_backward.png */; };
+		4F36438718F20ACA0088176A /* toolbar_backward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F36438318F20ACA0088176A /* toolbar_backward@2x.png */; };
+		4F36438818F20ACA0088176A /* toolbar_forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F36438418F20ACA0088176A /* toolbar_forward.png */; };
+		4F36438918F20ACA0088176A /* toolbar_forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F36438518F20ACA0088176A /* toolbar_forward@2x.png */; };
 		4F66DC1C18E73CBF007A78D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F66DC1B18E73CBF007A78D8 /* ViewController.m */; };
 		4F66DC2118E752E0007A78D8 /* Dolphin7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC1D18E752E0007A78D8 /* Dolphin7.png */; };
 		4F66DC2218E752E0007A78D8 /* Dolphin7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F66DC1E18E752E0007A78D8 /* Dolphin7@2x.png */; };
@@ -41,8 +45,6 @@
 		4FC763F618E72A610009F375 /* inpector-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F518E72A610009F375 /* inpector-script.js */; };
 		4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */; };
 		4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */; };
-		4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */; };
-		4FDD61B718E6308400E23A69 /* UIImage+SystemGlyph.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */; };
 		4FDD61B818E6308400E23A69 /* Safari7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B018E6308400E23A69 /* Safari7.png */; };
 		4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B118E6308400E23A69 /* Safari7@2x.png */; };
 		4FDD61BA18E6308400E23A69 /* Safari7@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */; };
@@ -61,6 +63,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4F36438218F20ACA0088176A /* toolbar_backward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toolbar_backward.png; sourceTree = "<group>"; };
+		4F36438318F20ACA0088176A /* toolbar_backward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar_backward@2x.png"; sourceTree = "<group>"; };
+		4F36438418F20ACA0088176A /* toolbar_forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toolbar_forward.png; sourceTree = "<group>"; };
+		4F36438518F20ACA0088176A /* toolbar_forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar_forward@2x.png"; sourceTree = "<group>"; };
 		4F66DC1A18E73CBF007A78D8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F66DC1B18E73CBF007A78D8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4F66DC1D18E752E0007A78D8 /* Dolphin7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dolphin7.png; sourceTree = "<group>"; };
@@ -102,10 +108,6 @@
 		4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNPolyActivity.m; sourceTree = "<group>"; };
 		4FDD61A918E6308400E23A69 /* DZNWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZNWebViewController.h; sourceTree = "<group>"; };
 		4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DZNWebViewController.m; sourceTree = "<group>"; };
-		4FDD61AB18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+SystemGlyph.h"; sourceTree = "<group>"; };
-		4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+SystemGlyph.m"; sourceTree = "<group>"; };
-		4FDD61AD18E6308400E23A69 /* UIImage+SystemGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SystemGlyph.h"; sourceTree = "<group>"; };
-		4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SystemGlyph.m"; sourceTree = "<group>"; };
 		4FDD61B018E6308400E23A69 /* Safari7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Safari7.png; sourceTree = "<group>"; };
 		4FDD61B118E6308400E23A69 /* Safari7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Safari7@2x.png"; sourceTree = "<group>"; };
 		4FDD61B218E6308400E23A69 /* Safari7@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Safari7@2x~ipad.png"; sourceTree = "<group>"; };
@@ -242,10 +244,6 @@
 				4FDD61AA18E6308400E23A69 /* DZNWebViewController.m */,
 				4FDD61A718E6308400E23A69 /* DZNPolyActivity.h */,
 				4FDD61A818E6308400E23A69 /* DZNPolyActivity.m */,
-				4FDD61AB18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.h */,
-				4FDD61AC18E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m */,
-				4FDD61AD18E6308400E23A69 /* UIImage+SystemGlyph.h */,
-				4FDD61AE18E6308400E23A69 /* UIImage+SystemGlyph.m */,
 			);
 			name = Class;
 			path = ../../Source/Class;
@@ -274,6 +272,10 @@
 				4FC763D518E65A160009F375 /* Opera7@2x.png */,
 				4FC763D618E65A160009F375 /* Opera7@2x~ipad.png */,
 				4FC763D718E65A160009F375 /* Opera7~ipad.png */,
+				4F36438218F20ACA0088176A /* toolbar_backward.png */,
+				4F36438318F20ACA0088176A /* toolbar_backward@2x.png */,
+				4F36438418F20ACA0088176A /* toolbar_forward.png */,
+				4F36438518F20ACA0088176A /* toolbar_forward@2x.png */,
 			);
 			name = Resources;
 			path = ../../Source/Resources;
@@ -356,6 +358,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F36438918F20ACA0088176A /* toolbar_forward@2x.png in Resources */,
 				4FC763F618E72A610009F375 /* inpector-script.js in Resources */,
 				4FC763E118E65E590009F375 /* Chrome7@2x.png in Resources */,
 				4FC763D918E65A160009F375 /* Opera7@2x.png in Resources */,
@@ -363,17 +366,20 @@
 				4FDD61BA18E6308400E23A69 /* Safari7@2x~ipad.png in Resources */,
 				4FC763EB18E662900009F375 /* Link7~ipad.png in Resources */,
 				4FDD61B918E6308400E23A69 /* Safari7@2x.png in Resources */,
+				4F36438718F20ACA0088176A /* toolbar_backward@2x.png in Resources */,
 				4FC763DB18E65A160009F375 /* Opera7~ipad.png in Resources */,
 				4F66DC2218E752E0007A78D8 /* Dolphin7@2x.png in Resources */,
 				4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */,
 				4F66DC2318E752E0007A78D8 /* Dolphin7@2x~ipad.png in Resources */,
 				4FC763EA18E662900009F375 /* Link7@2x~ipad.png in Resources */,
+				4F36438818F20ACA0088176A /* toolbar_forward.png in Resources */,
 				4FC763DA18E65A160009F375 /* Opera7@2x~ipad.png in Resources */,
 				4F66DC2418E752E0007A78D8 /* Dolphin7~ipad.png in Resources */,
 				4FC763D818E65A160009F375 /* Opera7.png in Resources */,
 				4F66DC2118E752E0007A78D8 /* Dolphin7.png in Resources */,
 				4FC763F318E725C60009F375 /* Default@2x.png in Resources */,
 				4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */,
+				4F36438618F20ACA0088176A /* toolbar_backward.png in Resources */,
 				4FC763E818E662900009F375 /* Link7.png in Resources */,
 				4FDD61B818E6308400E23A69 /* Safari7.png in Resources */,
 				4FC763E318E65E590009F375 /* Chrome7~ipad.png in Resources */,
@@ -434,9 +440,7 @@
 			files = (
 				4F66DC1C18E73CBF007A78D8 /* ViewController.m in Sources */,
 				4FB8461318E50C450056BDFB /* AppDelegate.m in Sources */,
-				4FDD61B618E6308400E23A69 /* UIBarButtonItem+SystemGlyph.m in Sources */,
 				4FDD61B418E6308400E23A69 /* DZNPolyActivity.m in Sources */,
-				4FDD61B718E6308400E23A69 /* UIImage+SystemGlyph.m in Sources */,
 				4FDD61B518E6308400E23A69 /* DZNWebViewController.m in Sources */,
 				4FB8460F18E50C450056BDFB /* main.m in Sources */,
 			);

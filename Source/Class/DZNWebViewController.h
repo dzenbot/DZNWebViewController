@@ -39,10 +39,6 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, readonly) NSURL *URL;
 /**  */
 @property (nonatomic) DZNWebViewControllerLoadingStyle loadingStyle;
-/** The application's name to be used for promotion when sending link by email. */
-@property (nonatomic, copy) NSString *applicationName;
-/** The application's store url to be used for promotion when sending link by email. */
-@property (nonatomic, copy) NSString *applicationUrl;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
 @property (nonatomic) DZNWebViewControllerActions supportedActions;
 /** The toolbar background color. Default is black, translucent. */

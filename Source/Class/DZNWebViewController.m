@@ -14,8 +14,6 @@
 #import <NJKWebViewProgress/NJKWebViewProgressView.h>
 #import <NJKWebViewProgress/NJKWebViewProgress.h>
 
-#import "UIBarButtonItem+SystemGlyph.h"
-
 #define kContentTypeImage @"image"
 #define kContentTypeLink @"link"
 
@@ -99,7 +97,7 @@
 
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
     self.navigationController.toolbar.tintColor = [UIColor whiteColor];
-    self.navigationController.toolbar.translucent = YES;
+    self.navigationController.toolbar.translucent = NO;
     [self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handleInteractivePopGesture:)];
     
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
@@ -185,10 +183,10 @@
 
 - (NSArray *)navigationItems
 {
-    _backwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemGlyphBackward target:self action:@selector(goBack:)];
+    _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     _backwardBarItem.enabled = NO;
     
-    _forwardBarItem = [[UIBarButtonItem alloc] initWithBarButtonPrivateItem:UIBarButtonSystemGlyphForward target:self action:@selector(goForward:)];
+    _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
     _forwardBarItem.enabled = NO;
     
     if (_loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
