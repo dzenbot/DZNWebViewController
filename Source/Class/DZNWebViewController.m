@@ -14,8 +14,8 @@
 #import <NJKWebViewProgress/NJKWebViewProgressView.h>
 #import <NJKWebViewProgress/NJKWebViewProgress.h>
 
-#define kContentTypeImage @"image"
-#define kContentTypeLink @"link"
+#define kDZNWebViewControllerContentTypeImage @"image"
+#define kDZNWebViewControllerContentTypeLink @"link"
 
 @interface DZNLongPressGestureRecognizer : UILongPressGestureRecognizer
 @end
@@ -243,7 +243,7 @@
                                      UIActivityTypePrint,
                                      UIActivityTypeAssignToContact]];
     }
-        
+    
     if (self.supportsAllActions) {
         return types;
     }
@@ -388,7 +388,7 @@
 
 - (void)presentActivityController:(id)sender
 {
-    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString, @"type": kContentTypeLink};
+    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
     [self presentActivityControllerWithContent:content];
 }
 
@@ -402,11 +402,11 @@
     NSString *title = [content objectForKey:@"title"];
     NSString *url = [content objectForKey:@"url"];
     
-    if ([type isEqualToString:kContentTypeLink]) {
+    if ([type isEqualToString:kDZNWebViewControllerContentTypeLink]) {
         
         [self presentActivityControllerWithItem:url andTitle:title];
     }
-    if ([type isEqualToString:kContentTypeImage]) {
+    if ([type isEqualToString:kDZNWebViewControllerContentTypeImage]) {
         
         [self setActivityIndicatorsVisible:YES];
         
