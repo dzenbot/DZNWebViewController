@@ -18,9 +18,25 @@ typedef NS_OPTIONS(NSUInteger, DZNPolyActivityType) {
     DZNPolyActivityTypeDolphin
 };
 
+/**
+ * The DZNPolyActivity class is an abstract subclass of UIActivity allowing to easily create polymorphic instances by assigning different activity types. Each type will render a different icon and title, and will perform different actions too.
+ */
 @interface DZNPolyActivity : UIActivity
 
-+ (instancetype)activityWithType:(DZNPolyActivityType)type;
+/**
+ * Initializes and returns a newly created activity with a specific type.
+ *
+ * @param type The type of the activity to be created.
+ * @returns The initialized activity.
+ */
 - (instancetype)initWithActivityType:(DZNPolyActivityType)type;
+
+/**
+ * Allocates a new instance of the receiving class, sends it an init message, and returns the initialized object.
+ * This method implements the same logic than initWithActivityType: but is just shorter to call.
+ *
+ * @param type The type of the activity to be created.
+ */
++ (instancetype)activityWithType:(DZNPolyActivityType)type;
 
 @end
