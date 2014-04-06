@@ -85,10 +85,10 @@
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
     
-    self.toolbarItems = self.navigationItems;
-    
     self.view = self.webView;
     self.automaticallyAdjustsScrollViewInsets = YES;
+    
+    [self setToolbarItems:self.navigationItems animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -99,6 +99,7 @@
 
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
     self.navigationController.toolbar.tintColor = [UIColor whiteColor];
+    self.navigationController.toolbar.translucent = YES;
     [self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handleInteractivePopGesture:)];
     
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
@@ -117,7 +118,6 @@
 {
 	[super viewWillDisappear:animated];
     
-    [self.navigationController setToolbarHidden:YES animated:animated];
     [self clearProgressViewAnimated:animated];
 }
 
@@ -402,7 +402,7 @@
     
     if ([type isEqualToString:kContentTypeLink]) {
         
-        [self presentActivityControllerWithItem:url andTitle:title];
+        [self presentActivityControllerWithItem:[NSURL URLWithString:url] andTitle:title];
     }
     if ([type isEqualToString:kContentTypeImage]) {
         
@@ -431,7 +431,10 @@
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
     
     controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
-    [controller setValue:title forKey:@"subject"];
+    
+    if (title) {
+        [controller setValue:title forKey:@"subject"];
+    }
     
     [self presentViewController:controller animated:YES completion:nil];
     

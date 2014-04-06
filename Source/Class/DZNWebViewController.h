@@ -20,7 +20,6 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
     DZNWebViewControllerActionOpenChrome = (1 << 4),
     DZNWebViewControllerActionOpenOperaMini = (1 << 5),
     DZNWebViewControllerActionOpenDolphin = (1 << 6)
-
 };
 
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
