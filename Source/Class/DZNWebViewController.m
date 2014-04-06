@@ -237,9 +237,13 @@
     NSMutableArray *types = [NSMutableArray new];
     
     if (![item isKindOfClass:[UIImage class]]) {
-        [types addObjectsFromArray:@[UIActivityTypeCopyToPasteboard, UIActivityTypeSaveToCameraRoll, UIActivityTypePostToFlickr, UIActivityTypePrint, UIActivityTypeAssignToContact]];
+        [types addObjectsFromArray:@[UIActivityTypeCopyToPasteboard,
+                                     UIActivityTypeSaveToCameraRoll,
+                                     UIActivityTypePostToFlickr,
+                                     UIActivityTypePrint,
+                                     UIActivityTypeAssignToContact]];
     }
-    
+        
     if (self.supportsAllActions) {
         return types;
     }
@@ -400,7 +404,7 @@
     
     if ([type isEqualToString:kContentTypeLink]) {
         
-        [self presentActivityControllerWithItem:[NSURL URLWithString:url] andTitle:title];
+        [self presentActivityControllerWithItem:url andTitle:title];
     }
     if ([type isEqualToString:kContentTypeImage]) {
         
@@ -429,6 +433,8 @@
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
     
     controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
+    
+    NSLog(@"controller.excludedActivityTypes : %@", controller.excludedActivityTypes);
     
     if (title) {
         [controller setValue:title forKey:@"subject"];
