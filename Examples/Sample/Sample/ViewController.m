@@ -28,13 +28,20 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(presentWebViewController:)];
-    [self.view addGestureRecognizer:gesture];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setTitle:@"Open DZNWebViewController" forState:UIControlStateNormal];
+    [button setFrame:[UIScreen mainScreen].bounds];
+    [button addTarget:self action:@selector(presentWebViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [button setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    [self.view addSubview:button];
 }
 
 - (void)presentWebViewController:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://www.objc.io/"];
+//    NSURL *URL = [NSURL URLWithString:@"http://www.nshipster.com/"];
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"nshipster.com" ofType:@"html"];
+    NSURL *URL = [NSURL fileURLWithPath:path];
     
     _controller = [[DZNWebViewController alloc] initWithURL:URL];
     _controller.toolbarTintColor = [UIColor whiteColor];

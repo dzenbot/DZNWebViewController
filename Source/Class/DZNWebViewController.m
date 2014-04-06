@@ -71,6 +71,11 @@
     return self;
 }
 
+- (id)initWithFileURL:(NSURL *)URL
+{
+    return [self initWithURL:URL];
+}
+
 
 #pragma mark - View lifecycle
 
@@ -369,7 +374,16 @@
 - (void)startRequestWithURL:(NSURL *)URL
 {
     _loadBalance = 0;
-    [_webView loadRequest:[[NSURLRequest alloc] initWithURL:URL]];
+    
+    if (![self.webView.request.URL isFileURL]) {
+        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:URL]];
+    }
+    else {
+        NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
+        NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
+        
+        [_webView loadHTMLString:HTMLString baseURL:nil];
+    }
 }
 
 - (void)goBack:(id)sender
@@ -433,8 +447,6 @@
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
     
     controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
-    
-    NSLog(@"controller.excludedActivityTypes : %@", controller.excludedActivityTypes);
     
     if (title) {
         [controller setValue:title forKey:@"subject"];
@@ -509,6 +521,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    return YES;
+    
     if (request.URL && !_presentingActivities) {
         return YES;
     }
@@ -543,6 +557,10 @@
     _forwardBarItem.enabled = [_webView canGoForward];
     
     [self setViewTitle:[self title]];
+    
+    if ([webView.request.URL isFileURL] && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView) {
+        [_progressView setProgress:1.0 animated:YES];
+    }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

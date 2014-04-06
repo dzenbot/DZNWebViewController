@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+      NSNotification &amp;NSNotificationCenter : NSHipster
+    </title>
+    <meta name="description" content=
+    "NSHipster is a journal of the overlooked bits in Objective-C and Cocoa. Updated weekly.">
+    <meta name="author" content="Mattt Thompson">
+    <meta name="revisit-after" content="3 days">
+    <meta name="viewport" content="width=device-width">
+    <link rel="license" href=
+    "http://creativecommons.org/licenses/by-nc/3.0/">
+    <link rel="alternate" hreflang="en-us" href=
+    "http://nshipster.com">
+    <link rel="alternate" hreflang="zh-Hans" href=
+    "http://nshipster.cn">
+    <link rel="alternate" hreflang="x-default" href=
+    "http://nshipster.com">
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="http://nshipster.com/feed.xml">
+    <link rel="stylesheet" href="/css/screen.css" type="text/css">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@NSHipster">
+    <meta name="twitter:creator" content="@mattt">
+    <meta name="twitter:title" content=
+    "NSNotification &amp;&lt;br/&gt;NSNotificationCenter">
+    <meta name="twitter:description" content=
+    "Any idea is inextricably linked to how its communicated. A medium defines the form and scale of significance in such a way to shape the very meaning of an idea. Very truly, the medium is the message.">
+    <meta content="NSHipster" property="og:site_name">
+    <meta content=
+    "NSNotification &amp;&lt;br/&gt;NSNotificationCenter" property=
+    "og:title">
+    <meta content=
+    "http://nshipster.com/nsnotification-and-nsnotificationcenter/"
+    property="og:url">
+    <meta content=
+    "Any idea is inextricably linked to how its communicated. A medium defines the form and scale of significance in such a way to shape the very meaning of an idea. Very truly, the medium is the message."
+    property="og:description">
+    <meta property="st:title" content=
+    "NSNotification &amp;&lt;br/&gt;NSNotificationCenter">
+    <meta property="st:type" content="article">
+    <script type="text/javascript">
+var _sf_startpt=(new Date()).getTime()
+    </script>
+    <script onload="try{Typekit.load();}catch(e){}" src=
+    "//use.typekit.net/agk0bgp.js" type="text/javascript">
+</script>
+  </head>
+  <body>
+    <div role="container">
+      <header role="banner">
+        <h1 id="logo">
+          <a href="/"><acronym title="NeXTSTEP/Sun">NS</acronym>
+          <strong>Hipster</strong> <img id="moustache" src=
+          "//cdn.nshipster.com/images/moustache.svg" width="200"
+          height="150" data-author=
+          "http://thenounproject.com/bnhw"></a>
+        </h1>
+        <form>
+          <input type="text" id="st-search-input" class=
+          "st-search-input">
+        </form>
+      </header>
+      <div id="main" role="main">
+        <article>
+          <header>
+            <h1>
+              <a href=
+              "/nsnotification-and-nsnotificationcenter/">NSNotification
+              &amp;<br>
+              NSNotification​Center</a>
+            </h1>
+            <h2>
+              Written by <a href="http://mattt.me/">Mattt
+              Thompson</a> on <time pubdate=
+              "2013-12-02 00:00:00 -0800">Dec 2<span>nd</span>,
+              2013</time>
+            </h2>
+          </header>
+          <div class="content" data-swiftype-index="true">
+            <p>
+              Any idea is inextricably linked to how it's
+              communicated. A medium defines the form and scale of
+              significance in such a way to shape the very meaning
+              of an idea. Very truly, the medium is the message.
+            </p>
+            <p>
+              One of the first lessons of socialization is to know
+              one's audience. Sometimes communication is
+              one-to-one, like an in-person conversation, while at
+              other times, such as a television broadcast, it's
+              one-to-many. Not being able to distinguish between
+              these two circumstances leads to awkward situations.
+            </p>
+            <p>
+              This is as true of humans as it is within a computer
+              process. In Cocoa, there are a number of approaches
+              to communicating between objects, with different
+              characteristics of intimacy and coupling:
+            </p>
+            <table id="notification-center-coupling">
+              <thead>
+                <tr>
+                  <td class="empty" colspan="2" rowspan="2"></td>
+                  <th colspan="2">
+                    Audience
+                  </th>
+                </tr>
+                <tr>
+                  <th>
+                    Intimate (One-to-One)
+                  </th>
+                  <th>
+                    Broadcast (One-to-Many)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th rowspan="2">
+                    Coupling
+                  </th>
+                  <th>
+                    Loose
+                  </th>
+                  <td>
+                    <ul>
+                      <li>Target-Action
+                      </li>
+                      <li>Delegate
+                      </li>
+                      <li>Callbacks
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>
+                        <tt>Notifications</tt>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    Strong
+                  </th>
+                  <td>
+                    <ul>
+                      <li>Direct Method Invocation
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Key-Value Observing
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              We've discussed the importance of how events are
+              communicated in APIs previously in our <a href=
+              "http://nshipster.com/key-value-observing/">article
+              on Key-Value Observing</a>. This week, we'll expand
+              our look at the available options, with
+              <code>NSNotificationCenter</code> &amp;
+              <code>NSNotification</code>.
+            </p>
+            <hr>
+            <p>
+              <code>NSNotificationCenter</code> provides a
+              centralized hub through which any part of an
+              application may notify and be notified of changes
+              from any other part of the application. Observers
+              register with a notification center to respond to
+              particular events with a specified action. Each time
+              an event occurs, the notification goes through its
+              dispatch table, and messages any registered observers
+              for that event.
+            </p>
+            <blockquote>
+              <p>
+                Each running Cocoa program manages its own default
+                notification center, so it's unusual for a new
+                notification center to be instantiated separately.
+              </p>
+            </blockquote>
+            <p>
+              Each <code>NSNotification</code> object has a
+              <code>name</code>, with additional context optionally
+              provided by an associated <code>object</code> and
+              <code>userInfo</code> dictionary.
+            </p>
+            <p>
+              For example, <code>UITextField</code> posts an
+              <code>NSNotification</code> with the name
+              <code>UITextFieldTextDidChangeNotification</code>
+              each time its text changes. The object associated
+              with that notification is the text field itself. In
+              the case of
+              <code>UIKeyboardWillShowNotification</code>, frame
+              positioning and animation timing are passed in
+              <code>userInfo</code>, while the notification's
+              associated <code>object</code> is <code>nil</code>.
+            </p>
+            <h3>
+              Adding Observers
+            </h3>
+            <p>
+              All sorts of notifications are constantly passing
+              through
+              <code>NSNotificationCenter</code>.<sup>*</sup> But
+              like a tree falling in the woods, a notification is
+              moot unless there's something listening for it.
+            </p>
+            <p>
+              The traditional way to add an observer is
+              <code>–addObserver:selector:name:object:</code>, in
+              which an object (usually <code>self</code>) adds
+              itself to have the specified selector performed when
+              a matching notification is posted.
+            </p>
+            <p>
+              The modern, block-based API for adding notification
+              observers is
+              <code>–addObserverForName:object:queue:usingBlock:</code>.
+              Instead of registering an existing object as an
+              observer for a notification, this method creates its
+              own anonymous object to be the observer, which
+              performs a block on the specified queue (or the
+              calling thread, if <code>nil</code>) when a matching
+              notification is posted. Unlike its similarly named
+              <code>@selector</code>-based counterpart, this method
+              actually returns the constructed observer object,
+              which is necessary for unregistering the observer, as
+              discussed in the next section.
+            </p>
+            <blockquote>
+              <p>
+                Contrary to a recent article claiming otherwise,
+                <code>–addObserverForName:object:queue:usingBlock:</code>
+                should <em>not</em> be considered harmful. It's
+                perfectly safe and suitable for use in
+                applications. Just make sure to understand memory
+                management rules when referencing <code>self</code>
+                in blocks. Any concerns in this respect are the
+                same as for any other block-based API.
+              </p>
+            </blockquote>
+            <p>
+              The <code>name</code> and <code>object</code>
+              parameters of both methods are used to decide whether
+              the criteria of a posted notification match the
+              observer. If <code>name</code> is set, only
+              notifications with that name will trigger, but if
+              <code>nil</code> is set, then <em>all</em> names will
+              match. The same is true of <code>object</code>. So,
+              if both <code>name</code> and <code>object</code> are
+              set, only notifications with that name <em>and</em>
+              the specified object will trigger. However, if both
+              <code>name</code> and <code>object</code> are
+              <code>nil</code>, then <em>all</em> notifications
+              posted will trigger.
+            </p>
+            <blockquote>
+              <p>
+                <sup>*</sup>See for yourself! An ordinary iOS app
+                fires dozens of notifications just in the first
+                second of being launched—many that you've probably
+                never heard of before, nor will ever have to think
+                about again.
+              </p>
+            </blockquote>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"n">NSNotificationCenter</span> <span class=
+"o">*</span><span class="n">center</span> <span class=
+"o">=</span> <span class="p">[</span><span class=
+"n">NSNotificationCenter</span> <span class=
+"n">defaultCenter</span><span class="p">];</span>
+<span class="p">[</span><span class="n">center</span> <span class=
+"n">addObserverForName</span><span class="o">:</span><span class=
+"nb">nil</span>
+                    <span class="nl">object:</span><span class=
+"nb">nil</span>
+                     <span class="nl">queue:</span><span class=
+"nb">nil</span>
+                <span class="nl">usingBlock:</span><span class=
+"o">^</span><span class="p">(</span><span class=
+"n">NSNotification</span> <span class="o">*</span><span class=
+"n">notification</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"%@"</span><span class=
+"p">,</span> <span class="n">notification</span><span class=
+"p">.</span><span class="n">name</span><span class="p">);</span>
+<span class="p">}];</span>
+</code>
+</pre>
+            </div>
+            <h3>
+              Removing Observers
+            </h3>
+            <p>
+              It's important for objects to remove observers before
+              they're deallocated, in order to prevent further
+              messages from being sent.
+            </p>
+            <p>
+              There are two methods for removing observers:
+              <code>-removeObserver:</code> and
+              <code>-removeObserver:name:object:</code>. Again,
+              just as with adding observers, <code>name</code> and
+              <code>object</code> are used to define scope.
+              <code>-removeObserver:</code>, or
+              <code>-removeObserver:name:object</code> with
+              <code>nil</code> for both parameters, will remove the
+              observer from the notification center dispatch table
+              entirely, while specifying parameters for
+              <code>-removeObserver:name:object:</code> will only
+              remove the observer for registrations with that name
+              and/or object.
+            </p>
+            <h3>
+              Posting Notifications
+            </h3>
+            <p>
+              Of course, consuming is but one side of the story. In
+              addition to subscribing to system-provided
+              notifications, applications may want to publish and
+              subscribe to their own.
+            </p>
+            <p>
+              Notifications are created with
+              <code>+notificationWithName:object:userInfo:</code>.
+            </p>
+            <p>
+              Notification names are generally defined as string
+              constants. Like any string constant, it should be
+              declared <code>extern</code> in a public interface,
+              and defined privately in the corresponding
+              implementation. It doesn't matter too much what a
+              notification name's value is defined to be; the name
+              of the variable itself is commonplace, but a
+              reverse-DNS identifier is also a classy choice. So
+              long as notification names are unique (or explicitly
+              aliased), everything will work as expected.
+            </p>
+            <p>
+              Keys for <code>userInfo</code> should likewise be
+              defined as string constants. It's important to
+              clearly document the expected kinds of values for
+              each key, since the compiler can't enforce
+              constraints on dictionaries the same way it can for
+              an object.
+            </p>
+            <h4>
+              Foo.h
+            </h4>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">extern</span> <span class=
+"n">NSString</span> <span class="o">*</span> <span class=
+"k">const</span> <span class=
+"n">XXFooDidBarNotification</span><span class="p">;</span>
+</code>
+</pre>
+            </div>
+            <h4>
+              Foo.m
+            </h4>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">NSString</span> <span class=
+"o">*</span> <span class="k">const</span> <span class=
+"n">XXFooDidBarNotification</span> <span class=
+"o">=</span> <span class=
+"s">@"XXFooDidBarNotification"</span><span class="p">;</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Notifications are posted with
+              <code>–postNotificationName:object:userInfo:</code>
+              or its convenience method
+              <code>–postNotificationName:object:</code>, which
+              passes <code>nil</code> for <code>userInfo</code>.
+              <code>–postNotification:</code> is also available,
+              but it's generally preferable to have the
+              notification object creation handled by the method
+              itself.
+            </p>
+            <p>
+              Recall from the previous section how
+              <code>name</code> and <code>object</code> act to
+              scope notification dispatch. Developers are advised
+              to be consistent in how objects are posted with
+              notifications, and to have this behavior documented
+              clearly in the public interface.
+            </p>
+            <p>
+              Since notification dispatch happens on the posting
+              thread, it may be necessary to
+              <code>dispatch_async</code> to
+              <code>dispatch_get_main_queue()</code> so that a
+              notification is handled on the main thread. This is
+              not usually necessary, but it's important to keep in
+              mind.
+            </p>
+            <h2>
+              KVO != NSNotificationCenter
+            </h2>
+            <p>
+              Something that often slips up developers is how
+              similar the method signatures for <a href=
+              "http://nshipster.com/key-value-observing/">Key-Value
+              Observing</a> are to those of
+              <code>NSNotificationCenter</code>:
+            </p>
+            <h4>
+              Key-Value Observing
+            </h4>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">-</span> <span class=
+"p">(</span><span class="kt">void</span><span class=
+"p">)</span><span class="nf">addObserver:</span><span class=
+"p">(</span><span class="n">NSObject</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">observer</span>
+         <span class="nl">forKeyPath:</span><span class=
+"p">(</span><span class="n">NSString</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">keyPath</span>
+            <span class="nl">options:</span><span class=
+"p">(</span><span class=
+"n">NSKeyValueObservingOptions</span><span class=
+"p">)</span><span class="nv">options</span>
+            <span class="nl">context:</span><span class=
+"p">(</span><span class="kt">void</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">context</span>
+</code>
+</pre>
+            </div>
+            <h4>
+              NSNotificationCenter
+            </h4>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">-</span> <span class=
+"p">(</span><span class="kt">void</span><span class=
+"p">)</span><span class="nf">addObserver:</span><span class=
+"p">(</span><span class="kt">id</span><span class=
+"p">)</span><span class="nv">notificationObserver</span>
+           <span class="nl">selector:</span><span class=
+"p">(</span><span class="kt">SEL</span><span class=
+"p">)</span><span class="nv">notificationSelector</span>
+               <span class="nl">name:</span><span class=
+"p">(</span><span class="n">NSString</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">notificationName</span>
+             <span class="nl">object:</span><span class=
+"p">(</span><span class="kt">id</span><span class=
+"p">)</span><span class="nv">notificationSender</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">id</span><span class="p">)</span><span class=
+"nf">addObserverForName:</span><span class="p">(</span><span class=
+"n">NSString</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">name</span>
+                  <span class="nl">object:</span><span class=
+"p">(</span><span class="kt">id</span><span class=
+"p">)</span><span class="nv">obj</span>
+                   <span class="nl">queue:</span><span class=
+"p">(</span><span class="n">NSOperationQueue</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">queue</span>
+              <span class="nl">usingBlock:</span><span class=
+"p">(</span><span class="kt">void</span> <span class=
+"p">(</span><span class="o">^</span><span class=
+"p">)(</span><span class="n">NSNotification</span> <span class=
+"o">*</span><span class="p">))</span><span class="nv">block</span>
+</code>
+</pre>
+            </div>
+            <p>
+              <strong>Key-Value Observing adds observers for
+              keypaths, while NSNotificationCenter adds observers
+              for notifications.</strong> Keep this distinction
+              clear in your mind, and proceed to use both APIs
+              confidently.
+            </p>
+            <hr>
+            <p>
+              Notifications are an essential tool for communicating
+              across an application. Because of its distributed,
+              low-coupling characteristics, notifications are
+              well-suited to a wide range of architectures. APIs
+              would do well to add them for any significant events
+              that might benefit from greater circulation—the
+              performance overhead for this sort of chattiness is
+              negligible.
+            </p>
+            <p>
+              As it were, thinking about notifications in your own
+              life can do wonders for improving your relationships
+              with others. Communicating intent and giving
+              sufficient notice are the trappings of a mature,
+              grounded individual.
+            </p>
+            <p>
+              ...but don't take that advice too far and use it to
+              justify life-streaming, or anything. Seriously, stop
+              taking pictures, and just eat your damn food,
+              <em>amiright</em>?
+            </p>
+          </div>
+          <aside>
+            <a href="https://twitter.com/share" class=
+            "twitter-share-button" data-url=
+            "http://nshipster.com/nsnotification-and-nsnotificationcenter/"
+            data-via="NSHipster" data-size="large">Tweet</a>
+            <script type="text/javascript">
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            </script>
+          </aside>
+          <footer id="book" class="promotion">
+            <a href="https://gum.co/cfhipsterref"></a>
+            <div id="cfhipsterref-cover"></div>
+            <div>
+              <hgroup>
+                <h1>
+                  <a href=
+                  "https://gum.co/cfhipsterref">CFHipsterRef:
+                  Low-Level Programming on<br>
+                  iOS &amp; Mac OS X</a>
+                </h1>
+                <h2>
+                  Available May 27th, 2014
+                </h2>
+              </hgroup>
+              <p>
+                Perfect for intermediate and expert developers
+                wanting to take a deeper dive into advanced topics,
+                <em>CFHipsterRef: Low-Level Programming on iOS
+                &amp; Mac OS X</em> covers the core technologies
+                powering Cocoa, Objective-C, and the operating
+                system itself, including Core Bluetooth,
+                Accelerate, and the Objective-C runtime.
+              </p><button onclick=
+              "javascript:window.location.href='https://gum.co/cfhipsterref'">Pre-Order
+              Now</button>
+            </div>
+          </footer>
+        </article>
+      </div>
+      <footer role="contentinfo">
+        <section class="credits colophon">
+          <p>
+            Created by <a href="http://mattt.me">Mattt
+            Thompson</a>, and released under a <a href=
+            "http://creativecommons.org/licenses/by-nc/3.0/" rel=
+            "license">Creative Commons BY-NC License</a>. <a href=
+            "https://plus.google.com/106751358503565042647?rel=author"
+            style="display: none;"></a>
+          </p>
+          <p>
+            Articles also available in <a href=
+            "http://nshipster.cn" hreflang="zh-Hans">中文</a>.
+          </p>
+        </section>
+        <aside class="links">
+          <a href="https://github.com/NSHipster/articles/issues"
+          class="icon-github" title="Pull Requests Welcome"
+          aria-hidden="true"></a> <a href="/feed.xml" class=
+          "icon-feed" title="RSS" aria-hidden="true"></a>
+        </aside>
+        <section class="archive" role="navigation">
+          <div>
+            <h2>
+              Foundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/nsurl/">NSURL /<br>
+                NSURLComponents</a>
+              </li>
+              <li>
+                <a href=
+                "/nstemporarydirectory/">NSTemporaryDirectory /<br>
+                NSItemReplacementDirectory /<br>
+                mktemp(3)</a>
+              </li>
+              <li>
+                <a href="/nsrange/">NSRange</a>
+              </li>
+              <li>
+                <a href=
+                "/nsnotification-and-nsnotificationcenter/">NSNotification
+                &amp;<br>
+                NSNotificationCenter</a>
+              </li>
+              <li>
+                <a href="/nsfilemanager/">NSFileManager</a>
+              </li>
+              <li>
+                <a href="/nsformatter/">NSFormatter</a>
+              </li>
+              <li>
+                <a href="/nserror/">NSError</a>
+              </li>
+              <li>
+                <a href="/key-value-observing/">Key-Value
+                Observing</a>
+              </li>
+              <li>
+                <a href="/nshashtable-and-nsmaptable/">NSHashTable
+                &amp;<br>
+                NSMapTable</a>
+              </li>
+              <li>
+                <a href="/nspredicate/">NSPredicate</a>
+              </li>
+              <li>
+                <a href="/nsexpression/">NSExpression</a>
+              </li>
+              <li>
+                <a href="/enumerators/">NSFastEnumeration /<br>
+                NSEnumerator /<br>
+                -enumerateObjectsUsingBlock:</a>
+              </li>
+              <li>
+                <a href="/uuid-udid-unique-identifier/">NSUUID
+                /<br>
+                CFUUIDRef /<br>
+                UIDevice -uniqueIdentifier /<br>
+                -identifierForVendor</a>
+              </li>
+              <li>
+                <a href="/nsdatadetector/">NSDataDetector</a>
+              </li>
+              <li>
+                <a href="/nscoding/">NSCoding / NSKeyedArchiver</a>
+              </li>
+              <li>
+                <a href="/nssecurecoding/">NSSecureCoding</a>
+              </li>
+              <li>
+                <a href=
+                "/nsassertionhandler/">NSAssertionHandler</a>
+              </li>
+              <li>
+                <a href="/nsurlcache/">NSURLCache</a>
+              </li>
+              <li>
+                <a href="/nsvalue/">NSValue</a>
+              </li>
+              <li>
+                <a href="/nslocalizedstring/">NSLocalizedString</a>
+              </li>
+              <li>
+                <a href="/instancetype/">instancetype</a>
+              </li>
+              <li>
+                <a href="/kvc-collection-operators/">KVC Collection
+                Operators</a>
+              </li>
+              <li>
+                <a href="/nsorderedset/">NSOrderedSet</a>
+              </li>
+              <li>
+                <a href="/ns_enum-ns_options/">NS_ENUM &amp;
+                NS_OPTIONS</a>
+              </li>
+              <li>
+                <a href=
+                "/nsvaluetransformer/">NSValueTransformer</a>
+              </li>
+              <li>
+                <a href="/nsurlprotocol/">NSURLProtocol</a>
+              </li>
+              <li>
+                <a href=
+                "/nslinguistictagger/">NSLinguisticTagger</a>
+              </li>
+              <li>
+                <a href="/nscharacterset/">NSCharacterSet</a>
+              </li>
+              <li>
+                <a href="/nslocale/">NSLocale</a>
+              </li>
+              <li>
+                <a href="/nsoperation/">NSOperation</a>
+              </li>
+              <li>
+                <a href=
+                "/nsincrementalstore/">NSIncrementalStore</a>
+              </li>
+              <li>
+                <a href="/nsdatecomponents/">NSDateComponents</a>
+              </li>
+              <li>
+                <a href="/nssortdescriptor/">NSSortDescriptor</a>
+              </li>
+              <li>
+                <a href="/nscache/">NSCache</a>
+              </li>
+              <li>
+                <a href="/nsindexset/">NSIndexSet</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreFoundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/cfbag/">CFBag</a>
+              </li>
+              <li>
+                <a href="/cfstringtransform/">CFStringTransform</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreGraphics
+            </h2>
+            <ul>
+              <li>
+                <a href="/cggeometry/">CGGeometry</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              UIKit
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/launch-options/">UIApplicationDelegate<br>
+                launchOptions</a>
+              </li>
+              <li>
+                <a href="/uimenucontroller/">UIMenuController</a>
+              </li>
+              <li>
+                <a href="/uiappearance/">UIAppearance</a>
+              </li>
+              <li>
+                <a href=
+                "/uilocalizedindexedcollation/">UILocalizedIndexedCollation</a>
+              </li>
+              <li>
+                <a href="/uicollectionview/">UICollectionView</a>
+              </li>
+              <li>
+                <a href="/uiaccessibility/">UIAccessibility</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Objective-C
+            </h2>
+            <ul>
+              <li>
+                <a href="/namespacing/">Namespacing</a>
+              </li>
+              <li>
+                <a href="/extended-file-attributes/">Extended File
+                Attributes</a>
+              </li>
+              <li>
+                <a href="/equality/">Equality</a>
+              </li>
+              <li>
+                <a href="/random/">rand(3) / random(3) /
+                arc4random(3) / et al.</a>
+              </li>
+              <li>
+                <a href="/object-subscripting/">Object
+                Subscripting</a>
+              </li>
+              <li>
+                <a href="/bool/">BOOL / bool / Boolean /
+                NSCFBoolean</a>
+              </li>
+              <li>
+                <a href="/c-storage-classes/">C Storage Classes</a>
+              </li>
+              <li>
+                <a href="/type-encodings/">Type Encodings</a>
+              </li>
+              <li>
+                <a href="/__attribute__/">__attribute__</a>
+              </li>
+              <li>
+                <a href="/nil/">nil / Nil / NULL / NSNull</a>
+              </li>
+              <li>
+                <a href="/at-compiler-directives/">@</a>
+              </li>
+              <li>
+                <a href="/pragma/">#pragma</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Open Source
+            </h2>
+            <ul>
+              <li>
+                <a href="/xctool/">xctool</a>
+              </li>
+              <li>
+                <a href="/afnetworking-2/">AFNetworking 2.0</a>
+              </li>
+              <li>
+                <a href="/core-data-libraries-and-utilities/">Core
+                Data Libraries &amp; Utilities</a>
+              </li>
+              <li>
+                <a href="/gpuimage/">GPUImage</a>
+              </li>
+              <li>
+                <a href="/reactivecocoa/">ReactiveCocoa</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Testing
+            </h2>
+            <ul>
+              <li>
+                <a href="/unit-testing/">Unit Testing</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Miscellanea
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/avspeechsynthesizer/">AVSpeechSynthesizer</a>
+              </li>
+              <li>
+                <a href="/empathy/">Empathy</a>
+              </li>
+              <li>
+                <a href=
+                "/dictionary-services/">UIReferenceLibraryViewController
+                /<br>
+                DCSDictionaryRef/<br>
+                /usr/share/dict/words</a>
+              </li>
+              <li>
+                <a href="/method-swizzling/">Method Swizzling</a>
+              </li>
+              <li>
+                <a href="/associated-objects/">Associated
+                Objects</a>
+              </li>
+              <li>
+                <a href=
+                "/mktileoverlay-mkmapsnapshotter-mkdirections/">MKTileOverlay,<br>
+                MKMapSnapshotter &amp;<br>
+                MKDirections</a>
+              </li>
+              <li>
+                <a href="/stewardship/">Stewardship</a>
+              </li>
+              <li>
+                <a href="/colophon/">Colophon</a>
+              </li>
+              <li>
+                <a href="/new-years-2014/">Reader Submissions -<br>
+                New Year's 2014</a>
+              </li>
+              <li>
+                <a href="/multipeer-connectivity/">Multipeer
+                Connectivity</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-4/">NSHipster Quiz #4</a>
+              </li>
+              <li>
+                <a href=
+                "/launch-arguments-and-environment-variables/">Launch
+                Arguments &amp;<br>
+                Environment Variables</a>
+              </li>
+              <li>
+                <a href="/xcode-key-bindings-and-gestures/">Xcode
+                Key Bindings &amp; Gestures</a>
+              </li>
+              <li>
+                <a href="/ios7/">iOS 7</a>
+              </li>
+              <li>
+                <a href="/network-link-conditioner/">Network Link
+                Conditioner</a>
+              </li>
+              <li>
+                <a href="/xcode-snippets/">Xcode Snippets</a>
+              </li>
+              <li>
+                <a href="/documentation/">Documentation</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-3/">NSHipster Quiz #3</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-2/">NSHipster Quiz #2</a>
+              </li>
+              <li>
+                <a href="/mklocalsearch/">MKLocalSearch</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-1/">NSHipster Quiz #1</a>
+              </li>
+              <li>
+                <a href="/icloud/">iCloud</a>
+              </li>
+              <li>
+                <a href="/search-kit/">Search Kit</a>
+              </li>
+              <li>
+                <a href="/backrow/">Back Row</a>
+              </li>
+              <li>
+                <a href=
+                "/reader-submissions-new-years-2013/">Reader
+                Submissions -<br>
+                New Year's 2013</a>
+              </li>
+              <li>
+                <a href="/addressbookui/">AddressBookUI</a>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </footer>
+    </div><script type="text/javascript">
+var Swiftype = window.Swiftype || {};
+    (function() {
+      Swiftype.key = 'Q5jNBiR8qVs5xE5dNect';
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = "//swiftype.com/embed.js";
+      var entry = document.getElementsByTagName('script')[0];
+      document.getElementsByTagName('script')[0].parentNode.insertBefore(script, entry);
+    }());
+    </script><script type="text/javascript">
+var _gauges = _gauges || [];
+    (function() {
+      var t   = document.createElement('script');
+      t.type  = 'text/javascript';
+      t.async = true;
+      t.id    = 'gauges-tracker';
+      t.setAttribute('data-site-id', '510be6d4108d7b438800005f');
+      t.src = '//secure.gaug.es/track.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+  </body>
+</html>

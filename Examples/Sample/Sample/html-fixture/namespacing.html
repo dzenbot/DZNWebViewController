@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+      Namespacing : NSHipster
+    </title>
+    <meta name="description" content=
+    "NSHipster is a journal of the overlooked bits in Objective-C and Cocoa. Updated weekly.">
+    <meta name="author" content="Mattt Thompson">
+    <meta name="revisit-after" content="3 days">
+    <meta name="viewport" content="width=device-width">
+    <link rel="license" href=
+    "http://creativecommons.org/licenses/by-nc/3.0/">
+    <link rel="alternate" hreflang="en-us" href=
+    "http://nshipster.com">
+    <link rel="alternate" hreflang="zh-Hans" href=
+    "http://nshipster.cn">
+    <link rel="alternate" hreflang="x-default" href=
+    "http://nshipster.com">
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="http://nshipster.com/feed.xml">
+    <link rel="stylesheet" href="/css/screen.css" type="text/css">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@NSHipster">
+    <meta name="twitter:creator" content="@mattt">
+    <meta name="twitter:title" content="Namespacing">
+    <meta name="twitter:description" content=
+    "Namespacing is the preeminent bugbear of Objective-C. A cosmetic quirk with global implications, the language's lack of identifier containers remains a source of prodigious quantities of caremad for armchair language critics.">
+    <meta content="NSHipster" property="og:site_name">
+    <meta content="Namespacing" property="og:title">
+    <meta content="http://nshipster.com/namespacing/" property=
+    "og:url">
+    <meta content=
+    "Namespacing is the preeminent bugbear of Objective-C. A cosmetic quirk with global implications, the language's lack of identifier containers remains a source of prodigious quantities of caremad for armchair language critics."
+    property="og:description">
+    <meta property="st:title" content="Namespacing">
+    <meta property="st:type" content="article">
+    <script type="text/javascript">
+var _sf_startpt=(new Date()).getTime()
+    </script>
+    <script onload="try{Typekit.load();}catch(e){}" src=
+    "//use.typekit.net/agk0bgp.js" type="text/javascript">
+</script>
+  </head>
+  <body>
+    <div role="container">
+      <header role="banner">
+        <h1 id="logo">
+          <a href="/"><acronym title="NeXTSTEP/Sun">NS</acronym>
+          <strong>Hipster</strong> <img id="moustache" src=
+          "//cdn.nshipster.com/images/moustache.svg" width="200"
+          height="150" data-author=
+          "http://thenounproject.com/bnhw"></a>
+        </h1>
+        <form>
+          <input type="text" id="st-search-input" class=
+          "st-search-input">
+        </form>
+      </header>
+      <div id="main" role="main">
+        <article>
+          <header>
+            <h1>
+              <a href="/namespacing/">Namespacing</a>
+            </h1>
+            <h2>
+              Written by <a href="http://mattt.me/">Mattt
+              Thompson</a> on <time pubdate=
+              "2014-02-24 00:00:00 -0800">Feb 24<span>th</span>,
+              2014</time>
+            </h2>
+          </header>
+          <div class="content" data-swiftype-index="true">
+            <blockquote>
+              <p>
+                Why the hell is everything
+                <code>NS</code>-whatever?
+              </p>
+            </blockquote>
+            <p>
+              You'll hear that within the first minute of
+              introducing someone to Objective-C. Guaranteed.
+            </p>
+            <p>
+              Like a parent faced with the task of explaining the
+              concept of death or the non-existence of Santa, you
+              do your best to be forthcoming with facts, so that
+              they might arrive at a conclusion themselves.
+            </p>
+            <blockquote>
+              <p>
+                Why, Jimmy, <code>NS</code> stands for
+                <code>NeXTSTEP</code> (well, actually,
+                <code>NeXTSTEP/Sun</code>, but we'll cover that
+                with "the birds &amp; the bees" talk), and it's
+                used to...
+              </p>
+            </blockquote>
+            <p>
+              ...but by the time the words have left your mouth,
+              you can already sense the disappointment in their
+              face. Their innocence has been lost, and with an
+              audible <em>sigh</em> of resignation, they start to
+              ask uncomfortable questions about <a href=
+              "http://nshipster.com/at-compiler-directives/">@</a>
+            </p>
+            <hr>
+            <p>
+              Namespacing is the preeminent bugbear of Objective-C.
+              A cosmetic quirk with global implications, the
+              language's lack of identifier containers remains a
+              source of prodigious quantities of caremad for
+              armchair language critics.
+            </p>
+            <p>
+              This is all to say: unlike many other languages that
+              are popular today, Objective-C does not provide a
+              module-like mechanism for avoiding class and method
+              name collisions.
+            </p>
+            <p>
+              Instead, Objective-C relies on prefixes to ensure
+              that functionality in one part of the app doesn't
+              interfere with similarly named code somewhere else.
+            </p>
+            <p>
+              We'll jump into those right after a quick digression
+              into type systems:
+            </p>
+            <h2>
+              Types in C &amp; Objective-C
+            </h2>
+            <p>
+              As noted many times in this publication, Objective-C
+              is built directly on top of the C language. One
+              consequence of this is that Objective-C and C share a
+              type system, requiring that identifiers are globally
+              unique.
+            </p>
+            <p>
+              You can see this for yourself—try defining a new
+              static variable with the same name as an existing
+              <code>@interface</code>, and the compiler will
+              generate an error:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">@interface</span> <span class=
+"nc">XXObject</span> : <span class="nc">NSObject</span>
+<span class="k">@end</span>
+
+<span class="k">static</span> <span class=
+"kt">char</span> <span class="o">*</span> <span class=
+"n">XXObject</span><span class="p">;</span>  <span class=
+"c1">// Redefinition of "XXObject" as different kind of symbol</span>
+</code>
+</pre>
+            </div>
+            <p>
+              That said, the Objective-C runtime creates a layer of
+              abstraction on top of the C type system, allowing the
+              following code to compile without even a snicker:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">@protocol</span> <span class=
+"nc">Foo</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class=
+"nc">Foo</span> : <span class="nc">NSObject</span> <span class=
+"o">&lt;</span><span class="n">Foo</span><span class=
+"o">&gt;</span> <span class="p">{</span>
+    <span class="kt">id</span> <span class=
+"n">Foo</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@property</span> <span class=
+"kt">id</span> <span class="n">Foo</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class=
+"kt">id</span><span class="p">)</span><span class=
+"nf">Foo</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">id</span><span class="p">)</span><span class=
+"nf">Foo</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class=
+"nc">Foo</span> <span class="nl">(Foo)</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">Foo</span>
+<span class="k">@synthesize</span> <span class=
+"n">Foo</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class=
+"kt">id</span><span class="p">)</span><span class=
+"nf">Foo</span> <span class="p">{</span>
+    <span class="kt">id</span> <span class=
+"n">Foo</span> <span class="o">=</span> <span class=
+"s">@"Foo"</span><span class="p">;</span>
+    <span class="k">return</span> <span class=
+"n">Foo</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Within the context of the Objective-C runtime, a
+              program is able to differentiate between a class, a
+              protocol, a category, an instance variable, an
+              instance method, and a class method all having the
+              same name.
+            </p>
+            <blockquote>
+              <p>
+                That a variable can reappropriate the name of an
+                existing method is a consequence of the C type
+                system (which similarly allows for a variable to
+                shadow the name of its containing function)
+              </p>
+            </blockquote>
+            <h2>
+              Prefixes
+            </h2>
+            <p>
+              All classes in an Objective-C application must be
+              globally unique. Since many different frameworks are
+              likely have some conceptual overlap—and therefore an
+              overlap in names (users, views, requests / responses,
+              etc.)—convention dictates that class names use 2 or 3
+              letter prefix.
+            </p>
+            <h3>
+              Class Prefixes
+            </h3>
+            <p>
+              Apple <a href=
+              "https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html">
+              recommends</a> that 2-letter prefixes be reserved for
+              first-party libraries and frameworks, while
+              third-party developers (that's us) opt for 3 letters
+              or more.
+            </p>
+            <p>
+              A veteran Mac or iOS developer will have likely
+              memorized most if not all of the following
+              abbreviated identifiers:
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Prefix
+                  </th>
+                  <th>
+                    Frameworks
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <tt>AB</tt>
+                  </td>
+                  <td>
+                    AddressBook / AddressBookUI
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>AC</tt>
+                  </td>
+                  <td>
+                    Accounts
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>AD</tt>
+                  </td>
+                  <td>
+                    iAd
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>AL</tt>
+                  </td>
+                  <td>
+                    AssetsLibrary
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>AU</tt>
+                  </td>
+                  <td>
+                    AudioUnit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>AV</tt>
+                  </td>
+                  <td>
+                    AVFoundation
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CA</tt>
+                  </td>
+                  <td>
+                    CoreAnimation
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CB</tt>
+                  </td>
+                  <td>
+                    CoreBluetooth
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CF</tt>
+                  </td>
+                  <td>
+                    CoreFoundation / CFNetwork
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CG</tt>
+                  </td>
+                  <td>
+                    CoreGraphics / QuartzCore / ImageIO
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CI</tt>
+                  </td>
+                  <td>
+                    CoreImage
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CL</tt>
+                  </td>
+                  <td>
+                    CoreLocation
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CM</tt>
+                  </td>
+                  <td>
+                    CoreMedia / CoreMotion
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>CV</tt>
+                  </td>
+                  <td>
+                    CoreVideo
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>EA</tt>
+                  </td>
+                  <td>
+                    ExternalAccessory
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>EK</tt>
+                  </td>
+                  <td>
+                    EventKit / EventKitUI
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>GC</tt>
+                  </td>
+                  <td>
+                    GameController
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>GLK</tt><sup>*</sup>
+                  </td>
+                  <td>
+                    GLKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>JS</tt>
+                  </td>
+                  <td>
+                    JavaScriptCore
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MA</tt>
+                  </td>
+                  <td>
+                    MediaAccessibility
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MC</tt>
+                  </td>
+                  <td>
+                    MultipeerConnectivity
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MF</tt>
+                  </td>
+                  <td>
+                    MessageUI*
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MIDI</tt><sup>*</sup>
+                  </td>
+                  <td>
+                    CoreMIDI
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MK</tt>
+                  </td>
+                  <td>
+                    MapKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MP</tt>
+                  </td>
+                  <td>
+                    MediaPlayer
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>NK</tt>
+                  </td>
+                  <td>
+                    NewsstandKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>NS</tt>
+                  </td>
+                  <td>
+                    Foundation, AppKit, CoreData
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>PK</tt>
+                  </td>
+                  <td>
+                    PassKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>QL</tt>
+                  </td>
+                  <td>
+                    QuickLook
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>SC</tt>
+                  </td>
+                  <td>
+                    SystemConfiguration
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>Sec</tt><sup>*</sup>
+                  </td>
+                  <td>
+                    Security*
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>SK</tt>
+                  </td>
+                  <td>
+                    StoreKit / SpriteKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>SL</tt>
+                  </td>
+                  <td>
+                    Social
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>SS</tt>
+                  </td>
+                  <td>
+                    Safari Services
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>TW</tt>
+                  </td>
+                  <td>
+                    Twitter
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>UI</tt>
+                  </td>
+                  <td>
+                    UIKit
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>UT</tt>
+                  </td>
+                  <td>
+                    MobileCoreServices
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h4>
+              3rd-Party Class Prefixes
+            </h4>
+            <p>
+              Until recently, with the advent of <a href=
+              "http://cocoapods.org">CocoaPods</a> and a surge of
+              new iOS developers, the distribution of open source,
+              3rd-party code had been largely a non-issue for Apple
+              and the rest of the Objective-C community. Apple's
+              naming guidelines came about recently enough that the
+              advice to adopt 3-letter prefixes is only
+              <em>just</em> becoming accepted practice.
+            </p>
+            <p>
+              Because of this, many established libraries still use
+              2-letter prefixes. Consider some of these <a href=
+              "https://github.com/search?l=Objective-C&amp;q=stars%3A%3E1&amp;s=stars&amp;type=Repositories">
+              most-starred Objective-C repositories on GitHub</a>.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Prefix
+                  </th>
+                  <th>
+                    Frameworks
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <tt>AF</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/AFNetworking/AFNetworking">AFNetworking</a>
+                    ("<a href=
+                    "http://en.wikipedia.org/wiki/Gowalla">Alamofire</a>")
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>RK</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/RestKit/RestKit">RestKit</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>GPU</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/BradLarson/GPUImage">GPUImage</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>SD</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/rs/SDWebImage">SDWebImage</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>MB</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/jdg/MBProgressHUD">MBProgressHUD</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>FB</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/facebook/facebook-ios-sdk">Facebook
+                    SDK</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>FM</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/ccgus/fmdb">FMDB</a>
+                    ("<a href="http://flyingmeat.com">Flying
+                    Meat</a>")
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>JK</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/johnezang/JSONKit">JSONKit</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>FUI</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/Grouper/FlatUIKit">FlatUI</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>NI</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/jverkoey/nimbus">Nimbus</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <tt>RAC</tt>
+                  </td>
+                  <td>
+                    <a href=
+                    "https://github.com/ReactiveCocoa/ReactiveCocoa">
+                    Reactive Cocoa</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              Seeing as how <a href=
+              "https://github.com/AshFurrow/AFTabledCollectionView">
+              we're already seeing prefix overlap among 3rd-party
+              libraries</a>, make sure that you follow a 3+-letter
+              convention in your own code.
+            </p>
+            <blockquote>
+              <p>
+                For especially future-focused library authors,
+                consider using <a href=
+                "http://nshipster.com/at-compiler-directives/"><code>
+                @compatibility_alias</code></a> to provide a
+                seamless migration path for existing users in your
+                next major upgrade.
+              </p>
+            </blockquote>
+            <h3>
+              Method Prefixes
+            </h3>
+            <p>
+              It's not just classes that are prone to naming
+              collisions: selectors suffer from this too—in ways
+              that are even more problematic than classes.
+            </p>
+            <p>
+              Consider the category:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">@interface</span> <span class=
+"nc">NSString</span> <span class="nl">(PigLatin)</span>
+<span class="k">-</span> <span class="p">(</span><span class=
+"n">NSString</span> <span class="o">*</span><span class=
+"p">)</span><span class="nf">pigLatinString</span><span class=
+"p">;</span>
+<span class="k">@end</span>
+</code>
+</pre>
+            </div>
+            <p>
+              If <code>-pigLatinString</code> were implemented by
+              another category (or added to the
+              <code>NSString</code> class in a future version of
+              iOS or Mac OS X), any calls to that method would
+              result in undefined behavior, since no guarantee is
+              made as to the order in which methods are defined by
+              the runtime.
+            </p>
+            <p>
+              This can be guarded against by prefixing the method
+              name, just like the class name (prefixing the
+              category name isn't a bad idea, either):
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">@interface</span> <span class=
+"nc">NSString</span> <span class="nl">(XXXPigLatin)</span>
+<span class="k">-</span> <span class="p">(</span><span class=
+"n">NSString</span> <span class="o">*</span><span class=
+"p">)</span><span class="nf">xxx_pigLatinString</span><span class=
+"p">;</span>
+<span class="k">@end</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Apple's recommendation that <a href=
+              "https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/CustomizingExistingClasses/CustomizingExistingClasses.html#//apple_ref/doc/uid/TP40011210-CH6-SW4">
+              all category methods use prefixes</a> is even less
+              widely known or accepted than its policy on class
+              prefixing.
+            </p>
+            <p>
+              There are many outspoken developers who will
+              passionately argue one side or another. However,
+              weighing the risk of collision against its
+              likelihood, the cost/benefit analysis is not entirely
+              clear-cut:
+            </p>
+            <p>
+              The main feature of categories is coating useful
+              functionality with syntactic sugar. Any category
+              method could alternatively be implemented as a
+              function taking an explicit argument in place of the
+              implicit <code>self</code> of a method.
+            </p>
+            <p>
+              Collisions can be detected at compile time by setting
+              the <code>OBJC_PRINT_REPLACED_METHODS</code>
+              environment variable to <code>YES</code>. In
+              practice, collisions are extremely rare, and when
+              they do occur, they're usually an indicator of
+              functionality that is needlessly duplicated across
+              dependencies. Although the worst-case scenario is a
+              runtime exception, it's entirely likely that two
+              methods named the same thing will actually
+              <em>do</em> the same thing, and result in no change
+              in behavior. All of those Swiss Army Knife categories
+              that defined <code>NSArray -firstObject</code>
+              continued to march on once the method was officially
+              added.
+            </p>
+            <p>
+              Just as with constitutional scholarship, there will
+              be strict and loose interpretations of Apple's
+              programming guidelines. Those that see it as a living
+              document would point out that... actually, you know
+              what? If you've read this far and are still
+              undecided, just prefix your damn category methods. If
+              you choose not to, just be mindful that it could bite
+              you in the ass.
+            </p>
+            <blockquote>
+              <p>
+                Go ahead and add "category method" to your Tweetbot
+                mute terms. Expiration: 1 Week.
+              </p>
+            </blockquote>
+            <h4>
+              Swizzling
+            </h4>
+            <p>
+              The one case where method prefixing (or suffixing) is
+              absolutely necessary is when doing method
+              replacement, as discussed in last week's article on
+              <a href=
+              "http://nshipster.com/method-swizzling/">swizzling</a>.
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">@implementation</span> <span class=
+"nc">UIViewController</span> <span class="nl">(Swizzling)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">xxx_viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class=
+"n">self</span> <span class="n">xxx_viewDidLoad</span><span class=
+"p">];</span>
+
+    <span class="c1">// Swizzled implementation</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <h2>
+              Do We <em>Really</em> Need Namespaces?
+            </h2>
+            <p>
+              With all of the recent talk about replacing /
+              reinventing / reimagining Objective-C, it's almost
+              taken as a given that namespacing would be an obvious
+              feature. But what does that actually get us?
+            </p>
+            <p>
+              <strong>Aesthetics?</strong> Aside from IETF members
+              and military personnel, nobody likes the visual
+              aesthetic of <acronym title=
+              "CAPITAL LETTER ACRONYMS">CLA</acronym>s. But would
+              <code>::</code>, <code>/</code>, or an extra
+              <code>.</code> really make matters better? Do we
+              <em>really</em> want to start calling
+              <code>NSArray</code> "Foundation Array"? (And what
+              would I do with NSHipster.com ?!)
+            </p>
+            <p>
+              <strong>Semantics?</strong> Start to look closely at
+              any other language, and how they actually use
+              namespaces, and you'll realize that namespaces don't
+              magically solve all matters of ambiguity. If
+              anything, the additional context makes things worse.
+            </p>
+            <p>
+              Not to create a straw man, but an imagined
+              implementation of Objective-C namespaces probably
+              look a lot like this:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="p">@</span><span class=
+"n">namespace</span> <span class="n">XX</span>
+    <span class="k">@implementation</span> <span class=
+"nc">Object</span>
+
+    <span class="p">@</span><span class=
+"n">using</span> <span class="n">F</span><span class=
+"o">:</span> <span class="n">Foundation</span><span class=
+"p">;</span>
+
+    <span class="o">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"n">foo</span> <span class="p">{</span>
+        <span class="nl">F:</span><span class=
+"n">Array</span> <span class="o">*</span><span class=
+"n">array</span> <span class="o">=</span> <span class=
+"p">@[</span><span class="mi">@1</span><span class=
+"p">,</span><span class="mi">@2</span><span class=
+"p">,</span> <span class="mi">@3</span><span class="p">];</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+
+    <span class="k">@end</span>
+<span class="k">@end</span>
+</code>
+</pre>
+            </div>
+            <p>
+              What we have currently—warts and all—has the notable
+              advantage of non-ambiguity. There is no mistaking
+              <code>NSString</code> for anything other than what it
+              is, either by the compiler or when we talk about it
+              as developers. There are no special contextual
+              considerations to consider when reading through code
+              to understand what actors are at play. And best of
+              all: class names are <a href=
+              "http://lmgtfy.com/?q=NSString"><em>exceedingly</em>
+              easy to search for</a>.
+            </p>
+            <p>
+              Either way, if you're interested in this subject, I'd
+              encourage you to take a look at <a href=
+              "http://optshiftk.com/2012/04/draft-proposal-for-namespaces-in-objective-c/">
+              this namespace feature proposal</a> by <a href=
+              "http://optshiftk.com">Kyle Sluder</a>. It's a
+              fascinating read.
+            </p>
+          </div>
+          <aside>
+            <a href="https://twitter.com/share" class=
+            "twitter-share-button" data-url=
+            "http://nshipster.com/namespacing/" data-via=
+            "NSHipster" data-size="large">Tweet</a> <script type=
+            "text/javascript">
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            </script>
+          </aside>
+          <footer id="book" class="promotion">
+            <a href="https://gum.co/cfhipsterref"></a>
+            <div id="cfhipsterref-cover"></div>
+            <div>
+              <hgroup>
+                <h1>
+                  <a href=
+                  "https://gum.co/cfhipsterref">CFHipsterRef:
+                  Low-Level Programming on<br>
+                  iOS &amp; Mac OS X</a>
+                </h1>
+                <h2>
+                  Available May 27th, 2014
+                </h2>
+              </hgroup>
+              <p>
+                Perfect for intermediate and expert developers
+                wanting to take a deeper dive into advanced topics,
+                <em>CFHipsterRef: Low-Level Programming on iOS
+                &amp; Mac OS X</em> covers the core technologies
+                powering Cocoa, Objective-C, and the operating
+                system itself, including Core Bluetooth,
+                Accelerate, and the Objective-C runtime.
+              </p><button onclick=
+              "javascript:window.location.href='https://gum.co/cfhipsterref'">Pre-Order
+              Now</button>
+            </div>
+          </footer>
+        </article>
+      </div>
+      <footer role="contentinfo">
+        <section class="credits colophon">
+          <p>
+            Created by <a href="http://mattt.me">Mattt
+            Thompson</a>, and released under a <a href=
+            "http://creativecommons.org/licenses/by-nc/3.0/" rel=
+            "license">Creative Commons BY-NC License</a>. <a href=
+            "https://plus.google.com/106751358503565042647?rel=author"
+            style="display: none;"></a>
+          </p>
+          <p>
+            Articles also available in <a href=
+            "http://nshipster.cn" hreflang="zh-Hans">中文</a>.
+          </p>
+        </section>
+        <aside class="links">
+          <a href="https://github.com/NSHipster/articles/issues"
+          class="icon-github" title="Pull Requests Welcome"
+          aria-hidden="true"></a> <a href="/feed.xml" class=
+          "icon-feed" title="RSS" aria-hidden="true"></a>
+        </aside>
+        <section class="archive" role="navigation">
+          <div>
+            <h2>
+              Foundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/nsurl/">NSURL /<br>
+                NSURLComponents</a>
+              </li>
+              <li>
+                <a href=
+                "/nstemporarydirectory/">NSTemporaryDirectory /<br>
+                NSItemReplacementDirectory /<br>
+                mktemp(3)</a>
+              </li>
+              <li>
+                <a href="/nsrange/">NSRange</a>
+              </li>
+              <li>
+                <a href=
+                "/nsnotification-and-nsnotificationcenter/">NSNotification
+                &amp;<br>
+                NSNotificationCenter</a>
+              </li>
+              <li>
+                <a href="/nsfilemanager/">NSFileManager</a>
+              </li>
+              <li>
+                <a href="/nsformatter/">NSFormatter</a>
+              </li>
+              <li>
+                <a href="/nserror/">NSError</a>
+              </li>
+              <li>
+                <a href="/key-value-observing/">Key-Value
+                Observing</a>
+              </li>
+              <li>
+                <a href="/nshashtable-and-nsmaptable/">NSHashTable
+                &amp;<br>
+                NSMapTable</a>
+              </li>
+              <li>
+                <a href="/nspredicate/">NSPredicate</a>
+              </li>
+              <li>
+                <a href="/nsexpression/">NSExpression</a>
+              </li>
+              <li>
+                <a href="/enumerators/">NSFastEnumeration /<br>
+                NSEnumerator /<br>
+                -enumerateObjectsUsingBlock:</a>
+              </li>
+              <li>
+                <a href="/uuid-udid-unique-identifier/">NSUUID
+                /<br>
+                CFUUIDRef /<br>
+                UIDevice -uniqueIdentifier /<br>
+                -identifierForVendor</a>
+              </li>
+              <li>
+                <a href="/nsdatadetector/">NSDataDetector</a>
+              </li>
+              <li>
+                <a href="/nscoding/">NSCoding / NSKeyedArchiver</a>
+              </li>
+              <li>
+                <a href="/nssecurecoding/">NSSecureCoding</a>
+              </li>
+              <li>
+                <a href=
+                "/nsassertionhandler/">NSAssertionHandler</a>
+              </li>
+              <li>
+                <a href="/nsurlcache/">NSURLCache</a>
+              </li>
+              <li>
+                <a href="/nsvalue/">NSValue</a>
+              </li>
+              <li>
+                <a href="/nslocalizedstring/">NSLocalizedString</a>
+              </li>
+              <li>
+                <a href="/instancetype/">instancetype</a>
+              </li>
+              <li>
+                <a href="/kvc-collection-operators/">KVC Collection
+                Operators</a>
+              </li>
+              <li>
+                <a href="/nsorderedset/">NSOrderedSet</a>
+              </li>
+              <li>
+                <a href="/ns_enum-ns_options/">NS_ENUM &amp;
+                NS_OPTIONS</a>
+              </li>
+              <li>
+                <a href=
+                "/nsvaluetransformer/">NSValueTransformer</a>
+              </li>
+              <li>
+                <a href="/nsurlprotocol/">NSURLProtocol</a>
+              </li>
+              <li>
+                <a href=
+                "/nslinguistictagger/">NSLinguisticTagger</a>
+              </li>
+              <li>
+                <a href="/nscharacterset/">NSCharacterSet</a>
+              </li>
+              <li>
+                <a href="/nslocale/">NSLocale</a>
+              </li>
+              <li>
+                <a href="/nsoperation/">NSOperation</a>
+              </li>
+              <li>
+                <a href=
+                "/nsincrementalstore/">NSIncrementalStore</a>
+              </li>
+              <li>
+                <a href="/nsdatecomponents/">NSDateComponents</a>
+              </li>
+              <li>
+                <a href="/nssortdescriptor/">NSSortDescriptor</a>
+              </li>
+              <li>
+                <a href="/nscache/">NSCache</a>
+              </li>
+              <li>
+                <a href="/nsindexset/">NSIndexSet</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreFoundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/cfbag/">CFBag</a>
+              </li>
+              <li>
+                <a href="/cfstringtransform/">CFStringTransform</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreGraphics
+            </h2>
+            <ul>
+              <li>
+                <a href="/cggeometry/">CGGeometry</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              UIKit
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/launch-options/">UIApplicationDelegate<br>
+                launchOptions</a>
+              </li>
+              <li>
+                <a href="/uimenucontroller/">UIMenuController</a>
+              </li>
+              <li>
+                <a href="/uiappearance/">UIAppearance</a>
+              </li>
+              <li>
+                <a href=
+                "/uilocalizedindexedcollation/">UILocalizedIndexedCollation</a>
+              </li>
+              <li>
+                <a href="/uicollectionview/">UICollectionView</a>
+              </li>
+              <li>
+                <a href="/uiaccessibility/">UIAccessibility</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Objective-C
+            </h2>
+            <ul>
+              <li>
+                <a href="/namespacing/">Namespacing</a>
+              </li>
+              <li>
+                <a href="/extended-file-attributes/">Extended File
+                Attributes</a>
+              </li>
+              <li>
+                <a href="/equality/">Equality</a>
+              </li>
+              <li>
+                <a href="/random/">rand(3) / random(3) /
+                arc4random(3) / et al.</a>
+              </li>
+              <li>
+                <a href="/object-subscripting/">Object
+                Subscripting</a>
+              </li>
+              <li>
+                <a href="/bool/">BOOL / bool / Boolean /
+                NSCFBoolean</a>
+              </li>
+              <li>
+                <a href="/c-storage-classes/">C Storage Classes</a>
+              </li>
+              <li>
+                <a href="/type-encodings/">Type Encodings</a>
+              </li>
+              <li>
+                <a href="/__attribute__/">__attribute__</a>
+              </li>
+              <li>
+                <a href="/nil/">nil / Nil / NULL / NSNull</a>
+              </li>
+              <li>
+                <a href="/at-compiler-directives/">@</a>
+              </li>
+              <li>
+                <a href="/pragma/">#pragma</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Open Source
+            </h2>
+            <ul>
+              <li>
+                <a href="/xctool/">xctool</a>
+              </li>
+              <li>
+                <a href="/afnetworking-2/">AFNetworking 2.0</a>
+              </li>
+              <li>
+                <a href="/core-data-libraries-and-utilities/">Core
+                Data Libraries &amp; Utilities</a>
+              </li>
+              <li>
+                <a href="/gpuimage/">GPUImage</a>
+              </li>
+              <li>
+                <a href="/reactivecocoa/">ReactiveCocoa</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Testing
+            </h2>
+            <ul>
+              <li>
+                <a href="/unit-testing/">Unit Testing</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Miscellanea
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/avspeechsynthesizer/">AVSpeechSynthesizer</a>
+              </li>
+              <li>
+                <a href="/empathy/">Empathy</a>
+              </li>
+              <li>
+                <a href=
+                "/dictionary-services/">UIReferenceLibraryViewController
+                /<br>
+                DCSDictionaryRef/<br>
+                /usr/share/dict/words</a>
+              </li>
+              <li>
+                <a href="/method-swizzling/">Method Swizzling</a>
+              </li>
+              <li>
+                <a href="/associated-objects/">Associated
+                Objects</a>
+              </li>
+              <li>
+                <a href=
+                "/mktileoverlay-mkmapsnapshotter-mkdirections/">MKTileOverlay,<br>
+                MKMapSnapshotter &amp;<br>
+                MKDirections</a>
+              </li>
+              <li>
+                <a href="/stewardship/">Stewardship</a>
+              </li>
+              <li>
+                <a href="/colophon/">Colophon</a>
+              </li>
+              <li>
+                <a href="/new-years-2014/">Reader Submissions -<br>
+                New Year's 2014</a>
+              </li>
+              <li>
+                <a href="/multipeer-connectivity/">Multipeer
+                Connectivity</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-4/">NSHipster Quiz #4</a>
+              </li>
+              <li>
+                <a href=
+                "/launch-arguments-and-environment-variables/">Launch
+                Arguments &amp;<br>
+                Environment Variables</a>
+              </li>
+              <li>
+                <a href="/xcode-key-bindings-and-gestures/">Xcode
+                Key Bindings &amp; Gestures</a>
+              </li>
+              <li>
+                <a href="/ios7/">iOS 7</a>
+              </li>
+              <li>
+                <a href="/network-link-conditioner/">Network Link
+                Conditioner</a>
+              </li>
+              <li>
+                <a href="/xcode-snippets/">Xcode Snippets</a>
+              </li>
+              <li>
+                <a href="/documentation/">Documentation</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-3/">NSHipster Quiz #3</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-2/">NSHipster Quiz #2</a>
+              </li>
+              <li>
+                <a href="/mklocalsearch/">MKLocalSearch</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-1/">NSHipster Quiz #1</a>
+              </li>
+              <li>
+                <a href="/icloud/">iCloud</a>
+              </li>
+              <li>
+                <a href="/search-kit/">Search Kit</a>
+              </li>
+              <li>
+                <a href="/backrow/">Back Row</a>
+              </li>
+              <li>
+                <a href=
+                "/reader-submissions-new-years-2013/">Reader
+                Submissions -<br>
+                New Year's 2013</a>
+              </li>
+              <li>
+                <a href="/addressbookui/">AddressBookUI</a>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </footer>
+    </div><script type="text/javascript">
+var Swiftype = window.Swiftype || {};
+    (function() {
+      Swiftype.key = 'Q5jNBiR8qVs5xE5dNect';
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = "//swiftype.com/embed.js";
+      var entry = document.getElementsByTagName('script')[0];
+      document.getElementsByTagName('script')[0].parentNode.insertBefore(script, entry);
+    }());
+    </script><script type="text/javascript">
+var _gauges = _gauges || [];
+    (function() {
+      var t   = document.createElement('script');
+      t.type  = 'text/javascript';
+      t.async = true;
+      t.id    = 'gauges-tracker';
+      t.setAttribute('data-site-id', '510be6d4108d7b438800005f');
+      t.src = '//secure.gaug.es/track.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+  </body>
+</html>

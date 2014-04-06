@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+      Multipeer Connectivity : NSHipster
+    </title>
+    <meta name="description" content=
+    "NSHipster is a journal of the overlooked bits in Objective-C and Cocoa. Updated weekly.">
+    <meta name="author" content="Mattt Thompson">
+    <meta name="revisit-after" content="3 days">
+    <meta name="viewport" content="width=device-width">
+    <link rel="license" href=
+    "http://creativecommons.org/licenses/by-nc/3.0/">
+    <link rel="alternate" hreflang="en-us" href=
+    "http://nshipster.com">
+    <link rel="alternate" hreflang="zh-Hans" href=
+    "http://nshipster.cn">
+    <link rel="alternate" hreflang="x-default" href=
+    "http://nshipster.com">
+    <link rel="alternate" type="application/rss+xml" title="RSS"
+    href="http://nshipster.com/feed.xml">
+    <link rel="stylesheet" href="/css/screen.css" type="text/css">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@NSHipster">
+    <meta name="twitter:creator" content="@mattt">
+    <meta name="twitter:title" content="Multipeer Connectivity">
+    <meta name="twitter:description" content=
+    "As consumer web technologies and enterprises race towards cloud infrastructure, there is a curious and significant counter-movement towards connected devices. The Multipeer Connectivity APIs, introduced in iOS 7, therefore may well be the most significant for the platform.">
+    <meta content="NSHipster" property="og:site_name">
+    <meta content="Multipeer Connectivity" property="og:title">
+    <meta content="http://nshipster.com/multipeer-connectivity/"
+    property="og:url">
+    <meta content=
+    "As consumer web technologies and enterprises race towards cloud infrastructure, there is a curious and significant counter-movement towards connected devices. The Multipeer Connectivity APIs, introduced in iOS 7, therefore may well be the most significant for the platform."
+    property="og:description">
+    <meta property="st:title" content="Multipeer Connectivity">
+    <meta property="st:type" content="article">
+    <script type="text/javascript">
+var _sf_startpt=(new Date()).getTime()
+    </script>
+    <script onload="try{Typekit.load();}catch(e){}" src=
+    "//use.typekit.net/agk0bgp.js" type="text/javascript">
+</script>
+  </head>
+  <body>
+    <div role="container">
+      <header role="banner">
+        <h1 id="logo">
+          <a href="/"><acronym title="NeXTSTEP/Sun">NS</acronym>
+          <strong>Hipster</strong> <img id="moustache" src=
+          "//cdn.nshipster.com/images/moustache.svg" width="200"
+          height="150" data-author=
+          "http://thenounproject.com/bnhw"></a>
+        </h1>
+        <form>
+          <input type="text" id="st-search-input" class=
+          "st-search-input">
+        </form>
+      </header>
+      <div id="main" role="main">
+        <article>
+          <header>
+            <h1>
+              <a href="/multipeer-connectivity/">Multipeer
+              Connectivity</a>
+            </h1>
+            <h2>
+              Written by <a href="http://mattt.me/">Mattt
+              Thompson</a> on <time pubdate=
+              "2013-12-09 00:00:00 -0800">Dec 9<span>th</span>,
+              2013</time>
+            </h2>
+          </header>
+          <div class="content" data-swiftype-index="true">
+            <p>
+              As consumer web technologies and enterprises race
+              towards cloud infrastructure, there is a curious and
+              significant counter-movement towards connected
+              devices.
+            </p>
+            <p>
+              In this age of mobile computing, the possibilities of
+              collaboration, whether in work or play, have never
+              been greater. In this age of privacy concerns and
+              mass surveillance, the need for secure, ad hoc
+              communications has never been more prescient. In this
+              age of connected devices, the promise of mastery over
+              the everyday objects of our lives has never been
+              closer at hand.
+            </p>
+            <p>
+              The Multipeer Connectivity APIs, introduced in iOS 7,
+              therefore may well be the most significant for the
+              platform. It allows developers to completely
+              reimagine how mobile apps are built, and to redefine
+              what is possible. And we're not just talking about
+              successors to the lame
+              bump-to-send-contact-information genre, either:
+              multi-peer connectivity has implications on
+              everything from collaborative editing and file
+              sharing to multiplayer gaming and sensor aggregation.
+            </p>
+            <hr>
+            <p>
+              Multipeer Connectivity is a framework that enables
+              nearby devices to communicate over infrastructure
+              Wi-Fi networks, peer-to-peer Wi-Fi, and Bluetooth
+              personal area networks. Connected peers are able
+              securely transmit messages, streams, or file
+              resources to other devices without going through an
+              intermediary web service.
+            </p>
+            <h2>
+              Advertising &amp; Discovering
+            </h2>
+            <p>
+              The first step in communication is to make peers
+              aware of one another. This is accomplished by
+              advertising and discovering services.
+            </p>
+            <p>
+              Advertising makes a service known to other peers,
+              while discovery is the inverse process of the client
+              being made aware of services advertised by other
+              peers. In many cases, clients both discover and
+              advertise for the same service, which can lead to
+              some initial confusion—especially to anyone rooted in
+              the client-server paradigm.
+            </p>
+            <p>
+              Each service is identified by a type, which is a
+              short text string of ASCII letters, numbers, and
+              dashes, up to 15 characters in length. By convention,
+              a service name should begin with the app name,
+              followed by a dash and a unique descriptor for that
+              service (think of it as simplified
+              <code>com.apple.*</code>-esque reverse-DNS notation):
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="k">static</span> <span class=
+"n">NSString</span> <span class="o">*</span> <span class=
+"k">const</span> <span class="n">XXServiceType</span> <span class=
+"o">=</span> <span class="s">@"xx-service"</span><span class=
+"p">;</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Peers are uniquely identified by an
+              <code>MCPeerID</code> object, which are initialized
+              with a display name. This could be a user-specified
+              nickname, or simply the current device name:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="n">localPeerID</span> <span class=
+"o">=</span> <span class="p">[[</span><span class=
+"n">MCPeerID</span> <span class="n">alloc</span><span class=
+"p">]</span> <span class="n">initWithDisplayName</span><span class=
+"o">:</span><span class="p">[[</span><span class=
+"n">UIDevice</span> <span class=
+"n">currentDevice</span><span class="p">]</span> <span class=
+"n">name</span><span class="p">]];</span>
+</code>
+</pre>
+            </div>
+            <blockquote>
+              <p>
+                Peers can be also be advertised or discovered
+                manually using <code>NSNetService</code> or the
+                Bonjour C APIs, but this is a rather advanced and
+                specific concern. Additional information about
+                manual peer management can be found in the
+                <code>MCSession</code> documentation.
+              </p>
+            </blockquote>
+            <h3>
+              Advertising
+            </h3>
+            <p>
+              Services are advertised by the
+              <code>MCNearbyServiceAdvertiser</code>, which is
+              initialized with a local peer, service type, and any
+              optional information to be communicated to peers that
+              discover the service.
+            </p>
+            <blockquote>
+              <p>
+                Discovery information is sent as Bonjour
+                <code>TXT</code> records encoded according to
+                <a href="http://tools.ietf.org/html/rfc6763">RFC
+                6763</a>.
+              </p>
+            </blockquote>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"n">MCNearbyServiceAdvertiser</span> <span class=
+"o">*</span><span class="n">advertiser</span> <span class=
+"o">=</span>
+    <span class="p">[[</span><span class=
+"n">MCNearbyServiceAdvertiser</span> <span class=
+"n">alloc</span><span class="p">]</span> <span class=
+"n">initWithPeer</span><span class="o">:</span><span class=
+"n">localPeerID</span>
+                                      <span class=
+"nl">discoveryInfo:</span><span class="nb">nil</span>
+                                        <span class=
+"nl">serviceType:</span><span class=
+"n">XXServiceType</span><span class="p">];</span>
+<span class="n">advertiser</span><span class=
+"p">.</span><span class="n">delegate</span> <span class=
+"o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">[</span><span class=
+"n">advertiser</span> <span class=
+"n">startAdvertisingPeer</span><span class="p">];</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Events are handled by the advertiser's
+              <code>delegate</code>, conforming to the
+              <code>MCNearbyServiceAdvertiserDelegate</code>
+              protocol.
+            </p>
+            <p>
+              As an example implementation, consider a client that
+              allows the user to choose whether to accept or reject
+              incoming connection requests, with the option to
+              reject and block any subsequent requests from that
+              peer:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"cp">#pragma mark - MCNearbyServiceAdvertiserDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">advertiser:</span><span class="p">(</span><span class=
+"n">MCNearbyServiceAdvertiser</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">advertiser</span>
+<span class="nl">didReceiveInvitationFromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+       <span class="nl">withContext:</span><span class=
+"p">(</span><span class="n">NSData</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">context</span>
+ <span class="nl">invitationHandler:</span><span class=
+"p">(</span><span class="kt">void</span><span class=
+"p">(</span><span class="o">^</span><span class=
+"p">)(</span><span class="kt">BOOL</span> <span class=
+"n">accept</span><span class="p">,</span> <span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"n">session</span><span class="p">))</span><span class=
+"nv">invitationHandler</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class=
+"n">self</span><span class="p">.</span><span class=
+"n">mutableBlockedPeers</span> <span class=
+"n">containsObject</span><span class="o">:</span><span class=
+"n">peerID</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">invitationHandler</span><span class=
+"p">(</span><span class="nb">NO</span><span class=
+"p">,</span> <span class="nb">nil</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">[[</span><span class=
+"n">UIActionSheet</span> <span class=
+"n">actionSheetWithTitle</span><span class="o">:</span><span class=
+"p">[</span><span class="n">NSString</span> <span class=
+"n">stringWithFormat</span><span class="o">:</span><span class=
+"n">NSLocalizedString</span><span class="p">(</span><span class=
+"s">@"Received Invitation from %@"</span><span class=
+"p">,</span> <span class=
+"s">@"Received Invitation from {Peer}"</span><span class=
+"p">),</span> <span class="n">peerID</span><span class=
+"p">.</span><span class="n">displayName</span><span class=
+"p">]</span>
+                       <span class=
+"nl">cancelButtonTitle:</span><span class=
+"n">NSLocalizedString</span><span class="p">(</span><span class=
+"s">@"Reject"</span><span class="p">,</span> <span class=
+"nb">nil</span><span class="p">)</span>
+                  <span class=
+"nl">destructiveButtonTitle:</span><span class=
+"n">NSLocalizedString</span><span class="p">(</span><span class=
+"s">@"Block"</span><span class="p">,</span> <span class=
+"nb">nil</span><span class="p">)</span>
+                       <span class=
+"nl">otherButtonTitles:</span><span class="p">@[</span><span class=
+"n">NSLocalizedString</span><span class="p">(</span><span class=
+"s">@"Accept"</span><span class="p">,</span> <span class=
+"nb">nil</span><span class="p">)]</span>
+                                   <span class=
+"nl">block:</span><span class="o">^</span><span class=
+"p">(</span><span class="n">UIActionSheet</span> <span class=
+"o">*</span><span class="n">actionSheet</span><span class=
+"p">,</span> <span class="n">NSInteger</span> <span class=
+"n">buttonIndex</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">BOOL</span> <span class=
+"n">acceptedInvitation</span> <span class="o">=</span> <span class=
+"p">(</span><span class="n">buttonIndex</span> <span class=
+"o">==</span> <span class="p">[</span><span class=
+"n">actionSheet</span> <span class=
+"n">firstOtherButtonIndex</span><span class="p">]);</span>
+
+        <span class="k">if</span> <span class=
+"p">(</span><span class="n">buttonIndex</span> <span class=
+"o">==</span> <span class="p">[</span><span class=
+"n">actionSheet</span> <span class=
+"n">destructiveButtonIndex</span><span class=
+"p">])</span> <span class="p">{</span>
+            <span class="p">[</span><span class=
+"n">self</span><span class="p">.</span><span class=
+"n">mutableBlockedPeers</span> <span class=
+"n">addObject</span><span class="o">:</span><span class=
+"n">peerID</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="n">MCSession</span> <span class=
+"o">*</span><span class="n">session</span> <span class=
+"o">=</span> <span class="p">[[</span><span class=
+"n">MCSession</span> <span class="n">alloc</span><span class=
+"p">]</span> <span class="n">initWithPeer</span><span class=
+"o">:</span><span class="n">localPeerID</span>
+                                            <span class=
+"nl">securityIdentity:</span><span class="nb">nil</span>
+                                        <span class=
+"nl">encryptionPreference:</span><span class=
+"n">MCEncryptionNone</span><span class="p">];</span>
+        <span class="n">session</span><span class=
+"p">.</span><span class="n">delegate</span> <span class=
+"o">=</span> <span class="n">self</span><span class="p">;</span>
+
+        <span class="n">invitationHandler</span><span class=
+"p">(</span><span class="n">acceptedInvitation</span><span class=
+"p">,</span> <span class="p">(</span><span class=
+"n">acceptedInvitation</span> <span class="o">?</span> <span class=
+"n">session</span> <span class="o">:</span> <span class=
+"nb">nil</span><span class="p">));</span>
+    <span class="p">}]</span> <span class=
+"n">showInView</span><span class="o">:</span><span class=
+"n">self</span><span class="p">.</span><span class=
+"n">view</span><span class="p">];</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <blockquote>
+              <p>
+                For sake of simplicity, this example contrives a
+                block-based initializer for
+                <code>UIActionSheet</code>, which allows for the
+                <code>invitationHandler</code> to be passed
+                directly into the action sheet responder in order
+                to avoid the messy business of creating and
+                managing a custom delegate object. This method can
+                be implemented in a category, or adapted from
+                <a href=
+                "http://cocoapods.org/?q=uiactionsheet%20blocks">any
+                of the implementations available on CocoaPods</a>
+              </p>
+            </blockquote>
+            <h3>
+              Creating a Session
+            </h3>
+            <p>
+              As in the example above, sessions are created by
+              advertisers, and passed to peers when accepting an
+              invitation to connect. An <code>MCSession</code>
+              object is initialized with the local peer identifier,
+              as well as <code>securityIdentity</code> and
+              <code>encryptionPreference</code> parameters.
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">MCSession</span> <span class=
+"o">*</span><span class="n">session</span> <span class=
+"o">=</span> <span class="p">[[</span><span class=
+"n">MCSession</span> <span class="n">alloc</span><span class=
+"p">]</span> <span class="n">initWithPeer</span><span class=
+"o">:</span><span class="n">localPeerID</span>
+                                    <span class=
+"nl">securityIdentity:</span><span class="nb">nil</span>
+                                <span class=
+"nl">encryptionPreference:</span><span class=
+"n">MCEncryptionNone</span><span class="p">];</span>
+<span class="n">session</span><span class="p">.</span><span class=
+"n">delegate</span> <span class="o">=</span> <span class=
+"n">self</span><span class="p">;</span>
+</code>
+</pre>
+            </div>
+            <p>
+              <code>securityIdentity</code> is an optional
+              parameter that allows peers to securely identify
+              peers by X.509 certificates. When specified, the
+              first object should be an <code>SecIdentityRef</code>
+              identifying the client, followed by one or more
+              <code>SecCertificateRef</code> objects than can be
+              used to verify the local peer’s identity.
+            </p>
+            <p>
+              The <code>encryptionPreference</code> parameter
+              specifies whether to encrypt communication between
+              peers. Three possible values are provided by the
+              <code>MCEncryptionPreference</code> enum:
+            </p>
+            <ul>
+              <li>
+                <code>MCEncryptionOptional</code>: The session
+                prefers to use encryption, but will accept
+                unencrypted connections.
+              </li>
+              <li>
+                <code>MCEncryptionRequired</code>: The session
+                requires encryption.
+              </li>
+              <li>
+                <code>MCEncryptionNone</code>: The session should
+                not be encrypted.
+              </li>
+            </ul>
+            <blockquote>
+              <p>
+                Enabling encryption can significantly reduce
+                transfer rates, so unless your application
+                specifically deals with user-sensitive information,
+                <code>MCEncryptionNone</code> is recommended.
+              </p>
+            </blockquote>
+            <p>
+              The <code>MCSessionDelegate</code> protocol will be
+              covered in the section on sending and receiving
+              information.
+            </p>
+            <h3>
+              Discovering
+            </h3>
+            <p>
+              Clients can discover advertised services using
+              <code>MCNearbyServiceBrowser</code>, which is
+              initialized with the local peer identifier and the
+              service type, much like for
+              <code>MCNearbyServiceAdvertiser</code>.
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"n">MCNearbyServiceBrowser</span> <span class=
+"o">*</span><span class="n">browser</span> <span class=
+"o">=</span> <span class="p">[[</span><span class=
+"n">MCNearbyServiceBrowser</span> <span class=
+"n">alloc</span><span class="p">]</span> <span class=
+"n">initWithPeer</span><span class="o">:</span><span class=
+"n">localPeerID</span> <span class=
+"n">serviceType</span><span class="o">:</span><span class=
+"n">XXServiceType</span><span class="p">];</span>
+<span class="n">browser</span><span class="p">.</span><span class=
+"n">delegate</span> <span class="o">=</span> <span class=
+"n">self</span><span class="p">;</span>
+</code>
+</pre>
+            </div>
+            <p>
+              There may be many peers advertising a particular
+              service, so as a convenience to the user (and the
+              developer), the <code>MCBrowserViewController</code>
+              offers a built-in, standard way to present and
+              connect to advertising peers:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"n">MCBrowserViewController</span> <span class=
+"o">*</span><span class=
+"n">browserViewController</span> <span class="o">=</span>
+    <span class="p">[[</span><span class=
+"n">MCBrowserViewController</span> <span class=
+"n">alloc</span><span class="p">]</span> <span class=
+"n">initWithBrowser</span><span class="o">:</span><span class=
+"n">browser</span>
+                                             <span class=
+"nl">session:</span><span class="n">session</span><span class=
+"p">];</span>
+<span class="n">browserViewController</span><span class=
+"p">.</span><span class="n">delegate</span> <span class=
+"o">=</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">[</span><span class="n">self</span> <span class=
+"n">presentViewController</span><span class=
+"o">:</span><span class="n">browserViewController</span>
+                   <span class="nl">animated:</span><span class=
+"nb">YES</span>
+                 <span class="nl">completion:</span>
+<span class="o">^</span><span class="p">{</span>
+    <span class="p">[</span><span class=
+"n">browser</span> <span class=
+"n">startBrowsingForPeers</span><span class="p">];</span>
+<span class="p">}];</span>
+</code>
+</pre>
+            </div>
+            <p>
+              When a browser has finished connecting to peers, it
+              calls <code>-browserViewControllerDidFinish:</code>
+              on its delegate, to notify the presenting view
+              controller that it should update its UI to
+              accommodate the newly-connected clients.
+            </p>
+            <h2>
+              Sending &amp; Receiving Information
+            </h2>
+            <p>
+              Once peers are connected to one another, information
+              can be sent between them. The Multipeer Connectivity
+              framework distinguishes between three different forms
+              of data transfer:
+            </p>
+            <ul>
+              <li>
+                <strong>Messages</strong> are information with
+                well-defined boundaries, such as short text or
+                small serialized objects.
+              </li>
+              <li>
+                <strong>Streams</strong> are open channels of
+                information used to continuously transfer data like
+                audio, video, or real-time sensor events.
+              </li>
+              <li>
+                <strong>Resources</strong> are files like images,
+                movies, or documents.
+              </li>
+            </ul>
+            <h3>
+              Messages
+            </h3>
+            <p>
+              Messages are sent with
+              <code>-sendData:toPeers:withMode:error:</code>:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">NSString</span> <span class=
+"o">*</span><span class="n">message</span> <span class=
+"o">=</span> <span class="s">@"Hello, World!"</span><span class=
+"p">;</span>
+<span class="n">NSData</span> <span class="o">*</span><span class=
+"n">data</span> <span class="o">=</span> <span class=
+"p">[</span><span class="n">message</span> <span class=
+"n">dataUsingEncoding</span><span class="o">:</span><span class=
+"n">NSUTF8StringEncoding</span><span class="p">];</span>
+<span class="n">NSError</span> <span class="o">*</span><span class=
+"n">error</span> <span class="o">=</span> <span class=
+"nb">nil</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class=
+"o">!</span><span class="p">[</span><span class=
+"n">self</span><span class="p">.</span><span class=
+"n">session</span> <span class="n">sendData</span><span class=
+"o">:</span><span class="n">data</span>
+                    <span class="nl">toPeers:</span><span class=
+"n">peers</span>
+                   <span class="nl">withMode:</span><span class=
+"n">MCSessionSendDataReliable</span>
+                      <span class="nl">error:</span><span class=
+"o">&amp;</span><span class="n">error</span><span class=
+"p">])</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"[Error] %@"</span><span class=
+"p">,</span> <span class="n">error</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <hr>
+            <p>
+              Messages are received through the
+              <code>MCSessionDelegate</code> method
+              <code>-sessionDidReceiveData:fromPeer:</code>. Here's
+              how one would decode the message sent in the previous
+              code example:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"cp">#pragma mark - MCSessionDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">session:</span><span class="p">(</span><span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">session</span>
+ <span class="nl">didReceiveData:</span><span class=
+"p">(</span><span class="n">NSData</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">data</span>
+       <span class="nl">fromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+<span class="p">{</span>
+    <span class="n">NSString</span> <span class=
+"o">*</span><span class="n">message</span> <span class="o">=</span>
+        <span class="p">[[</span><span class=
+"n">NSString</span> <span class="n">alloc</span><span class=
+"p">]</span> <span class="n">initWithData</span><span class=
+"o">:</span><span class="n">data</span>
+                              <span class=
+"nl">encoding:</span><span class=
+"n">NSUTF8StringEncoding</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"%@"</span><span class=
+"p">,</span> <span class="n">message</span><span class=
+"p">);</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Another approach would be to send
+              <code>NSKeyedArchiver</code>-encoded objects:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="kt">id</span> <span class=
+"o">&lt;</span><span class="n">NSSecureCoding</span><span class=
+"o">&gt;</span> <span class="n">object</span> <span class=
+"o">=</span> <span class="c1">// ...;</span>
+<span class="n">NSData</span> <span class="o">*</span><span class=
+"n">data</span> <span class="o">=</span> <span class=
+"p">[</span><span class="n">NSKeyedArchiver</span> <span class=
+"n">archivedDataWithRootObject</span><span class=
+"o">:</span><span class="n">object</span><span class="p">];</span>
+<span class="n">NSError</span> <span class="o">*</span><span class=
+"n">error</span> <span class="o">=</span> <span class=
+"nb">nil</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class=
+"o">!</span><span class="p">[</span><span class=
+"n">self</span><span class="p">.</span><span class=
+"n">session</span> <span class="n">sendData</span><span class=
+"o">:</span><span class="n">data</span>
+                    <span class="nl">toPeers:</span><span class=
+"n">peers</span>
+                   <span class="nl">withMode:</span><span class=
+"n">MCSessionSendDataReliable</span>
+                      <span class="nl">error:</span><span class=
+"o">&amp;</span><span class="n">error</span><span class=
+"p">])</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"[Error] %@"</span><span class=
+"p">,</span> <span class="n">error</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"cp">#pragma mark - MCSessionDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">session:</span><span class="p">(</span><span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">session</span>
+ <span class="nl">didReceiveData:</span><span class=
+"p">(</span><span class="n">NSData</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">data</span>
+       <span class="nl">fromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+<span class="p">{</span>
+    <span class="n">NSKeyedUnarchiver</span> <span class=
+"o">*</span><span class="n">unarchiver</span> <span class=
+"o">=</span> <span class="p">[[</span><span class=
+"n">NSKeyedUnarchiver</span> <span class=
+"n">alloc</span><span class="p">]</span> <span class=
+"n">initForReadingWithData</span><span class=
+"o">:</span><span class="n">data</span><span class="p">];</span>
+    <span class="n">unarchiver</span><span class=
+"p">.</span><span class=
+"n">requiresSecureCoding</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="kt">id</span> <span class=
+"n">object</span> <span class="o">=</span> <span class=
+"p">[</span><span class="n">unarchiver</span> <span class=
+"n">decodeObject</span><span class="p">];</span>
+    <span class="p">[</span><span class=
+"n">unarchiver</span> <span class=
+"n">finishDecoding</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"%@"</span><span class=
+"p">,</span> <span class="n">object</span><span class="p">);</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <blockquote>
+              <p>
+                In order to guard against object substitution
+                attacks, it is important to set
+                <code>requiresSecureCoding</code> to
+                <code>YES</code>, such that an exception is thrown
+                if the root object class does not conform to
+                <code>&lt;NSSecureCoding&gt;</code>. For more
+                information, see the [NSHipster article on <a href=
+                "http://nshipster.com/nssecurecoding/">NSSecureCoding</a>.
+              </p>
+            </blockquote>
+            <h3>
+              Streams
+            </h3>
+            <p>
+              Streams are created with
+              <code>-startStreamWithName:toPeer:</code>:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">NSOutputStream</span> <span class=
+"o">*</span><span class="n">outputStream</span> <span class=
+"o">=</span>
+    <span class="p">[</span><span class=
+"n">session</span> <span class=
+"n">startStreamWithName</span><span class="o">:</span><span class=
+"n">name</span>
+                          <span class=
+"nl">toPeer:</span><span class="n">peer</span><span class=
+"p">];</span>
+
+<span class="n">stream</span><span class="p">.</span><span class=
+"n">delegate</span> <span class="o">=</span> <span class=
+"n">self</span><span class="p">;</span>
+<span class="p">[</span><span class="n">stream</span> <span class=
+"n">scheduleInRunLoop</span><span class="o">:</span><span class=
+"p">[</span><span class="n">NSRunLoop</span> <span class=
+"n">mainRunLoop</span><span class="p">]</span>
+                <span class="nl">forMode:</span><span class=
+"n">NSDefaultRunLoopMode</span><span class="p">];</span>
+<span class="p">[</span><span class="n">stream</span> <span class=
+"n">open</span><span class="p">];</span>
+
+<span class="c1">// ...</span>
+</code>
+</pre>
+            </div>
+            <hr>
+            <p>
+              Streams are received by the
+              <code>MCSessionDelegate</code> with
+              <code>-session:didReceiveStream:withName:fromPeer:</code>:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"cp">#pragma mark - MCSessionDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">session:</span><span class="p">(</span><span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">session</span>
+<span class="nl">didReceiveStream:</span><span class=
+"p">(</span><span class="n">NSInputStream</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">stream</span>
+       <span class="nl">withName:</span><span class=
+"p">(</span><span class="n">NSString</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">streamName</span>
+       <span class="nl">fromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+<span class="p">{</span>
+    <span class="n">stream</span><span class=
+"p">.</span><span class="n">delegate</span> <span class=
+"o">=</span> <span class="n">self</span><span class="p">;</span>
+    <span class="p">[</span><span class=
+"n">stream</span> <span class=
+"n">scheduleInRunLoop</span><span class="o">:</span><span class=
+"p">[</span><span class="n">NSRunLoop</span> <span class=
+"n">mainRunLoop</span><span class="p">]</span>
+                      <span class="nl">forMode:</span><span class=
+"n">NSDefaultRunLoopMode</span><span class="p">];</span>
+    <span class="p">[</span><span class=
+"n">stream</span> <span class="n">open</span><span class=
+"p">];</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Both the input and output streams must be scheduled
+              and opened before they can be used. Once that's done,
+              streams can be read from and written to just like any
+              other bound pair.
+            </p>
+            <h3>
+              Resources
+            </h3>
+            <p>
+              Resources are sent with
+              <code>sendResourceAtURL:withName:toPeer:withCompletionHandler:</code>:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class="n">NSURL</span> <span class=
+"o">*</span><span class="n">fileURL</span> <span class=
+"o">=</span> <span class="p">[</span><span class=
+"n">NSURL</span> <span class="n">fileURLWithPath</span><span class=
+"o">:</span><span class="s">@"path/to/resource"</span><span class=
+"p">];</span>
+<span class="n">NSProgress</span> <span class=
+"o">*</span><span class="n">progress</span> <span class=
+"o">=</span>
+    <span class="p">[</span><span class="n">self</span><span class=
+"p">.</span><span class="n">session</span> <span class=
+"n">sendResourceAtURL</span><span class="o">:</span><span class=
+"n">fileURL</span>
+                           <span class=
+"nl">withName:</span><span class="p">[</span><span class=
+"n">fileURL</span> <span class=
+"n">lastPathComponent</span><span class="p">]</span>
+                             <span class=
+"nl">toPeer:</span><span class="n">peer</span>
+                  <span class=
+"nl">withCompletionHandler:</span><span class=
+"o">^</span><span class="p">(</span><span class=
+"n">NSError</span> <span class="o">*</span><span class=
+"n">error</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"[Error] %@"</span><span class=
+"p">,</span> <span class="n">error</span><span class="p">);</span>
+<span class="p">}];</span>
+</code>
+</pre>
+            </div>
+            <p>
+              The returned <code>NSProgress</code> object can be
+              <a href=
+              "http://nshipster.com/key-value-observing/">Key-Value
+              Observed</a> to monitor progress of the file
+              transfer, as well as provide a cancellation handler,
+              through the <code>-cancel</code> method.
+            </p>
+            <hr>
+            <p>
+              Receiving resources happens across two methods in
+              <code>MCSessionDelegate</code>:
+              <code>-session:didStartReceivingResourceWithName:fromPeer:withProgress:</code>
+              &amp;
+              <code>-session:didFinishReceivingResourceWithName:fromPeer:atURL:withError:</code>:
+            </p>
+            <div class="highlight">
+              <pre>
+<code class="objective-c language-objective-c" data-lang=
+"objective-c"><span class=
+"cp">#pragma mark - MCSessionDelegate</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">session:</span><span class="p">(</span><span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">session</span>
+<span class=
+"nl">didStartReceivingResourceWithName:</span><span class=
+"p">(</span><span class="n">NSString</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">resourceName</span>
+       <span class="nl">fromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+   <span class="nl">withProgress:</span><span class=
+"p">(</span><span class="n">NSProgress</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">progress</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class=
+"kt">void</span><span class="p">)</span><span class=
+"nf">session:</span><span class="p">(</span><span class=
+"n">MCSession</span> <span class="o">*</span><span class=
+"p">)</span><span class="nv">session</span>
+<span class=
+"nl">didFinishReceivingResourceWithName:</span><span class=
+"p">(</span><span class="n">NSString</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">resourceName</span>
+       <span class="nl">fromPeer:</span><span class=
+"p">(</span><span class="n">MCPeerID</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">peerID</span>
+          <span class="nl">atURL:</span><span class=
+"p">(</span><span class="n">NSURL</span> <span class=
+"o">*</span><span class="p">)</span><span class=
+"nv">localURL</span>
+      <span class="nl">withError:</span><span class=
+"p">(</span><span class="n">NSError</span> <span class=
+"o">*</span><span class="p">)</span><span class="nv">error</span>
+<span class="p">{</span>
+    <span class="n">NSURL</span> <span class=
+"o">*</span><span class="n">destinationURL</span> <span class=
+"o">=</span> <span class="p">[</span><span class=
+"n">NSURL</span> <span class="n">fileURLWithPath</span><span class=
+"o">:</span><span class=
+"s">@"/path/to/destination"</span><span class="p">];</span>
+    <span class="n">NSError</span> <span class=
+"o">*</span><span class="n">error</span> <span class=
+"o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class=
+"o">!</span><span class="p">[[</span><span class=
+"n">NSFileManager</span> <span class=
+"n">defaultManager</span><span class="p">]</span> <span class=
+"n">moveItemAtURL</span><span class="o">:</span><span class=
+"n">localURL</span>
+                                                 <span class=
+"nl">toURL:</span><span class="n">destinationURL</span>
+                                                 <span class=
+"nl">error:</span><span class="o">&amp;</span><span class=
+"n">error</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class=
+"p">(</span><span class="s">@"[Error] %@"</span><span class=
+"p">,</span> <span class="n">error</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code>
+</pre>
+            </div>
+            <p>
+              Again, the <code>NSProgress</code> parameter in
+              <code>-session:didStartReceivingResourceWithName:fromPeer:withProgress:</code>
+              allows the receiving peer to monitor the file
+              transfer progress. In
+              <code>-session:didFinishReceivingResourceWithName:fromPeer:atURL:withError:</code>,
+              it is the responsibility of the delegate to move the
+              file at the temporary <code>localURL</code> to a
+              permanent location.
+            </p>
+            <hr>
+            <p>
+              Multipeer Connectivity is a ground-breaking API,
+              whose value is only just starting to be fully
+              understood. Although full support for features like
+              AirDrop are currently limited to latest-gen devices,
+              you should expect to see this kind of functionality
+              become expected behavior.
+            </p>
+            <p>
+              As you look forward to the possibilities of the new
+              year ahead, get your head out of the cloud, and start
+              to consider the incredible possibilities around you.
+            </p>
+          </div>
+          <aside>
+            <a href="https://twitter.com/share" class=
+            "twitter-share-button" data-url=
+            "http://nshipster.com/multipeer-connectivity/"
+            data-via="NSHipster" data-size="large">Tweet</a>
+            <script type="text/javascript">
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            </script>
+          </aside>
+          <footer id="book" class="promotion">
+            <a href="https://gum.co/cfhipsterref"></a>
+            <div id="cfhipsterref-cover"></div>
+            <div>
+              <hgroup>
+                <h1>
+                  <a href=
+                  "https://gum.co/cfhipsterref">CFHipsterRef:
+                  Low-Level Programming on<br>
+                  iOS &amp; Mac OS X</a>
+                </h1>
+                <h2>
+                  Available May 27th, 2014
+                </h2>
+              </hgroup>
+              <p>
+                Perfect for intermediate and expert developers
+                wanting to take a deeper dive into advanced topics,
+                <em>CFHipsterRef: Low-Level Programming on iOS
+                &amp; Mac OS X</em> covers the core technologies
+                powering Cocoa, Objective-C, and the operating
+                system itself, including Core Bluetooth,
+                Accelerate, and the Objective-C runtime.
+              </p><button onclick=
+              "javascript:window.location.href='https://gum.co/cfhipsterref'">Pre-Order
+              Now</button>
+            </div>
+          </footer>
+        </article>
+      </div>
+      <footer role="contentinfo">
+        <section class="credits colophon">
+          <p>
+            Created by <a href="http://mattt.me">Mattt
+            Thompson</a>, and released under a <a href=
+            "http://creativecommons.org/licenses/by-nc/3.0/" rel=
+            "license">Creative Commons BY-NC License</a>. <a href=
+            "https://plus.google.com/106751358503565042647?rel=author"
+            style="display: none;"></a>
+          </p>
+          <p>
+            Articles also available in <a href=
+            "http://nshipster.cn" hreflang="zh-Hans">中文</a>.
+          </p>
+        </section>
+        <aside class="links">
+          <a href="https://github.com/NSHipster/articles/issues"
+          class="icon-github" title="Pull Requests Welcome"
+          aria-hidden="true"></a> <a href="/feed.xml" class=
+          "icon-feed" title="RSS" aria-hidden="true"></a>
+        </aside>
+        <section class="archive" role="navigation">
+          <div>
+            <h2>
+              Foundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/nsurl/">NSURL /<br>
+                NSURLComponents</a>
+              </li>
+              <li>
+                <a href=
+                "/nstemporarydirectory/">NSTemporaryDirectory /<br>
+                NSItemReplacementDirectory /<br>
+                mktemp(3)</a>
+              </li>
+              <li>
+                <a href="/nsrange/">NSRange</a>
+              </li>
+              <li>
+                <a href=
+                "/nsnotification-and-nsnotificationcenter/">NSNotification
+                &amp;<br>
+                NSNotificationCenter</a>
+              </li>
+              <li>
+                <a href="/nsfilemanager/">NSFileManager</a>
+              </li>
+              <li>
+                <a href="/nsformatter/">NSFormatter</a>
+              </li>
+              <li>
+                <a href="/nserror/">NSError</a>
+              </li>
+              <li>
+                <a href="/key-value-observing/">Key-Value
+                Observing</a>
+              </li>
+              <li>
+                <a href="/nshashtable-and-nsmaptable/">NSHashTable
+                &amp;<br>
+                NSMapTable</a>
+              </li>
+              <li>
+                <a href="/nspredicate/">NSPredicate</a>
+              </li>
+              <li>
+                <a href="/nsexpression/">NSExpression</a>
+              </li>
+              <li>
+                <a href="/enumerators/">NSFastEnumeration /<br>
+                NSEnumerator /<br>
+                -enumerateObjectsUsingBlock:</a>
+              </li>
+              <li>
+                <a href="/uuid-udid-unique-identifier/">NSUUID
+                /<br>
+                CFUUIDRef /<br>
+                UIDevice -uniqueIdentifier /<br>
+                -identifierForVendor</a>
+              </li>
+              <li>
+                <a href="/nsdatadetector/">NSDataDetector</a>
+              </li>
+              <li>
+                <a href="/nscoding/">NSCoding / NSKeyedArchiver</a>
+              </li>
+              <li>
+                <a href="/nssecurecoding/">NSSecureCoding</a>
+              </li>
+              <li>
+                <a href=
+                "/nsassertionhandler/">NSAssertionHandler</a>
+              </li>
+              <li>
+                <a href="/nsurlcache/">NSURLCache</a>
+              </li>
+              <li>
+                <a href="/nsvalue/">NSValue</a>
+              </li>
+              <li>
+                <a href="/nslocalizedstring/">NSLocalizedString</a>
+              </li>
+              <li>
+                <a href="/instancetype/">instancetype</a>
+              </li>
+              <li>
+                <a href="/kvc-collection-operators/">KVC Collection
+                Operators</a>
+              </li>
+              <li>
+                <a href="/nsorderedset/">NSOrderedSet</a>
+              </li>
+              <li>
+                <a href="/ns_enum-ns_options/">NS_ENUM &amp;
+                NS_OPTIONS</a>
+              </li>
+              <li>
+                <a href=
+                "/nsvaluetransformer/">NSValueTransformer</a>
+              </li>
+              <li>
+                <a href="/nsurlprotocol/">NSURLProtocol</a>
+              </li>
+              <li>
+                <a href=
+                "/nslinguistictagger/">NSLinguisticTagger</a>
+              </li>
+              <li>
+                <a href="/nscharacterset/">NSCharacterSet</a>
+              </li>
+              <li>
+                <a href="/nslocale/">NSLocale</a>
+              </li>
+              <li>
+                <a href="/nsoperation/">NSOperation</a>
+              </li>
+              <li>
+                <a href=
+                "/nsincrementalstore/">NSIncrementalStore</a>
+              </li>
+              <li>
+                <a href="/nsdatecomponents/">NSDateComponents</a>
+              </li>
+              <li>
+                <a href="/nssortdescriptor/">NSSortDescriptor</a>
+              </li>
+              <li>
+                <a href="/nscache/">NSCache</a>
+              </li>
+              <li>
+                <a href="/nsindexset/">NSIndexSet</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreFoundation
+            </h2>
+            <ul>
+              <li>
+                <a href="/cfbag/">CFBag</a>
+              </li>
+              <li>
+                <a href="/cfstringtransform/">CFStringTransform</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              CoreGraphics
+            </h2>
+            <ul>
+              <li>
+                <a href="/cggeometry/">CGGeometry</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              UIKit
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/launch-options/">UIApplicationDelegate<br>
+                launchOptions</a>
+              </li>
+              <li>
+                <a href="/uimenucontroller/">UIMenuController</a>
+              </li>
+              <li>
+                <a href="/uiappearance/">UIAppearance</a>
+              </li>
+              <li>
+                <a href=
+                "/uilocalizedindexedcollation/">UILocalizedIndexedCollation</a>
+              </li>
+              <li>
+                <a href="/uicollectionview/">UICollectionView</a>
+              </li>
+              <li>
+                <a href="/uiaccessibility/">UIAccessibility</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Objective-C
+            </h2>
+            <ul>
+              <li>
+                <a href="/namespacing/">Namespacing</a>
+              </li>
+              <li>
+                <a href="/extended-file-attributes/">Extended File
+                Attributes</a>
+              </li>
+              <li>
+                <a href="/equality/">Equality</a>
+              </li>
+              <li>
+                <a href="/random/">rand(3) / random(3) /
+                arc4random(3) / et al.</a>
+              </li>
+              <li>
+                <a href="/object-subscripting/">Object
+                Subscripting</a>
+              </li>
+              <li>
+                <a href="/bool/">BOOL / bool / Boolean /
+                NSCFBoolean</a>
+              </li>
+              <li>
+                <a href="/c-storage-classes/">C Storage Classes</a>
+              </li>
+              <li>
+                <a href="/type-encodings/">Type Encodings</a>
+              </li>
+              <li>
+                <a href="/__attribute__/">__attribute__</a>
+              </li>
+              <li>
+                <a href="/nil/">nil / Nil / NULL / NSNull</a>
+              </li>
+              <li>
+                <a href="/at-compiler-directives/">@</a>
+              </li>
+              <li>
+                <a href="/pragma/">#pragma</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Open Source
+            </h2>
+            <ul>
+              <li>
+                <a href="/xctool/">xctool</a>
+              </li>
+              <li>
+                <a href="/afnetworking-2/">AFNetworking 2.0</a>
+              </li>
+              <li>
+                <a href="/core-data-libraries-and-utilities/">Core
+                Data Libraries &amp; Utilities</a>
+              </li>
+              <li>
+                <a href="/gpuimage/">GPUImage</a>
+              </li>
+              <li>
+                <a href="/reactivecocoa/">ReactiveCocoa</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Testing
+            </h2>
+            <ul>
+              <li>
+                <a href="/unit-testing/">Unit Testing</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2>
+              Miscellanea
+            </h2>
+            <ul>
+              <li>
+                <a href=
+                "/avspeechsynthesizer/">AVSpeechSynthesizer</a>
+              </li>
+              <li>
+                <a href="/empathy/">Empathy</a>
+              </li>
+              <li>
+                <a href=
+                "/dictionary-services/">UIReferenceLibraryViewController
+                /<br>
+                DCSDictionaryRef/<br>
+                /usr/share/dict/words</a>
+              </li>
+              <li>
+                <a href="/method-swizzling/">Method Swizzling</a>
+              </li>
+              <li>
+                <a href="/associated-objects/">Associated
+                Objects</a>
+              </li>
+              <li>
+                <a href=
+                "/mktileoverlay-mkmapsnapshotter-mkdirections/">MKTileOverlay,<br>
+                MKMapSnapshotter &amp;<br>
+                MKDirections</a>
+              </li>
+              <li>
+                <a href="/stewardship/">Stewardship</a>
+              </li>
+              <li>
+                <a href="/colophon/">Colophon</a>
+              </li>
+              <li>
+                <a href="/new-years-2014/">Reader Submissions -<br>
+                New Year's 2014</a>
+              </li>
+              <li>
+                <a href="/multipeer-connectivity/">Multipeer
+                Connectivity</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-4/">NSHipster Quiz #4</a>
+              </li>
+              <li>
+                <a href=
+                "/launch-arguments-and-environment-variables/">Launch
+                Arguments &amp;<br>
+                Environment Variables</a>
+              </li>
+              <li>
+                <a href="/xcode-key-bindings-and-gestures/">Xcode
+                Key Bindings &amp; Gestures</a>
+              </li>
+              <li>
+                <a href="/ios7/">iOS 7</a>
+              </li>
+              <li>
+                <a href="/network-link-conditioner/">Network Link
+                Conditioner</a>
+              </li>
+              <li>
+                <a href="/xcode-snippets/">Xcode Snippets</a>
+              </li>
+              <li>
+                <a href="/documentation/">Documentation</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-3/">NSHipster Quiz #3</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-2/">NSHipster Quiz #2</a>
+              </li>
+              <li>
+                <a href="/mklocalsearch/">MKLocalSearch</a>
+              </li>
+              <li>
+                <a href="/nshipster-quiz-1/">NSHipster Quiz #1</a>
+              </li>
+              <li>
+                <a href="/icloud/">iCloud</a>
+              </li>
+              <li>
+                <a href="/search-kit/">Search Kit</a>
+              </li>
+              <li>
+                <a href="/backrow/">Back Row</a>
+              </li>
+              <li>
+                <a href=
+                "/reader-submissions-new-years-2013/">Reader
+                Submissions -<br>
+                New Year's 2013</a>
+              </li>
+              <li>
+                <a href="/addressbookui/">AddressBookUI</a>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </footer>
+    </div><script type="text/javascript">
+var Swiftype = window.Swiftype || {};
+    (function() {
+      Swiftype.key = 'Q5jNBiR8qVs5xE5dNect';
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = "//swiftype.com/embed.js";
+      var entry = document.getElementsByTagName('script')[0];
+      document.getElementsByTagName('script')[0].parentNode.insertBefore(script, entry);
+    }());
+    </script><script type="text/javascript">
+var _gauges = _gauges || [];
+    (function() {
+      var t   = document.createElement('script');
+      t.type  = 'text/javascript';
+      t.async = true;
+      t.id    = 'gauges-tracker';
+      t.setAttribute('data-site-id', '510be6d4108d7b438800005f');
+      t.src = '//secure.gaug.es/track.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(t, s);
+    })();
+    </script>
+  </body>
+</html>

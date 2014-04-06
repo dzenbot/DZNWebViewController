@@ -53,11 +53,19 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, strong) UIColor *toolbarTintColor;
 
 /**
- * Initializes and returns a newly created webview controller with an initial URL to be requested as soon as the view appears.
+ * Initializes and returns a newly created webview controller with an initial HTTP URL to be requested as soon as the view appears.
  *
- * @param URL The URL to be requested.
+ * @param URL The HTTP URL to be requested.
  * @returns The initialized webview controller.
  */
 - (id)initWithURL:(NSURL *)URL;
+
+/**
+ * Initializes and returns a newly created webview controller for local HTML navigation.
+ *
+ * @param URL The file URL of the main html.
+ * @returns The initialized webview controller.
+ */
+- (id)initWithFileURL:(NSURL *)URL;
 
 @end
