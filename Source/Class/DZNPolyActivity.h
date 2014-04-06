@@ -10,6 +10,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * Types of activity kind, used for polymorphic creation.
+ */
 typedef NS_OPTIONS(NSUInteger, DZNPolyActivityType) {
     DZNPolyActivityTypeLink,
     DZNPolyActivityTypeSafari,

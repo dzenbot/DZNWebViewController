@@ -10,6 +10,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * Types of supported actions (i.e. Share & Copy link, Add to Reading List, Open in Safari/Chrome/Opera/Dolphin).
+ */
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
     DZNWebViewControllerActionAll = -1,
     DZNWebViewControllerActionNone = 0,
@@ -22,6 +25,9 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
     DZNWebViewControllerActionOpenDolphin = (1 << 6)
 };
 
+/**
+ * Types of network loading style.
+ */
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
     DZNWebViewControllerLoadingStyleNone,
     DZNWebViewControllerLoadingStyleProgressView,
