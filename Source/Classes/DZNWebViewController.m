@@ -520,9 +520,7 @@
 #pragma mark - UIWebViewDelegate methods
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    return YES;
-    
+{    
     if (request.URL && !_presentingActivities) {
         return YES;
     }
