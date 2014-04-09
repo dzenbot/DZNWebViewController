@@ -210,6 +210,12 @@
     return items;
 }
 
+- (NSString *)pageTitle
+{
+    NSString *js = @"document.body.style.webkitTouchCallout = 'none'; document.getElementsByTagName('title')[0].textContent;";
+    return [_webView stringByEvaluatingJavaScriptFromString:js];
+}
+
 - (NSURL *)URL
 {
     return _webView.request.URL;
@@ -300,12 +306,6 @@
 
 
 #pragma mark - Setter methods
-
-- (NSString *)title
-{
-    NSString *js = @"document.body.style.webkitTouchCallout = 'none'; document.getElementsByTagName('title')[0].textContent;";
-    return [_webView stringByEvaluatingJavaScriptFromString:js];
-}
 
 - (void)setURL:(NSURL *)URL
 {
@@ -402,7 +402,7 @@
 
 - (void)presentActivityController:(id)sender
 {
-    NSDictionary *content = @{@"title": [self title], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
+    NSDictionary *content = @{@"title": [self pageTitle], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
     [self presentActivityControllerWithContent:content];
 }
 
@@ -554,7 +554,7 @@
     _backwardBarItem.enabled = [_webView canGoBack];
     _forwardBarItem.enabled = [_webView canGoForward];
     
-    [self setViewTitle:[self title]];
+    [self setViewTitle:[self pageTitle]];
     
     if ([webView.request.URL isFileURL] && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView) {
         [_progressView setProgress:1.0 animated:YES];
