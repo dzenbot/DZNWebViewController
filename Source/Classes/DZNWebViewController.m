@@ -210,10 +210,29 @@
     return items;
 }
 
+- (UIFont *)titleFont
+{
+    if (!_titleFont) {
+        return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
+    }
+    
+    return _titleFont;
+}
+
+- (UIColor *)titleColor
+{
+    if (!_titleColor) {
+        return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSForegroundColorAttributeName];
+    }
+    
+    return _titleColor;
+}
+
 - (NSString *)pageTitle
 {
     NSString *js = @"document.body.style.webkitTouchCallout = 'none'; document.getElementsByTagName('title')[0].textContent;";
-    return [_webView stringByEvaluatingJavaScriptFromString:js];
+    NSString *title = [_webView stringByEvaluatingJavaScriptFromString:js];
+    return [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 - (NSURL *)URL
@@ -320,8 +339,8 @@
         label = [UILabel new];
         label.numberOfLines = 2;
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
-        label.textColor = [[UINavigationBar appearance].titleTextAttributes objectForKey:NSForegroundColorAttributeName];
+        label.font = self.titleFont;
+        label.textColor = self.titleColor;
         self.navigationItem.titleView = label;
     }
     

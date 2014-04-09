@@ -51,6 +51,10 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, strong) UIColor *toolbarBackgroundColor;
 /** The toolbar item's tint color. Default is white. */
 @property (nonatomic, strong) UIColor *toolbarTintColor;
+/** The navigation bar's title font. Default uses UINavigation's appearance title text attributes with key NSFontAttributeName. */
+@property (nonatomic, strong) UIFont *titleFont;
+/** The navigation bar's title custom font. Default uses UINavigation's appearance title text attributes with key NSForegroundColorAttributeName. */
+@property (nonatomic, strong) UIColor *titleColor;
 
 /**
  * Initializes and returns a newly created webview controller with an initial HTTP URL to be requested as soon as the view appears.
