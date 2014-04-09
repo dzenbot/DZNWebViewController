@@ -421,6 +421,16 @@
 
 - (void)presentActivityController:(id)sender
 {
+    NSLog(@"%s",__FUNCTION__);
+    
+    NSString *type = kDZNWebViewControllerContentTypeLink;
+    NSString *title = [self pageTitle];
+    NSString *url = [self URL].absoluteString;
+    
+    NSLog(@"type : %@", type);
+    NSLog(@"title : %@", title);
+    NSLog(@"url : %@", url);
+    
     NSDictionary *content = @{@"title": [self pageTitle], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
     [self presentActivityControllerWithContent:content];
 }
@@ -434,6 +444,10 @@
     NSString *type = [content objectForKey:@"type"];
     NSString *title = [content objectForKey:@"title"];
     NSString *url = [content objectForKey:@"url"];
+    
+    NSLog(@"type : %@", type);
+    NSLog(@"title : %@", title);
+    NSLog(@"url : %@", url);
     
     if ([type isEqualToString:kDZNWebViewControllerContentTypeLink]) {
         
@@ -491,9 +505,13 @@
         //// Get the URL link at the touch location
         NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
         NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
+        NSData *data = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy|NSStringEncodingConversionExternalRepresentation];
         
-        NSData *JSONData = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy];
-        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:JSONData options:NSJSONReadingAllowFragments error:nil]];
+        if (!data) {
+            return;
+        }
+        
+        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil]];
         
         if (content.allValues.count > 0) {
             [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];

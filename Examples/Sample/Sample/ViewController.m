@@ -38,7 +38,7 @@
 
 - (void)presentWebViewController:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://www.nshipster.com/"];
+    NSURL *URL = [NSURL URLWithString:@"http://blog.epiclist.io/"];
     
 //    NSString *path = [[NSBundle mainBundle] pathForResource:@"nshipster.com" ofType:@"html"];
 //    NSURL *URL = [NSURL fileURLWithPath:path];
