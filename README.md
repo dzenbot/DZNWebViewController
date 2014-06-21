@@ -6,16 +6,16 @@ An iPhone/iPad simple web browser controller with navigation controls and sharin
 * Sharing options like posting on Twitter, Facebook, Mail, etc. (optional).
 * Long press gesture for capturing links and images (optional).
 * Customizable toolbar icons.
+* iOS7 support.
 * Localization support.
 * NSURLCache support.
 
 ![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
 
-DZWebBrowser uses ARC and supports iOS6 and superior.
+DZWebBrowser uses ARC and supports iOS7 and superior.
 Also support multiple orientations.
 
 Some additonal feature ideas:
-- iOS7 support
 - Hide NavigationBar & ToolBar for larger screen real estate (à la Safari App).
 - Optional way of searching a custom URL from the NavigationBar.
 - Keywords auto-completion when searching on bar.
@@ -26,7 +26,7 @@ Feel free to fork it and make it more interesting!
 ## Installation
 Available in [Cocoa Pods](http://cocoapods.org/?q=DZWebBrowser)
 ```
-pod 'DZWebBrowser', '~> 0.0.1'
+pod 'DZNWebViewController', '~> 2.0.0'
 ```
 
 ## How to use
@@ -35,7 +35,7 @@ Hopefully you saved a couple of hours!
 
 ### Step 1
 ```
-Import "DZWebBrowser.h" to your view controller subclass.
+Import "DZNWebViewController.h" to your view controller subclass.
 ```
 
 ### Step 2
@@ -45,19 +45,19 @@ Import Apple's SystemConfiguration, CFNetwork, MessageUI and Social frameworks.
 ```
 
 ### Step 3
-Create a new instance of DZWebBrowser and initialize with a NSURL.
+Create a new instance of DZNWebViewController and initialize with a NSURL.
 You also need to embed the view controller into a UINavigationController.
 ```
 NSURL *URL = [NSURL URLWithString:@"http://www.google.com/"];
 
-DZWebBrowser *webBrowser = [[DZWebBrowser alloc] initBrowserWithURL:URL];
-webBrowser.showProgress = YES;
-webBrowser.allowSharing = YES;
-webBrowser.resourceBundleName = @"custom-controls";
+DZNWebViewController *webViewController = [[DZNWebViewController alloc] initWithURL:URL];
+webViewController.toolbarTintColor = [UIColor whiteColor];
+webViewController.toolbarBackgroundColor = [UIColor blackColor];
+webViewController.supportedActions = DZNWebViewControllerActionAll;
 
-UINavigationController *webBrowserNC = [[UINavigationController alloc] initWithRootViewController:webBrowser];
+UINavigationController *webViewNavController = [[UINavigationController alloc] initWithRootViewController:webViewController];
 
-[self presentViewController:webBrowserNC animated:YES completion:NULL];
+[self presentViewController:webViewNavController animated:YES completion:NULL];
 ```
 
 ## Third party Frameworks
