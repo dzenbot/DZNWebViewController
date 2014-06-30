@@ -8,7 +8,6 @@ An iPhone/iPad simple web browser controller with navigation controls and sharin
 * Customizable toolbar icons.
 * iOS7 support.
 * Localization support.
-* NSURLCache support.
 
 ![DZWebBrowser](Docs/screenshot.jpg)
 
@@ -64,6 +63,7 @@ UINavigationController *webViewNavController = [[UINavigationController alloc] i
 
 DZWebBrowser requires third party frameworks, if not installed with Cocoa Pods you must add them as submodules:
 - [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [Satoshi Asano](https://github.com/ninjinkun).
+
 
 ## License
 (The MIT License)
