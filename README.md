@@ -10,7 +10,7 @@ An iPhone/iPad simple web browser controller with navigation controls and sharin
 * Localization support.
 * NSURLCache support.
 
-![DZWebBrowser](https://dl.dropboxusercontent.com/u/2452151/Permalink/DZWebBrowser.png)
+![DZWebBrowser](Docs/screenshot.jpg)
 
 DZWebBrowser uses ARC and supports iOS7 and superior.
 Also support multiple orientations.
@@ -63,9 +63,7 @@ UINavigationController *webViewNavController = [[UINavigationController alloc] i
 ## Third party Frameworks
 
 DZWebBrowser requires third party frameworks, if not installed with Cocoa Pods you must add them as submodules:
-- Apple's [Reachability](https://github.com/tonymillion/Reachability), but the ARC version from [Tony Million](https://github.com/tonymillion).
 - [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) from [Satoshi Asano](https://github.com/ninjinkun).
-- [SDURLCache](https://github.com/rs/SDURLCache) from [Olivier Poitrey](https://github.com/rs)
 
 ## License
 (The MIT License)
