@@ -1,4 +1,8 @@
-# DZWebBrowser
+DZWebBrowser
+================
+[![Pod Version](http://img.shields.io/cocoapods/v/DZNWebViewController.svg)](https://cocoadocs.org/docsets/DZNWebViewController)
+[![Gittip](http://img.shields.io/gittip/dzenbot.svg)](https://www.gittip.com/dzenbot/)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 An iPhone/iPad simple web browser controller with navigation controls and sharing features:
 * Progress bar embeded on the navigation bar (optional).
