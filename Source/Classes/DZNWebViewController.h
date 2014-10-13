@@ -42,7 +42,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 /** The web view that the controller manages. */
 @property (nonatomic, strong) UIWebView *webView;
 /** The URL identifying the location of the content to load. */
-@property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic) NSURL *URL;
 /** The loading visual style, using a progress bar or a network activity indicator. Default is DZNWebViewControllerLoadingStyleProgressView. */
 @property (nonatomic) DZNWebViewControllerLoadingStyle loadingStyle;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
@@ -62,7 +62,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
  * @param URL The HTTP URL to be requested.
  * @returns The initialized webview controller.
  */
-- (id)initWithURL:(NSURL *)URL;
+- (instancetype)initWithURL:(NSURL *)URL;
 
 /**
  * Initializes and returns a newly created webview controller for local HTML navigation.
@@ -70,6 +70,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
  * @param URL The file URL of the main html.
  * @returns The initialized webview controller.
  */
-- (id)initWithFileURL:(NSURL *)URL;
+- (instancetype)initWithFileURL:(NSURL *)URL;
+
 
 @end
