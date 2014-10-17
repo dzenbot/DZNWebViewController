@@ -72,4 +72,6 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
  */
 - (id)initWithFileURL:(NSURL *)URL;
 
+- (void)startRequestWithURL:(NSURL *)URL;
+
 @end
