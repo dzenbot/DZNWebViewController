@@ -55,6 +55,8 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 @property (nonatomic, strong) UIFont *titleFont;
 /** The navigation bar's title custom font. Default uses UINavigation's appearance title text attributes with key NSForegroundColorAttributeName. */
 @property (nonatomic, strong) UIColor *titleColor;
+/** YES if a contextual menu should show on web links and buttons. Default is NO. */
+@property (nonatomic) BOOL contextualMenuEnabled;
 
 ///------------------------------------------------
 /// @name Initialization

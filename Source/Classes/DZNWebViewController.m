@@ -168,10 +168,13 @@
             _webView.delegate = self;
         }
         
-        DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-        gesture.allowableMovement = 20;
-        gesture.delegate = self;
-        [_webView addGestureRecognizer:gesture];
+        // Disabling contextual menu in iOS8.
+        // TODO: Fix the inspector script in iOS8
+        if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
+            DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+            gesture.delegate = self;
+            [_webView addGestureRecognizer:gesture];
+        }
     }
     return _webView;
 }
@@ -486,15 +489,13 @@
     [self presentViewController:controller animated:YES completion:nil];
     
     controller.completionHandler = ^(NSString *activityType, BOOL completed) {
-        NSLog(@"completed dialog - activity: %@ - finished flag: %d", activityType, completed);
-
         _presentingActivities = NO;
     };
 }
 
 - (void)handleLongPressGesture:(UIGestureRecognizer *)gesture
 {
-    if (gesture.state == UIGestureRecognizerStateBegan)
+    if (gesture.state == UIGestureRecognizerStateBegan && self.contextualMenuEnabled)
     {
         [self injectJavaScript];
         

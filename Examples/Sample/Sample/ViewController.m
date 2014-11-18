@@ -45,6 +45,7 @@
     _controller.toolbarBackgroundColor = [UIColor blackColor];
     _controller.supportedActions = DZNWebViewControllerActionAll;
     _controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissWebViewController:)];
+    _controller.contextualMenuEnabled = YES;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_controller];
     [self presentViewController:navigationController animated:YES completion:NULL];
