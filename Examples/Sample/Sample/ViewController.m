@@ -38,10 +38,7 @@
 
 - (void)presentWebViewController:(id)sender
 {
-    NSURL *URL = [NSURL URLWithString:@"http://blog.epiclist.io/"];
-    
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"nshipster.com" ofType:@"html"];
-//    NSURL *URL = [NSURL fileURLWithPath:path];
+    NSURL *URL = [NSURL URLWithString:@"http://thenextweb.com/"];
     
     _controller = [[DZNWebViewController alloc] initWithURL:URL];
     _controller.toolbarTintColor = [UIColor whiteColor];

@@ -1,14 +1,21 @@
 PODS:
-  - NJKWebViewProgress (0.2.2):
+  - DZNWebViewController (2.0):
+    - NJKWebViewProgress (= 0.2.3)
+  - NJKWebViewProgress (0.2.3):
     - NJKWebViewProgress/Core
     - NJKWebViewProgress/ProgressView
-  - NJKWebViewProgress/Core (0.2.2)
-  - NJKWebViewProgress/ProgressView (0.2.2)
+  - NJKWebViewProgress/Core (0.2.3)
+  - NJKWebViewProgress/ProgressView (0.2.3)
 
 DEPENDENCIES:
-  - NJKWebViewProgress (~> 0.2)
+  - DZNWebViewController (from `../../DZNWebViewController.podspec`)
+
+EXTERNAL SOURCES:
+  DZNWebViewController:
+    :path: ../../DZNWebViewController.podspec
 
 SPEC CHECKSUMS:
-  NJKWebViewProgress: 4f905b9ab7eb91525dc899cacebd2941a6d4553b
+  DZNWebViewController: 3078f6049a32e630a4d249dbac68c3126c0ea865
+  NJKWebViewProgress: 721b57080c840c76f70ff6c2dda4f836ee1b27c1
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.34.4
