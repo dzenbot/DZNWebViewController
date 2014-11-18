@@ -26,7 +26,7 @@
 }
 @end
 
-@interface DZNWebViewController () <UIWebViewDelegate, UIGestureRecognizerDelegate, NJKWebViewProgressDelegate>
+@interface DZNWebViewController () <UIGestureRecognizerDelegate, NJKWebViewProgressDelegate>
 {
     NJKWebViewProgress *_progressProxy;
     

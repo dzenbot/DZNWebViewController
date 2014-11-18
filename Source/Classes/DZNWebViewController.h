@@ -37,7 +37,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 /**
  * A very simple web browser with useful navigation and exportation tools.
  */
-@interface DZNWebViewController : UIViewController
+@interface DZNWebViewController : UIViewController <UIWebViewDelegate>
 
 /** The web view that the controller manages. */
 @property (nonatomic, strong) UIWebView *webView;
@@ -71,5 +71,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
  * @returns The initialized webview controller.
  */
 - (id)initWithFileURL:(NSURL *)URL;
+
+- (void)startRequestWithURL:(NSURL *)URL;
 
 @end
