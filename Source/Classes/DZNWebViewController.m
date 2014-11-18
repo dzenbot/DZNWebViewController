@@ -17,14 +17,18 @@
 #define kDZNWebViewControllerContentTypeImage @"image"
 #define kDZNWebViewControllerContentTypeLink @"link"
 
+
 @interface DZNLongPressGestureRecognizer : UILongPressGestureRecognizer
 @end
 
 @implementation DZNLongPressGestureRecognizer
+
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer {
     return NO;
 }
+
 @end
+
 
 @interface DZNWebViewController () <UIGestureRecognizerDelegate, NJKWebViewProgressDelegate>
 {
@@ -50,17 +54,17 @@
 {
     self = [super init];
     if (self) {
-        [self _setup];
+        [self commonInit];
     }
     return self;
 }
 
 - (void)awakeFromNib
 {
-    [self _setup];
+    [self commonInit];
 }
 
-- (void)_setup
+- (void)commonInit
 {
     _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
     _supportedActions = DZNWebViewControllerActionAll;
@@ -71,8 +75,8 @@
 - (id)initWithURL:(NSURL *)URL
 {
     NSParameterAssert(URL);
-    NSAssert(URL != nil, @"Invalid URL");
-    NSAssert(URL.scheme != nil, @"URL has no scheme");
+    NSAssert(URL, @"Invalid URL");
+    NSAssert(URL.scheme, @"URL has no scheme");
 
     self = [self init];
     if (self) {
@@ -155,9 +159,10 @@
         if (_loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
         {
             _progressProxy = [[NJKWebViewProgress alloc] init];
-            _webView.delegate = _progressProxy;
             _progressProxy.webViewProxyDelegate = self;
             _progressProxy.progressDelegate = self;
+            
+            _webView.delegate = _progressProxy;
         }
         else {
             _webView.delegate = self;
@@ -227,7 +232,6 @@
     if (!_titleFont) {
         return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
     }
-    
     return _titleFont;
 }
 
@@ -236,7 +240,6 @@
     if (!_titleColor) {
         return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSForegroundColorAttributeName];
     }
-    
     return _titleColor;
 }
 
@@ -369,16 +372,12 @@
     }
 }
 
-/*
- * Sets the request errors with an alert view.
- */
+// Sets the request errors with an alert view.
 - (void)setLoadingError:(NSError *)error
 {
     switch (error.code) {
-//        case NSURLErrorTimedOut:
         case NSURLErrorUnknown:
-        case NSURLErrorCancelled:
-            return;
+        case NSURLErrorCancelled:   return;
     }
     
     [self setActivityIndicatorsVisible:NO];
@@ -387,9 +386,7 @@
     [alert show];
 }
 
-/*
- * Toggles the activity indicators on the status bar & footer view.
- */
+// Toggles the activity indicators on the status bar & footer view.
 - (void)setActivityIndicatorsVisible:(BOOL)visible
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
@@ -436,16 +433,6 @@
 
 - (void)presentActivityController:(id)sender
 {
-    NSLog(@"%s",__FUNCTION__);
-    
-    NSString *type = kDZNWebViewControllerContentTypeLink;
-    NSString *title = [self pageTitle];
-    NSString *url = [self URL].absoluteString;
-    
-    NSLog(@"type : %@", type);
-    NSLog(@"title : %@", title);
-    NSLog(@"url : %@", url);
-    
     NSDictionary *content = @{@"title": [self pageTitle], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
     [self presentActivityControllerWithContent:content];
 }
@@ -459,10 +446,6 @@
     NSString *type = [content objectForKey:@"type"];
     NSString *title = [content objectForKey:@"title"];
     NSString *url = [content objectForKey:@"url"];
-    
-    NSLog(@"type : %@", type);
-    NSLog(@"title : %@", title);
-    NSLog(@"url : %@", url);
     
     if ([type isEqualToString:kDZNWebViewControllerContentTypeLink]) {
         
@@ -517,7 +500,7 @@
         
         CGPoint point = [self convertPointToHTMLSystem:[gesture locationInView:_webView]];
         
-        //// Get the URL link at the touch location
+        // Gets the URL link at the touch location
         NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
         NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
         NSData *data = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy|NSStringEncodingConversionExternalRepresentation];
@@ -582,7 +565,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    // load balance is use to see if the load was completed end of the site
+    // Load balance is use to see if the load was completed end of the site
     _loadBalance++;
     
     if (_loadBalance == 1) {
