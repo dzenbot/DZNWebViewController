@@ -50,12 +50,22 @@
 {
     self = [super init];
     if (self) {
-        _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
-        _supportedActions = DZNWebViewControllerActionAll;
-        _toolbarBackgroundColor = [UIColor blackColor];
-        _toolbarTintColor = [UIColor whiteColor];
+        [self _setup];
     }
     return self;
+}
+
+- (void)awakeFromNib
+{
+    [self _setup];
+}
+
+- (void)_setup
+{
+    _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
+    _supportedActions = DZNWebViewControllerActionAll;
+    _toolbarBackgroundColor = [UIColor blackColor];
+    _toolbarTintColor = [UIColor whiteColor];
 }
 
 - (id)initWithURL:(NSURL *)URL
@@ -242,7 +252,7 @@
     return _webView.request.URL;
 }
 
-- (CGSize)HTLMWindowSize
+- (CGSize)HTMLWindowSize
 {
     CGSize size = CGSizeZero;
     size.width = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
@@ -253,7 +263,7 @@
 - (CGPoint)convertPointToHTMLSystem:(CGPoint)point
 {
     CGSize viewSize = _webView.frame.size;
-    CGSize windowSize = [self HTLMWindowSize];
+    CGSize windowSize = [self HTMLWindowSize];
     
     CGPoint scaledPoint = CGPointZero;
     CGFloat factor = windowSize.width / viewSize.width;
@@ -330,7 +340,10 @@
 
 - (void)setURL:(NSURL *)URL
 {
-    [self startRequestWithURL:URL];
+    if (self.isViewLoaded) {
+        [self startRequestWithURL:URL];
+    }
+    _URL = URL;
 }
 
 - (void)setViewTitle:(NSString *)title
