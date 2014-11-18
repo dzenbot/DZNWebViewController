@@ -67,6 +67,7 @@
 - (void)commonInit
 {
     _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
+    _supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
     _supportedActions = DZNWebViewControllerActionAll;
     _toolbarBackgroundColor = [UIColor blackColor];
     _toolbarTintColor = [UIColor whiteColor];
@@ -105,7 +106,7 @@
     self.view = self.webView;
     self.automaticallyAdjustsScrollViewInsets = YES;
     
-    [self setToolbarItems:self.navigationItems animated:NO];
+    [self setToolbarItems:[self navigationToolItems]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -113,7 +114,9 @@
     [super viewWillAppear:animated];
     
      [UIView performWithoutAnimation:^{
-         [self.navigationController setToolbarHidden:NO];
+         if (self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
+             [self.navigationController setToolbarHidden:NO];
+         }
      }];
     
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
@@ -206,30 +209,54 @@
     return _activityIndicatorView;
 }
 
-- (NSArray *)navigationItems
+- (NSArray *)navigationToolItems
 {
-    _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-    _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
-    _backwardBarItem.enabled = NO;
-    
-    _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
-    _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
-    _forwardBarItem.enabled = NO;
-    
-    if (_loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
-        _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
-    }
+    NSMutableArray *items = [NSMutableArray new];
     
     UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
     UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
     fixedSpace.width = 20.0;
     
-    NSMutableArray *items = [NSMutableArray arrayWithArray:@[_backwardBarItem,fixedSpace,_forwardBarItem,flexibleSpace]];
-    if (_loadingBarItem) {
+    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolBack) > 0 || self.supportsAllNavigationTools) {
+        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+        _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
+        _backwardBarItem.enabled = NO;
+        
+        [items addObject:_backwardBarItem];
+    }
+    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
+        _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
+        _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
+        _forwardBarItem.enabled = NO;
+        
+        if (items.count > 0) {
+            [items addObject:fixedSpace];
+        }
+        
+        [items addObject:_forwardBarItem];
+    }
+    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolReload) > 0 || self.supportsAllNavigationTools) {
+        
+    }
+    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolStop) > 0 || self.supportsAllNavigationTools) {
+        
+    }
+    
+    if (items.count > 0) {
+        [items addObject:flexibleSpace];
+    }
+
+    if (_loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
+        _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
         [items addObject:_loadingBarItem];
     }
     
     return items;
+}
+
+- (BOOL)supportsAllNavigationTools
+{
+    return (_supportedNavigationTools == DZNWebViewControllerNavigationToolAll) ? YES : NO;
 }
 
 - (UIFont *)titleFont
@@ -282,6 +309,33 @@
     return scaledPoint;
 }
 
+- (NSArray *)applicationActivitiesForItem:(id)item
+{
+    NSMutableArray *activities = [NSMutableArray new];
+    
+    if ([item isKindOfClass:[UIImage class]]) {
+        return activities;
+    }
+    
+    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
+    }
+    if ((_supportedActions & DZNWebViewControllerActionOpenDolphin) > 0 || self.supportsAllActions) {
+        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeDolphin]];
+    }
+    
+    return activities;
+}
+
 - (NSArray *)excludedActivityTypesForItem:(id)item
 {
     NSMutableArray *types = [NSMutableArray new];
@@ -309,33 +363,6 @@
     }
     
     return types;
-}
-
-- (NSArray *)applicationActivitiesForItem:(id)item
-{
-    NSMutableArray *activities = [NSMutableArray new];
-    
-    if ([item isKindOfClass:[UIImage class]]) {
-        return activities;
-    }
-    
-    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
-    }
-    if ((_supportedActions & DZNWebViewControllerActionOpenDolphin) > 0 || self.supportsAllActions) {
-        [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeDolphin]];
-    }
-    
-    return activities;
 }
 
 - (BOOL)supportsAllActions
