@@ -18,7 +18,7 @@
 
 + (void)initialize
 {
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15.0],
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13.0],
                                                            NSForegroundColorAttributeName: [UIColor darkGrayColor]}];
 }
 
@@ -44,6 +44,7 @@
     _controller.toolbarTintColor = [UIColor whiteColor];
     _controller.toolbarBackgroundColor = [UIColor blackColor];
     _controller.supportedActions = DZNWebViewControllerActionAll;
+    _controller.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
     _controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissWebViewController:)];
     _controller.contextualMenuEnabled = YES;
     

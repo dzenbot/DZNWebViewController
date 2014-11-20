@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :path: ../../DZNWebViewController.podspec
 
 SPEC CHECKSUMS:
-  DZNWebViewController: 3078f6049a32e630a4d249dbac68c3126c0ea865
+  DZNWebViewController: 42c98d7da34bb0056ad5656bcdd024fb1528c2d3
   NJKWebViewProgress: 721b57080c840c76f70ff6c2dda4f836ee1b27c1
 
 COCOAPODS: 0.34.4

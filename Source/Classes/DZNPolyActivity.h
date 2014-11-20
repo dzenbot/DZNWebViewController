@@ -26,6 +26,9 @@ typedef NS_OPTIONS(NSUInteger, DZNPolyActivityType) {
  */
 @interface DZNPolyActivity : UIActivity
 
+@property (nonatomic, readonly) DZNPolyActivityType type;
+@property (nonatomic, readonly) NSURL *URL;
+
 /**
  Initializes and returns a newly created activity with a specific type.
  

@@ -34,17 +34,20 @@
 {
     NJKWebViewProgress *_progressProxy;
     
-    UIBarButtonItem *_actionBarItem;
-    UIBarButtonItem *_backwardBarItem;
-    UIBarButtonItem *_forwardBarItem;
-    UIBarButtonItem *_loadingBarItem;
-    
-    int _loadBalance;
+    NSInteger _loadBalance;
     BOOL _didLoadContent;
     BOOL _presentingActivities;
 }
+
+@property (nonatomic, strong) UIBarButtonItem *actionBarItem;
+@property (nonatomic, strong) UIBarButtonItem *backwardBarItem;
+@property (nonatomic, strong) UIBarButtonItem *forwardBarItem;
+@property (nonatomic, strong) UIBarButtonItem *refreshBarItem;
+@property (nonatomic, strong) UIBarButtonItem *loadingBarItem;
+
 @property (nonatomic, strong) NJKWebViewProgressView *progressView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+
 @end
 
 @implementation DZNWebViewController
@@ -198,15 +201,53 @@
     return _progressView;
 }
 
-- (UIActivityIndicatorView *)activityIndicatorView
+- (UIBarButtonItem *)backwardBarItem
 {
-    if (!_activityIndicatorView)
+    if (!_backwardBarItem)
+    {
+        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"dzn_icn_toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+        _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
+        _backwardBarItem.enabled = NO;
+    }
+    return _backwardBarItem;
+}
+
+- (UIBarButtonItem *)forwardBarItem
+{
+    if (!_forwardBarItem)
+    {
+        _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"dzn_icn_toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
+        _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
+        _forwardBarItem.enabled = NO;
+    }
+    return _forwardBarItem;
+}
+
+- (UIBarButtonItem *)refreshBarItem
+{
+    if (!_refreshBarItem)
+    {
+        _refreshBarItem = [[UIBarButtonItem alloc] initWithImage:nil style:UIBarButtonItemStylePlain target:nil action:nil];
+        _refreshBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Reload", @"DZNWebViewController", @"Accessibility label button title");
+        _refreshBarItem.enabled = NO;
+        _refreshBarItem.tintColor = self.toolbarTintColor;
+        
+//        [self updateRefreshItemIfNeeded];
+    }
+    return _refreshBarItem;
+}
+
+- (UIBarButtonItem *)loadingBarItem
+{
+    if (!_loadingBarItem)
     {
         _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         _activityIndicatorView.hidesWhenStopped = YES;
-        _activityIndicatorView.color = _toolbarTintColor;
+        _activityIndicatorView.color = self.toolbarTintColor;
+        
+        _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
     }
-    return _activityIndicatorView;
+    return _loadingBarItem;
 }
 
 - (NSArray *)navigationToolItems
@@ -217,38 +258,33 @@
     UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
     fixedSpace.width = 20.0;
     
-    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolBack) > 0 || self.supportsAllNavigationTools) {
-        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
-        _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
-        _backwardBarItem.enabled = NO;
-        
-        [items addObject:_backwardBarItem];
+    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolBackward) > 0 || self.supportsAllNavigationTools) {
+        [items addObject:self.backwardBarItem];
     }
-    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
-        _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
-        _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
-        _forwardBarItem.enabled = NO;
+    
+    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
         
         if (items.count > 0) {
             [items addObject:fixedSpace];
         }
         
-        [items addObject:_forwardBarItem];
+        [items addObject:self.forwardBarItem];
     }
-    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolReload) > 0 || self.supportsAllNavigationTools) {
-        
+    
+    if (items.count > 0) {
+        [items addObject:flexibleSpace];
     }
-    if ((_supportedNavigationTools & DZNWebViewControllerNavigationToolStop) > 0 || self.supportsAllNavigationTools) {
-        
+    
+    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolStopRefresh) > 0 || self.supportsAllNavigationTools) {
+        [items addObject:self.refreshBarItem];
     }
     
     if (items.count > 0) {
         [items addObject:flexibleSpace];
     }
 
-    if (_loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
-        _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
-        [items addObject:_loadingBarItem];
+    if (self.loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
+        [items addObject:self.loadingBarItem];
     }
     
     return items;
@@ -375,6 +411,10 @@
 
 - (void)setURL:(NSURL *)URL
 {
+    if ([self.URL isEqual:URL]) {
+        return;
+    }
+    
     if (self.isViewLoaded) {
         [self startRequestWithURL:URL];
     }
@@ -399,7 +439,7 @@
         [label sizeToFit];
         
         CGRect frame = label.frame;
-        frame.size.height = self.navigationController.navigationBar.frame.size.height;
+        frame.size.height = CGRectGetHeight(self.navigationController.navigationBar.frame);
         label.frame = frame;
     }
 }
@@ -424,6 +464,10 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
     
     if (_loadingStyle != DZNWebViewControllerLoadingStyleActivityIndicator) {
+        return;
+    }
+    
+    if (self.activityIndicatorView.isAnimating == visible) {
         return;
     }
     
@@ -460,6 +504,22 @@
 {
     if ([_webView canGoForward]) {
         [_webView goForward];
+    }
+}
+
+- (void)updateRefreshItemIfNeeded
+{
+    if ([self.webView isLoading] && _loadBalance > 0) {
+        [self.refreshBarItem setImage:[UIImage imageNamed:@"dzn_icn_toolbar_stop"]];
+        self.refreshBarItem.target = self.webView;
+        self.refreshBarItem.action = @selector(stopLoading);
+        self.refreshBarItem.enabled = YES;
+    }
+    else if (![self.webView isLoading] && _loadBalance == 0) {
+        [self.refreshBarItem setImage:[UIImage imageNamed:@"dzn_icn_toolbar_refresh"]];
+        self.refreshBarItem.target = self.webView;
+        self.refreshBarItem.action = @selector(reload);
+        self.refreshBarItem.enabled = YES;
     }
 }
 
@@ -587,6 +647,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {    
     if (request.URL && !_presentingActivities) {
+        [self updateRefreshItemIfNeeded];
         return YES;
     }
     
@@ -602,8 +663,8 @@
         [self setActivityIndicatorsVisible:YES];
     }
     
-    _backwardBarItem.enabled = [_webView canGoBack];
-    _forwardBarItem.enabled = [_webView canGoForward];
+    self.backwardBarItem.enabled = [webView canGoBack];
+    self.forwardBarItem.enabled = [webView canGoForward];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -614,10 +675,12 @@
     if (_loadBalance == 0) {
         _didLoadContent = YES;
         [self setActivityIndicatorsVisible:NO];
+        
+        [self updateRefreshItemIfNeeded];
     }
     
-    _backwardBarItem.enabled = [_webView canGoBack];
-    _forwardBarItem.enabled = [_webView canGoForward];
+    self.backwardBarItem.enabled = [webView canGoBack];
+    self.forwardBarItem.enabled = [webView canGoForward];
     
     [self setViewTitle:[self pageTitle]];
     

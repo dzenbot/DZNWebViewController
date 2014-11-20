@@ -25,10 +25,9 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerLoadingStyle) {
 typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerNavigationTools) {
     DZNWebViewControllerNavigationToolAll = -1,
     DZNWebViewControllerNavigationToolNone = 0,
-    DZNWebViewControllerNavigationToolBack = (1 << 0),
+    DZNWebViewControllerNavigationToolBackward = (1 << 0),
     DZNWebViewControllerNavigationToolForward = (1 << 1),
-    DZNWebViewControllerNavigationToolReload = (1 << 2),
-    DZNWebViewControllerNavigationToolStop = (1 << 3)
+    DZNWebViewControllerNavigationToolStopRefresh = (1 << 2),
 };
 
 /**
@@ -57,7 +56,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
 @property (nonatomic) NSURL *URL;
 /** The loading visual style, using a progress bar or a network activity indicator. Default is DZNWebViewControllerLoadingStyleProgressView. */
 @property (nonatomic) DZNWebViewControllerLoadingStyle loadingStyle;
-/** */
+/** The supported navigation tool bar items. Default is DZNWebViewControllerNavigationToolAll. */
 @property (nonatomic) DZNWebViewControllerNavigationTools supportedNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
 @property (nonatomic) DZNWebViewControllerActions supportedActions;
