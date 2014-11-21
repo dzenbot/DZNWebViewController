@@ -14,7 +14,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [ViewController new];
+    
+    ViewController *controller = [[ViewController alloc] initWithURL:[NSURL URLWithString:@"http://nshipster.com/"]];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     
     [self.window makeKeyAndVisible];

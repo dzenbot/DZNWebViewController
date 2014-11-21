@@ -834,7 +834,7 @@
         item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
     }
     
-    [self startRequestWithURL:item.URL];
+    [self.webView goToBackForwardListItem:item];
     
     [self dismissHistoryController];
 }

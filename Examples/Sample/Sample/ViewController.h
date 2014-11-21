@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 DZN Labs. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "DZNWebViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : DZNWebViewController
 
 @end
