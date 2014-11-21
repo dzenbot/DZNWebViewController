@@ -15,7 +15,5 @@ Pod::Spec.new do |s|
 
   s.source_files   = 'Classes', 'Source/Classes/**/*.*'
   s.resources      = ["Source/Resources/*.*", "Source/Scripts/*.js"]
-  s.frameworks     = 'UIKit'
-
-  s.dependency 'NJKWebViewProgress', '0.2.3'
+  s.framework      = 'UIKit', 'WebKit'
 end

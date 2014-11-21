@@ -46,7 +46,7 @@
     _controller.supportedActions = DZNWebViewControllerActionAll;
     _controller.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
     _controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissWebViewController:)];
-    _controller.contextualMenuEnabled = YES;
+    _controller.allowContextualMenu = YES;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_controller];
     [self presentViewController:navigationController animated:YES completion:NULL];

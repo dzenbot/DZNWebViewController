@@ -11,12 +11,8 @@
 #import "DZNWebViewController.h"
 #import "DZNPolyActivity.h"
 
-#import <NJKWebViewProgress/NJKWebViewProgressView.h>
-#import <NJKWebViewProgress/NJKWebViewProgress.h>
-
 #define kDZNWebViewControllerContentTypeImage @"image"
 #define kDZNWebViewControllerContentTypeLink @"link"
-
 
 @interface DZNLongPressGestureRecognizer : UILongPressGestureRecognizer
 @end
@@ -30,11 +26,8 @@
 @end
 
 
-@interface DZNWebViewController () <UIGestureRecognizerDelegate, NJKWebViewProgressDelegate>
+@interface DZNWebViewController () <UIGestureRecognizerDelegate>
 {
-    NJKWebViewProgress *_progressProxy;
-    
-    NSInteger _loadBalance;
     BOOL _didLoadContent;
     BOOL _presentingActivities;
 }
@@ -45,7 +38,7 @@
 @property (nonatomic, strong) UIBarButtonItem *refreshBarItem;
 @property (nonatomic, strong) UIBarButtonItem *loadingBarItem;
 
-@property (nonatomic, strong) NJKWebViewProgressView *progressView;
+@property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 
 @end
@@ -60,20 +53,6 @@
         [self commonInit];
     }
     return self;
-}
-
-- (void)awakeFromNib
-{
-    [self commonInit];
-}
-
-- (void)commonInit
-{
-    _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
-    _supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
-    _supportedActions = DZNWebViewControllerActionAll;
-    _toolbarBackgroundColor = [UIColor blackColor];
-    _toolbarTintColor = [UIColor whiteColor];
 }
 
 - (id)initWithURL:(NSURL *)URL
@@ -92,6 +71,20 @@
 - (id)initWithFileURL:(NSURL *)URL
 {
     return [self initWithURL:URL];
+}
+
+- (void)awakeFromNib
+{
+    [self commonInit];
+}
+
+- (void)commonInit
+{
+    _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
+    _supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
+    _supportedActions = DZNWebViewControllerActionAll;
+    _toolbarBackgroundColor = [UIColor blackColor];
+    _toolbarTintColor = [UIColor whiteColor];
 }
 
 
@@ -125,7 +118,6 @@
     self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
     self.navigationController.toolbar.tintColor = _toolbarTintColor;
     self.navigationController.toolbar.translucent = NO;
-    [self.navigationController.interactivePopGestureRecognizer addTarget:self action:@selector(handleInteractivePopGesture:)];
     
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
 }
@@ -135,7 +127,7 @@
     [super viewDidAppear:animated];
     
     if (!_didLoadContent) {
-        [self startRequestWithURL:_URL];
+        [self startRequestWithURL:self.URL];
     }
 }
 
@@ -156,47 +148,47 @@
 
 #pragma mark - Getter methods
 
-- (UIWebView *)webView
+- (DZNWebView *)webView
 {
     if (!_webView)
     {
-        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
-        _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        _webView.backgroundColor = [UIColor whiteColor];
+        DZNWebView *webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
+        webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        webView.backgroundColor = [UIColor whiteColor];
         
-        if (_loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
-        {
-            _progressProxy = [[NJKWebViewProgress alloc] init];
-            _progressProxy.webViewProxyDelegate = self;
-            _progressProxy.progressDelegate = self;
-            
-            _webView.delegate = _progressProxy;
-        }
-        else {
-            _webView.delegate = self;
-        }
+        webView.allowsBackForwardNavigationGestures = YES;
+        
+        webView.navDelegate = self;
+        webView.UIDelegate = self;
+        
+        _webView = webView;
         
         // Disabling contextual menu in iOS8.
         // TODO: Fix the inspector script in iOS8
-        if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
-            DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-            gesture.delegate = self;
-            [_webView addGestureRecognizer:gesture];
-        }
+//        if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
+//            DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+//            gesture.delegate = self;
+//            [_webView addGestureRecognizer:gesture];
+//        }
     }
     return _webView;
 }
 
-- (NJKWebViewProgressView *)progressView
+- (UIProgressView *)progressView
 {
     if (!_progressView && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
     {
-        CGFloat progressBarHeight = 2.5f;
-        CGSize navigationBarSize = self.navigationController.navigationBar.bounds.size;
-        CGRect barFrame = CGRectMake(0, navigationBarSize.height - progressBarHeight, navigationBarSize.width, progressBarHeight);
-        _progressView = [[NJKWebViewProgressView alloc] initWithFrame:barFrame];
+        CGFloat height = 2.5f;
+        CGSize size = self.navigationController.navigationBar.bounds.size;
+        CGRect frame = CGRectMake(0, size.height - height, size.width, height);
         
-        [self.navigationController.navigationBar addSubview:_progressView];
+        UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:frame];
+        progressView.trackTintColor = [UIColor clearColor];
+        progressView.alpha = 0.0f;
+        
+        [self.navigationController.navigationBar addSubview:progressView];
+        
+        _progressView = progressView;
     }
     return _progressView;
 }
@@ -231,8 +223,6 @@
         _refreshBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Reload", @"DZNWebViewController", @"Accessibility label button title");
         _refreshBarItem.enabled = NO;
         _refreshBarItem.tintColor = self.toolbarTintColor;
-        
-//        [self updateRefreshItemIfNeeded];
     }
     return _refreshBarItem;
 }
@@ -311,23 +301,16 @@
     return _titleColor;
 }
 
-- (NSString *)pageTitle
-{
-    NSString *js = @"document.body.style.webkitTouchCallout = 'none'; document.getElementsByTagName('title')[0].textContent;";
-    NSString *title = [_webView stringByEvaluatingJavaScriptFromString:js];
-    return [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-- (NSURL *)URL
-{
-    return _webView.request.URL;
-}
+//- (NSURL *)URL
+//{
+//    return self.webView.URL;
+//}
 
 - (CGSize)HTMLWindowSize
 {
     CGSize size = CGSizeZero;
-    size.width = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
-    size.height = [[_webView stringByEvaluatingJavaScriptFromString:@"window.innerHeight"] floatValue];
+//    size.width = [[self.webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
+//    size.height = [[self.webView stringByEvaluatingJavaScriptFromString:@"window.innerHeight"] floatValue];
     return size;
 }
 
@@ -418,6 +401,7 @@
     if (self.isViewLoaded) {
         [self startRequestWithURL:URL];
     }
+    
     _URL = URL;
 }
 
@@ -480,52 +464,62 @@
 
 - (void)startRequestWithURL:(NSURL *)URL
 {
-    _loadBalance = 0;
-    
-    if (![self.webView.request.URL isFileURL]) {
-        [_webView loadRequest:[[NSURLRequest alloc] initWithURL:URL]];
-    }
-    else {
+    if ([URL isFileURL]) {
         NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
         NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
         
-        [_webView loadHTMLString:HTMLString baseURL:nil];
+        [self.webView loadHTMLString:HTMLString baseURL:nil];
+    }
+    else {
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+        [self.webView loadRequest:request];
     }
 }
 
 - (void)goBack:(id)sender
 {
-    if ([_webView canGoBack]) {
-        [_webView goBack];
+    if ([self.webView canGoBack]) {
+        [self.webView goBack];
     }
 }
 
 - (void)goForward:(id)sender
 {
-    if ([_webView canGoForward]) {
-        [_webView goForward];
+    if ([self.webView canGoForward]) {
+        [self.webView goForward];
     }
 }
 
-- (void)updateRefreshItemIfNeeded
+- (void)updateToolbarItemsIfNeeded
 {
-    if ([self.webView isLoading] && _loadBalance > 0) {
-        [self.refreshBarItem setImage:[UIImage imageNamed:@"dzn_icn_toolbar_stop"]];
-        self.refreshBarItem.target = self.webView;
-        self.refreshBarItem.action = @selector(stopLoading);
-        self.refreshBarItem.enabled = YES;
+    [self setViewTitle:self.webView.title];
+    
+    self.backwardBarItem.enabled = [self.webView canGoBack];
+    self.forwardBarItem.enabled = [self.webView canGoForward];
+    
+    [self setActivityIndicatorsVisible:[self.webView isLoading]];
+    
+    NSString *iconName = @"dzn_icn_toolbar_stop";
+    SEL action = @selector(stopLoading);
+    
+    if (![self.webView isLoading]) {
+        iconName = @"dzn_icn_toolbar_refresh";
+        action = @selector(reload);
     }
-    else if (![self.webView isLoading] && _loadBalance == 0) {
-        [self.refreshBarItem setImage:[UIImage imageNamed:@"dzn_icn_toolbar_refresh"]];
-        self.refreshBarItem.target = self.webView;
-        self.refreshBarItem.action = @selector(reload);
-        self.refreshBarItem.enabled = YES;
-    }
+    
+    [self.refreshBarItem setImage:[UIImage imageNamed:iconName]];
+    self.refreshBarItem.target = self.webView;
+    self.refreshBarItem.action = action;
+    self.refreshBarItem.enabled = YES;
 }
 
 - (void)presentActivityController:(id)sender
 {
-    NSDictionary *content = @{@"title": [self pageTitle], @"url": [self URL].absoluteString, @"type": kDZNWebViewControllerContentTypeLink};
+    NSMutableDictionary *content = [[NSMutableDictionary alloc] initWithDictionary:@{@"type": kDZNWebViewControllerContentTypeLink}];
+    
+    if (self.webView.URL) [content setObject:self.webView.URL.absoluteString forKey:@"url"];
+    if (self.webView.title) [content setObject:self.webView.title forKey:@"title"];
+    
     [self presentActivityControllerWithContent:content];
 }
 
@@ -582,44 +576,39 @@
     };
 }
 
-- (void)handleLongPressGesture:(UIGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan && self.contextualMenuEnabled)
-    {
-        [self injectJavaScript];
-        
-        CGPoint point = [self convertPointToHTMLSystem:[gesture locationInView:_webView]];
-        
-        // Gets the URL link at the touch location
-        NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
-        NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
-        NSData *data = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy|NSStringEncodingConversionExternalRepresentation];
-        
-        if (!data) {
-            return;
-        }
-        
-        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil]];
-        
-        if (content.allValues.count > 0) {
-            [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];
-            [self presentActivityControllerWithContent:content];
-        }
-    }
-}
-
-- (void)injectJavaScript
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"inpector-script" ofType:@"js"];
-    NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    
-    [_webView stringByEvaluatingJavaScriptFromString:script];
-}
-
-- (void)handleInteractivePopGesture:(UIGestureRecognizer *)gesture
-{
-    NSLog(@"%s : %@",__FUNCTION__, gesture);
-}
+//- (void)handleLongPressGesture:(UIGestureRecognizer *)gesture
+//{
+//    if (gesture.state == UIGestureRecognizerStateBegan && self.allowContextualMenu)
+//    {
+//        [self injectJavaScript];
+//        
+//        CGPoint point = [self convertPointToHTMLSystem:[gesture locationInView:_webView]];
+//        
+//        // Gets the URL link at the touch location
+//        NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
+//        NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
+//        NSData *data = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy|NSStringEncodingConversionExternalRepresentation];
+//        
+//        if (!data) {
+//            return;
+//        }
+//        
+//        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil]];
+//        
+//        if (content.allValues.count > 0) {
+//            [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];
+//            [self presentActivityControllerWithContent:content];
+//        }
+//    }
+//}
+//
+//- (void)injectJavaScript
+//{
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"inpector-script" ofType:@"js"];
+//    NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+//    
+//    [self.webView stringByEvaluatingJavaScriptFromString:script];
+//}
 
 - (void)clearProgressViewAnimated:(BOOL)animated
 {
@@ -642,57 +631,107 @@
 }
 
 
-#pragma mark - UIWebViewDelegate methods
+#pragma mark - DZNNavigationDelegate methods
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{    
-    if (request.URL && !_presentingActivities) {
-        [self updateRefreshItemIfNeeded];
-        return YES;
-    }
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+//{
+//    NSLog(@"%s",__FUNCTION__);
+//}
+//
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+//{
+//    NSLog(@"%s",__FUNCTION__);
+//}
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
+{
+    NSLog(@"%s",__FUNCTION__);
     
-    return NO;
+    [self updateToolbarItemsIfNeeded];
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
-    // Load balance is use to see if the load was completed end of the site
-    _loadBalance++;
-    
-    if (_loadBalance == 1) {
-        [self setActivityIndicatorsVisible:YES];
-    }
-    
-    self.backwardBarItem.enabled = [webView canGoBack];
-    self.forwardBarItem.enabled = [webView canGoForward];
+    NSLog(@"%s",__FUNCTION__);
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    if (_loadBalance >= 1) _loadBalance--;
-    else if (_loadBalance < 0) _loadBalance = 0;
+    NSLog(@"%s",__FUNCTION__);
+}
 
-    if (_loadBalance == 0) {
-        _didLoadContent = YES;
-        [self setActivityIndicatorsVisible:NO];
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
+{
+    NSLog(@"%s",__FUNCTION__);
+}
+
+- (void)webView:(WKWebView *)webView didUpdateProgress:(CGFloat)progress
+{
+    if (self.progressView.alpha == 0 && progress > 0) {
         
-        [self updateRefreshItemIfNeeded];
+        self.progressView.progress = 0;
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.progressView.alpha = 1.0;
+        }];
+    }
+    else if (self.progressView.alpha == 1.0 && progress == 1.0)
+    {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.progressView.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            self.progressView.progress = 0;
+        }];
     }
     
-    self.backwardBarItem.enabled = [webView canGoBack];
-    self.forwardBarItem.enabled = [webView canGoForward];
-    
-    [self setViewTitle:[self pageTitle]];
-    
-    if ([webView.request.URL isFileURL] && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView) {
-        [_progressView setProgress:1.0 animated:YES];
-    }
+    [self.progressView setProgress:progress animated:YES];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    _loadBalance = 0;
+    NSLog(@"%s",__FUNCTION__);
+    
+    [self updateToolbarItemsIfNeeded];
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    NSLog(@"%s",__FUNCTION__);
+    
+    [self updateToolbarItemsIfNeeded];
     [self setLoadingError:error];
+}
+
+//- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandle
+//{
+//    NSLog(@"%s",__FUNCTION__);
+//}
+
+
+#pragma mark - WKUIDelegate methods
+
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    
+    return nil;
+}
+
+//- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)())completionHandler
+//{
+//    NSLog(@"%s",__FUNCTION__);
+//}
+//
+//- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
+//{
+//    NSLog(@"%s",__FUNCTION__);
+//}
+
+- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *result))completionHandler
+{
+    NSLog(@"%s",__FUNCTION__);
 }
 
 
@@ -721,13 +760,6 @@
     return YES;
 }
 
-#pragma mark - NJKWebViewProgressDelegate methods
-
-- (void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
-{
-    [self.progressView setProgress:progress animated:YES];
-}
-
 
 #pragma mark - View lifeterm
 
@@ -750,6 +782,8 @@
 
     _activityIndicatorView = nil;
     
+    _webView.navDelegate = nil;
+    _webView.UIDelegate = nil;
     _webView = nil;
     _URL = nil;
 }

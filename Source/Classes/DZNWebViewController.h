@@ -9,6 +9,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
+
+#import "DZNWebView.h"
 
 /**
  Types of network loading style.
@@ -48,18 +51,18 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
 /**
  A very simple web browser with useful navigation and exportation tools.
  */
-@interface DZNWebViewController : UIViewController <UIWebViewDelegate>
+@interface DZNWebViewController : UIViewController <DZNNavigationDelegate, WKUIDelegate>
 
 /** The web view that the controller manages. */
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) DZNWebView *webView;
 /** The URL identifying the location of the content to load. */
-@property (nonatomic) NSURL *URL;
+@property (nonatomic, readwrite) NSURL *URL;
 /** The loading visual style, using a progress bar or a network activity indicator. Default is DZNWebViewControllerLoadingStyleProgressView. */
-@property (nonatomic) DZNWebViewControllerLoadingStyle loadingStyle;
+@property (nonatomic, readwrite) DZNWebViewControllerLoadingStyle loadingStyle;
 /** The supported navigation tool bar items. Default is DZNWebViewControllerNavigationToolAll. */
-@property (nonatomic) DZNWebViewControllerNavigationTools supportedNavigationTools;
+@property (nonatomic, readwrite) DZNWebViewControllerNavigationTools supportedNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
-@property (nonatomic) DZNWebViewControllerActions supportedActions;
+@property (nonatomic, readwrite) DZNWebViewControllerActions supportedActions;
 /** The toolbar background color. Default is black, translucent. */
 @property (nonatomic, strong) UIColor *toolbarBackgroundColor;
 /** The toolbar item's tint color. Default is white. */
@@ -69,7 +72,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
 /** The navigation bar's title custom font. Default uses UINavigation's appearance title text attributes with key NSForegroundColorAttributeName. */
 @property (nonatomic, strong) UIColor *titleColor;
 /** YES if a contextual menu should show on web links and buttons. Default is NO. */
-@property (nonatomic) BOOL contextualMenuEnabled;
+@property (nonatomic) BOOL allowContextualMenu;
 
 ///------------------------------------------------
 /// @name Initialization
