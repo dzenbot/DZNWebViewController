@@ -636,27 +636,27 @@
 
 #pragma mark - DZNNavigationDelegate methods
 
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
+- (void)webView:(DZNWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItemsIfNeeded];
 }
 
-- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
+- (void)webView:(DZNWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
     // Do something.
 }
 
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
+- (void)webView:(DZNWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     // Do something.
 }
 
-- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
+- (void)webView:(DZNWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
     [self setActivityIndicatorsVisible:[self.webView isLoading]];
 }
 
-- (void)webView:(WKWebView *)webView didUpdateProgress:(CGFloat)progress
+- (void)webView:(DZNWebView *)webView didUpdateProgress:(CGFloat)progress
 {
     if (self.progressView.alpha == 0 && progress > 0) {
         
@@ -678,12 +678,12 @@
     [self.progressView setProgress:progress animated:YES];
 }
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+- (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItemsIfNeeded];
 }
 
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+- (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [self updateToolbarItemsIfNeeded];
     [self setLoadingError:error];
@@ -692,7 +692,7 @@
 
 #pragma mark - WKUIDelegate methods
 
-- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+- (DZNWebView *)webView:(DZNWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
     if (!navigationAction.targetFrame.isMainFrame) {
         [webView loadRequest:navigationAction.request];

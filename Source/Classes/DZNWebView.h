@@ -21,6 +21,6 @@
 
 @protocol DZNNavigationDelegate <WKNavigationDelegate>
 
-- (void)webView:(WKWebView *)webView didUpdateProgress:(CGFloat)progress;
+- (void)webView:(DZNWebView *)webView didUpdateProgress:(CGFloat)progress;
 
 @end
