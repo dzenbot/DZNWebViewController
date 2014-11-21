@@ -19,7 +19,7 @@
     
     self.supportedActions = DZNWebViewControllerActionAll;
     self.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
-    self.loadingStyle = DZNWebViewControllerLoadingStyleActivityIndicator;
+    self.loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
     self.allowHistory = YES;
 }
 

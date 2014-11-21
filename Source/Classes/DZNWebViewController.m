@@ -653,7 +653,7 @@
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
-    // Do something.
+    [self setActivityIndicatorsVisible:[self.webView isLoading]];
 }
 
 - (void)webView:(WKWebView *)webView didUpdateProgress:(CGFloat)progress
@@ -685,8 +685,6 @@
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     [self updateToolbarItemsIfNeeded];
     [self setLoadingError:error];
 }
