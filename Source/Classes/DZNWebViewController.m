@@ -11,31 +11,12 @@
 #import "DZNWebViewController.h"
 #import "DZNPolyActivity.h"
 
-#define kDZNWebViewControllerContentTypeImage @"image"
-#define kDZNWebViewControllerContentTypeLink @"link"
-
-@interface DZNLongPressGestureRecognizer : UILongPressGestureRecognizer
-@end
-
-@implementation DZNLongPressGestureRecognizer
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer {
-    return NO;
-}
-
-@end
-
-
-@interface DZNWebViewController () <UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate>
-{
-    BOOL _didLoadContent;
-    BOOL _presentingActivities;
-}
+@interface DZNWebViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *actionBarItem;
 @property (nonatomic, strong) UIBarButtonItem *backwardBarItem;
 @property (nonatomic, strong) UIBarButtonItem *forwardBarItem;
-@property (nonatomic, strong) UIBarButtonItem *refreshBarItem;
+@property (nonatomic, strong) UIBarButtonItem *stateBarItem;
 @property (nonatomic, strong) UIBarButtonItem *loadingBarItem;
 
 @property (nonatomic, strong) UIProgressView *progressView;
@@ -93,7 +74,7 @@
     [super viewDidLoad];
     
     if (self.supportedActions > 0) {
-        _actionBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(presentActivityController:)];
+        _actionBarItem = [[UIBarButtonItem alloc] initWithImage:self.actionButtonImage landscapeImagePhone:self.actionButtonLandscapeImage style:0 target:self action:@selector(presentActivityController:)];
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
     
@@ -154,21 +135,13 @@
         webView.UIDelegate = self;
         
         _webView = webView;
-        
-        // Disabling contextual menu in iOS8.
-        // TODO: Fix the inspector script in iOS8
-//        if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
-//            DZNLongPressGestureRecognizer *gesture = [[DZNLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//            gesture.delegate = self;
-//            [_webView addGestureRecognizer:gesture];
-//        }
     }
     return _webView;
 }
 
 - (UIProgressView *)progressView
 {
-    if (!_progressView && _loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
+    if (!_progressView && self.loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
     {
         CGFloat height = 2.5f;
         CGSize size = self.navigationController.navigationBar.bounds.size;
@@ -189,15 +162,10 @@
 {
     if (!_backwardBarItem)
     {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        [button setImage:[UIImage imageNamed:@"dzn_icn_toolbar_backward"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(goBackward:) forControlEvents:UIControlEventTouchUpInside];
-        [button sizeToFit];
+//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
+//        [button addGestureRecognizer:longPress];
         
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
-        [button addGestureRecognizer:longPress];
-        
-        _backwardBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:self.backwardButtonImage landscapeImagePhone:nil style:0 target:self action:@selector(goBackward:)];
         _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
         _backwardBarItem.enabled = NO;
     }
@@ -208,37 +176,31 @@
 {
     if (!_forwardBarItem)
     {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        [button setImage:[UIImage imageNamed:@"dzn_icn_toolbar_forward"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(goForward:) forControlEvents:UIControlEventTouchUpInside];
-        [button sizeToFit];
+//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showForwardHistory:)];
+//        [button addGestureRecognizer:longPress];
         
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showForwardHistory:)];
-        [button addGestureRecognizer:longPress];
-        
-        _forwardBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:self.forwardButtonImage landscapeImagePhone:nil style:0 target:self action:@selector(goForward:)];
         _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
         _forwardBarItem.enabled = NO;
     }
     return _forwardBarItem;
 }
 
-- (UIBarButtonItem *)refreshBarItem
+- (UIBarButtonItem *)stateBarItem
 {
-    if (!_refreshBarItem)
+    if (!_stateBarItem)
     {
-        _refreshBarItem = [[UIBarButtonItem alloc] initWithImage:nil style:UIBarButtonItemStylePlain target:nil action:nil];
-        _refreshBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Reload", @"DZNWebViewController", @"Accessibility label button title");
-        _refreshBarItem.enabled = NO;
+        _stateBarItem = [UIBarButtonItem new];
+        _stateBarItem.enabled = NO;
     }
-    return _refreshBarItem;
+    return _stateBarItem;
 }
 
 - (UIBarButtonItem *)loadingBarItem
 {
     if (!_loadingBarItem)
     {
-        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activityIndicatorView.hidesWhenStopped = YES;
         
         _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
@@ -272,13 +234,13 @@
     }
     
     if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolStopRefresh) > 0 || self.supportsAllNavigationTools) {
-        [items addObject:self.refreshBarItem];
+        [items addObject:self.stateBarItem];
     }
     
     if (items.count > 0) {
         [items addObject:flexibleSpace];
     }
-
+    
     if (self.loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
         [items addObject:self.loadingBarItem];
     }
@@ -291,31 +253,76 @@
     return (_supportedNavigationTools == DZNWebViewControllerNavigationToolAll) ? YES : NO;
 }
 
-//- (NSURL *)URL
-//{
-//    return self.webView.URL;
-//}
-
-- (CGSize)HTMLWindowSize
+- (UIImage *)actionButtonImage
 {
-    CGSize size = CGSizeZero;
-//    size.width = [[self.webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
-//    size.height = [[self.webView stringByEvaluatingJavaScriptFromString:@"window.innerHeight"] floatValue];
-    return size;
+    if (!_actionButtonImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_action"];
+    }
+    return _actionButtonImage;
 }
 
-- (CGPoint)convertPointToHTMLSystem:(CGPoint)point
+- (UIImage *)actionButtonLandscapeImage
 {
-    CGSize viewSize = _webView.frame.size;
-    CGSize windowSize = [self HTMLWindowSize];
-    
-    CGPoint scaledPoint = CGPointZero;
-    CGFloat factor = windowSize.width / viewSize.width;
-    
-    scaledPoint.x = point.x * factor;
-    scaledPoint.y = point.y * factor;
-    
-    return scaledPoint;
+    if (!_actionButtonLandscapeImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_action_landscape"];
+    }
+    return _actionButtonLandscapeImage;
+}
+
+- (UIImage *)backwardButtonImage
+{
+    if (!_backwardButtonImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_backward"];
+    }
+    return _backwardButtonImage;
+}
+
+- (UIImage *)backwardButtonLandscapeImage
+{
+    if (!_backwardButtonLandscapeImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_backward_landscape"];
+    }
+    return _backwardButtonLandscapeImage;
+}
+
+- (UIImage *)forwardButtonImage
+{
+    if (!_forwardButtonImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_forward"];
+    }
+    return _forwardButtonImage;
+}
+
+- (UIImage *)forwardButtonLandscapeImage
+{
+    if (!_forwardButtonLandscapeImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_forward_landscape"];
+    }
+    return _forwardButtonLandscapeImage;
+}
+
+- (UIImage *)reloadButtonImage
+{
+    if (!_reloadButtonImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_refresh"];
+    }
+    return _reloadButtonImage;
+}
+
+- (UIImage *)stopButtonImage
+{
+    if (!_stopButtonImage) {
+        return [UIImage imageNamed:@"dzn_icn_toolbar_stop"];
+    }
+    return _stopButtonImage;
+}
+
+- (UIImage *)stateButtonImage
+{
+    if ([self.webView isLoading]) {
+        return self.stopButtonImage;
+    }
+    return self.reloadButtonImage;
 }
 
 - (NSArray *)applicationActivitiesForItem:(id)item
@@ -436,7 +443,7 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
     
-    if (_loadingStyle != DZNWebViewControllerLoadingStyleActivityIndicator) {
+    if (self.loadingStyle != DZNWebViewControllerLoadingStyleActivityIndicator) {
         return;
     }
     
@@ -444,8 +451,11 @@
         return;
     }
     
-    if (visible) [_activityIndicatorView startAnimating];
-    else [_activityIndicatorView stopAnimating];
+    if (visible) {
+        [self.activityIndicatorView startAnimating];
+        self.activityIndicatorView.color = self.navigationController.toolbar.tintColor;
+    }
+    else [self.activityIndicatorView stopAnimating];
 }
 
 
@@ -500,11 +510,11 @@
 
 - (void)showBackwardHistory:(UIGestureRecognizer *)sender
 {
-    if (sender.state != UIGestureRecognizerStateBegan) {
+    if (!self.allowHistory || self.webView.backForwardList.backList.count == 0) {
         return;
     }
     
-    if (self.webView.backForwardList.backList.count == 0) {
+    if (sender.state != UIGestureRecognizerStateBegan) {
         return;
     }
     
@@ -537,58 +547,21 @@
     
     [self setActivityIndicatorsVisible:[self.webView isLoading]];
     
-    NSString *iconName = @"dzn_icn_toolbar_stop";
-    SEL action = @selector(stopLoading);
-    
-    if (![self.webView isLoading]) {
-        iconName = @"dzn_icn_toolbar_refresh";
-        action = @selector(reload);
-    }
-    
-    [self.refreshBarItem setImage:[UIImage imageNamed:iconName]];
-    self.refreshBarItem.target = self.webView;
-    self.refreshBarItem.action = action;
-    self.refreshBarItem.enabled = YES;
+    self.stateBarItem.target = self.webView;
+    self.stateBarItem.action = self.webView.isLoading ? @selector(stopLoading) : @selector(reload);
+    self.stateBarItem.image = self.stateButtonImage;
+    self.stateBarItem.landscapeImagePhone = nil;
+    self.stateBarItem.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop" : @"Reload", @"DZNWebViewController", @"Accessibility label button title");
+    self.stateBarItem.enabled = YES;
 }
 
 - (void)presentActivityController:(id)sender
 {
-    NSMutableDictionary *content = [[NSMutableDictionary alloc] initWithDictionary:@{@"type": kDZNWebViewControllerContentTypeLink}];
-    
-    if (self.webView.URL) [content setObject:self.webView.URL.absoluteString forKey:@"url"];
-    if (self.webView.title) [content setObject:self.webView.title forKey:@"title"];
-    
-    [self presentActivityControllerWithContent:content];
-}
-
-- (void)presentActivityControllerWithContent:(NSDictionary *)content
-{
-    if (!content) {
+    if (!self.webView.URL.absoluteString) {
         return;
     }
     
-    NSString *type = [content objectForKey:@"type"];
-    NSString *title = [content objectForKey:@"title"];
-    NSString *url = [content objectForKey:@"url"];
-    
-    if ([type isEqualToString:kDZNWebViewControllerContentTypeLink]) {
-        
-        [self presentActivityControllerWithItem:url andTitle:title];
-    }
-    if ([type isEqualToString:kDZNWebViewControllerContentTypeImage]) {
-        
-        [self setActivityIndicatorsVisible:YES];
-        
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0ul);
-        dispatch_async(queue, ^{
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-            UIImage *image = [UIImage imageWithData:data];
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self presentActivityControllerWithItem:image andTitle:title];
-                [self setActivityIndicatorsVisible:NO];
-            });
-        });
-    }
+    [self presentActivityControllerWithItem:self.webView.URL.absoluteString andTitle:self.webView.title];
 }
 
 - (void)presentActivityControllerWithItem:(id)item andTitle:(NSString *)title
@@ -597,56 +570,15 @@
         return;
     }
     
-    _presentingActivities = YES;
-    
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[title, item] applicationActivities:[self applicationActivitiesForItem:item]];
-    
     controller.excludedActivityTypes = [self excludedActivityTypesForItem:item];
     
     if (title) {
         [controller setValue:title forKey:@"subject"];
     }
     
-    [self presentViewController:controller animated:YES completion:nil];
-    
-    controller.completionHandler = ^(NSString *activityType, BOOL completed) {
-        _presentingActivities = NO;
-    };
+    [self presentViewController:controller animated:YES completion:NULL];
 }
-
-//- (void)handleLongPressGesture:(UIGestureRecognizer *)gesture
-//{
-//    if (gesture.state == UIGestureRecognizerStateBegan && self.allowContextualMenu)
-//    {
-//        [self injectJavaScript];
-//        
-//        CGPoint point = [self convertPointToHTMLSystem:[gesture locationInView:_webView]];
-//        
-//        // Gets the URL link at the touch location
-//        NSString *function = [NSString stringWithFormat:@"script.getElement(%d,%d);", (int)point.x, (int)point.y];
-//        NSString *result = [_webView stringByEvaluatingJavaScriptFromString:function];
-//        NSData *data = [result dataUsingEncoding:NSStringEncodingConversionAllowLossy|NSStringEncodingConversionExternalRepresentation];
-//        
-//        if (!data) {
-//            return;
-//        }
-//        
-//        NSMutableDictionary *content = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil]];
-//        
-//        if (content.allValues.count > 0) {
-//            [content setObject:[NSValue valueWithCGPoint:point] forKey:@"location"];
-//            [self presentActivityControllerWithContent:content];
-//        }
-//    }
-//}
-//
-//- (void)injectJavaScript
-//{
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"inpector-script" ofType:@"js"];
-//    NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-//    
-//    [self.webView stringByEvaluatingJavaScriptFromString:script];
-//}
 
 - (void)clearProgressViewAnimated:(BOOL)animated
 {
@@ -671,36 +603,24 @@
 
 #pragma mark - DZNNavigationDelegate methods
 
-//- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//}
-//
-//- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//}
-
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     [self updateToolbarItemsIfNeeded];
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
 {
-    NSLog(@"%s",__FUNCTION__);
+    // Do something.
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"%s",__FUNCTION__);
+    // Do something.
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation
 {
-    NSLog(@"%s",__FUNCTION__);
+    // Do something.
 }
 
 - (void)webView:(WKWebView *)webView didUpdateProgress:(CGFloat)progress
@@ -727,8 +647,6 @@
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    NSLog(@"%s",__FUNCTION__);
-    
     [self updateToolbarItemsIfNeeded];
 }
 
@@ -740,11 +658,6 @@
     [self setLoadingError:error];
 }
 
-//- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandle
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//}
-
 
 #pragma mark - WKUIDelegate methods
 
@@ -755,21 +668,6 @@
     }
     
     return nil;
-}
-
-//- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)())completionHandler
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//}
-//
-//- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler
-//{
-//    NSLog(@"%s",__FUNCTION__);
-//}
-
-- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *result))completionHandler
-{
-    NSLog(@"%s",__FUNCTION__);
 }
 
 
@@ -837,32 +735,6 @@
     [self.webView goToBackForwardListItem:item];
     
     [self dismissHistoryController];
-}
-
-
-#pragma mark - UIGestureRecognizerDelegate methods
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if ([gestureRecognizer isKindOfClass:[DZNLongPressGestureRecognizer class]]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    Class class = [DZNLongPressGestureRecognizer class];
-    if ([gestureRecognizer isKindOfClass:class] || [otherGestureRecognizer isKindOfClass:class]) {
-        return NO;
-    }
-    
-    return YES;
 }
 
 

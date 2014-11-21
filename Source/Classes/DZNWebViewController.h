@@ -45,7 +45,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
     DZNWebViewControllerActionOpenSafari = (1 << 3),
     DZNWebViewControllerActionOpenChrome = (1 << 4),
     DZNWebViewControllerActionOpenOperaMini = (1 << 5),
-    DZNWebViewControllerActionOpenDolphin = (1 << 6)
+    DZNWebViewControllerActionOpenDolphin = (1 << 6),
 };
 
 /**
@@ -63,8 +63,23 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
 @property (nonatomic, readwrite) DZNWebViewControllerNavigationTools supportedNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
 @property (nonatomic, readwrite) DZNWebViewControllerActions supportedActions;
-/** YES if a contextual menu should show on web links and buttons. Default is NO. */
-@property (nonatomic) BOOL allowContextualMenu;
+/** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
+@property (nonatomic) BOOL allowHistory;
+
+@property (nonatomic, assign) UIImage *backwardButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *backwardButtonLandscapeImage UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) UIImage *forwardButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *forwardButtonLandscapeImage UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) UIImage *stopButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *stopButtonLandscapeImage UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) UIImage *reloadButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *reloadButtonLandscapeImage UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, assign) UIImage *actionButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *actionButtonLandscapeImage UI_APPEARANCE_SELECTOR;
 
 ///------------------------------------------------
 /// @name Initialization

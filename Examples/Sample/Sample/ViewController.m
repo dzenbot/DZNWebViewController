@@ -13,13 +13,14 @@
 
 @implementation ViewController
 
-- (void)viewDidLoad
+- (void)loadView
 {
-    [super viewDidLoad];
+    [super loadView];
     
     self.supportedActions = DZNWebViewControllerActionAll;
     self.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
-    self.allowContextualMenu = YES;
+    self.loadingStyle = DZNWebViewControllerLoadingStyleActivityIndicator;
+    self.allowHistory = YES;
 }
 
 @end

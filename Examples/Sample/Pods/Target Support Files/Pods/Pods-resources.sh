@@ -63,6 +63,10 @@ install_resource()
                     install_resource "../../../Source/Resources/dzn_icn_activity_safari@2x.png"
                     install_resource "../../../Source/Resources/dzn_icn_activity_safari@2x~ipad.png"
                     install_resource "../../../Source/Resources/dzn_icn_activity_safari~ipad.png"
+                    install_resource "../../../Source/Resources/dzn_icn_toolbar_action.png"
+                    install_resource "../../../Source/Resources/dzn_icn_toolbar_action@2x.png"
+                    install_resource "../../../Source/Resources/dzn_icn_toolbar_action_landscape.png"
+                    install_resource "../../../Source/Resources/dzn_icn_toolbar_action_landscape@2x.png"
                     install_resource "../../../Source/Resources/dzn_icn_toolbar_backward.png"
                     install_resource "../../../Source/Resources/dzn_icn_toolbar_backward@2x.png"
                     install_resource "../../../Source/Resources/dzn_icn_toolbar_forward.png"
@@ -73,7 +77,6 @@ install_resource()
                     install_resource "../../../Source/Resources/dzn_icn_toolbar_stop@2x.png"
                     install_resource "../../../Source/Resources/de.lproj"
                     install_resource "../../../Source/Resources/en.lproj"
-                    install_resource "../../../Source/Scripts/inpector-script.js"
           
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 if [[ "${ACTION}" == "install" ]]; then
