@@ -22,6 +22,9 @@
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 
+@property (nonatomic, strong) UILongPressGestureRecognizer *backwardLongPress;
+@property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
+
 @end
 
 @implementation DZNWebViewController
@@ -80,19 +83,15 @@
     
     [self.view addSubview:self.webView];
     self.automaticallyAdjustsScrollViewInsets = YES;
-    
-    [self setToolbarItems:[self navigationToolItems]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-     [UIView performWithoutAnimation:^{
-         if (self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
-             [self.navigationController setToolbarHidden:NO];
-         }
-     }];
+    [UIView performWithoutAnimation:^{
+        [self configureToolBar];
+    }];
     
     if (!self.webView.URL) {
         [self startRequestWithURL:self.URL];
@@ -162,9 +161,6 @@
 {
     if (!_backwardBarItem)
     {
-//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
-//        [button addGestureRecognizer:longPress];
-        
         _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:self.backwardButtonImage landscapeImagePhone:nil style:0 target:self action:@selector(goBackward:)];
         _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
         _backwardBarItem.enabled = NO;
@@ -176,12 +172,11 @@
 {
     if (!_forwardBarItem)
     {
-//        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showForwardHistory:)];
-//        [button addGestureRecognizer:longPress];
-        
         _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:self.forwardButtonImage landscapeImagePhone:nil style:0 target:self action:@selector(goForward:)];
+        _forwardBarItem.landscapeImagePhone = nil;
         _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
         _forwardBarItem.enabled = NO;
+        
     }
     return _forwardBarItem;
 }
@@ -504,7 +499,11 @@
 - (void)dismissHistoryController
 {
     if (self.presentedViewController) {
-        [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+        [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
+            
+            // The bar button item's gestures are invalidated after using them, so we must re-assign them.
+            [self configureBarItemsGestures];
+        }];
     }
 }
 
@@ -538,14 +537,48 @@
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
 
+- (void)configureToolBar
+{
+    [self setToolbarItems:[self navigationToolItems]];
+    
+    if (self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
+        [self.navigationController setToolbarHidden:NO];
+    }
+    else {
+        return;
+    }
+    
+    [self configureBarItemsGestures];
+}
+
+// Light hack for adding custom gesture recognizers to UIBarButtonItems
+- (void)configureBarItemsGestures
+{
+    UIView *backwardButton= [self.backwardBarItem valueForKey:@"view"];
+    if (backwardButton.gestureRecognizers.count == 0) {
+        if (!_backwardLongPress) {
+            _backwardLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
+        }
+        [backwardButton addGestureRecognizer:self.backwardLongPress];
+    }
+    
+    UIView *forwardBarButton= [self.forwardBarItem valueForKey:@"view"];
+    if (forwardBarButton.gestureRecognizers.count == 0) {
+        if (!_forwardLongPress) {
+            _forwardLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
+        }
+        [forwardBarButton addGestureRecognizer:self.forwardLongPress];
+    }
+}
+
 - (void)updateToolbarItemsIfNeeded
 {
+    [self setActivityIndicatorsVisible:[self.webView isLoading]];
+
     [self setViewTitle:self.webView.title];
     
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
-    
-    [self setActivityIndicatorsVisible:[self.webView isLoading]];
     
     self.stateBarItem.target = self.webView;
     self.stateBarItem.action = self.webView.isLoading ? @selector(stopLoading) : @selector(reload);
