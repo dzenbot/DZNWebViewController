@@ -26,7 +26,7 @@
 @end
 
 
-@interface DZNWebViewController () <UIGestureRecognizerDelegate>
+@interface DZNWebViewController () <UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     BOOL _didLoadContent;
     BOOL _presentingActivities;
@@ -83,8 +83,6 @@
     _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
     _supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
     _supportedActions = DZNWebViewControllerActionAll;
-    _toolbarBackgroundColor = [UIColor blackColor];
-    _toolbarTintColor = [UIColor whiteColor];
 }
 
 
@@ -99,7 +97,7 @@
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
     
-    self.view = self.webView;
+    [self.view addSubview:self.webView];
     self.automaticallyAdjustsScrollViewInsets = YES;
     
     [self setToolbarItems:[self navigationToolItems]];
@@ -115,20 +113,14 @@
          }
      }];
     
-    self.navigationController.toolbar.barTintColor = _toolbarBackgroundColor;
-    self.navigationController.toolbar.tintColor = _toolbarTintColor;
-    self.navigationController.toolbar.translucent = NO;
-    
-    self.navigationController.view.backgroundColor = [UIColor whiteColor];
+    if (!self.webView.URL) {
+        [self startRequestWithURL:self.URL];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    if (!_didLoadContent) {
-        [self startRequestWithURL:self.URL];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -153,7 +145,7 @@
     if (!_webView)
     {
         DZNWebView *webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
-        webView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         webView.backgroundColor = [UIColor whiteColor];
         
         webView.allowsBackForwardNavigationGestures = YES;
@@ -197,7 +189,15 @@
 {
     if (!_backwardBarItem)
     {
-        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"dzn_icn_toolbar_backward"] style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        [button setImage:[UIImage imageNamed:@"dzn_icn_toolbar_backward"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(goBackward:) forControlEvents:UIControlEventTouchUpInside];
+        [button sizeToFit];
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showBackwardHistory:)];
+        [button addGestureRecognizer:longPress];
+        
+        _backwardBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
         _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
         _backwardBarItem.enabled = NO;
     }
@@ -208,7 +208,15 @@
 {
     if (!_forwardBarItem)
     {
-        _forwardBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"dzn_icn_toolbar_forward"] style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        [button setImage:[UIImage imageNamed:@"dzn_icn_toolbar_forward"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(goForward:) forControlEvents:UIControlEventTouchUpInside];
+        [button sizeToFit];
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showForwardHistory:)];
+        [button addGestureRecognizer:longPress];
+        
+        _forwardBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
         _forwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Forward", @"DZNWebViewController", @"Accessibility label button title");
         _forwardBarItem.enabled = NO;
     }
@@ -222,7 +230,6 @@
         _refreshBarItem = [[UIBarButtonItem alloc] initWithImage:nil style:UIBarButtonItemStylePlain target:nil action:nil];
         _refreshBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Reload", @"DZNWebViewController", @"Accessibility label button title");
         _refreshBarItem.enabled = NO;
-        _refreshBarItem.tintColor = self.toolbarTintColor;
     }
     return _refreshBarItem;
 }
@@ -233,7 +240,6 @@
     {
         _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         _activityIndicatorView.hidesWhenStopped = YES;
-        _activityIndicatorView.color = self.toolbarTintColor;
         
         _loadingBarItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
     }
@@ -283,22 +289,6 @@
 - (BOOL)supportsAllNavigationTools
 {
     return (_supportedNavigationTools == DZNWebViewControllerNavigationToolAll) ? YES : NO;
-}
-
-- (UIFont *)titleFont
-{
-    if (!_titleFont) {
-        return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSFontAttributeName];
-    }
-    return _titleFont;
-}
-
-- (UIColor *)titleColor
-{
-    if (!_titleColor) {
-        return [[UINavigationBar appearance].titleTextAttributes objectForKey:NSForegroundColorAttributeName];
-    }
-    return _titleColor;
 }
 
 //- (NSURL *)URL
@@ -413,8 +403,7 @@
         label = [UILabel new];
         label.numberOfLines = 2;
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = self.titleFont;
-        label.textColor = self.titleColor;
+        label.font = [UIFont systemFontOfSize:13.0];
         self.navigationItem.titleView = label;
     }
     
@@ -476,7 +465,7 @@
     }
 }
 
-- (void)goBack:(id)sender
+- (void)goBackward:(id)sender
 {
     if ([self.webView canGoBack]) {
         [self.webView goBack];
@@ -488,6 +477,55 @@
     if ([self.webView canGoForward]) {
         [self.webView goForward];
     }
+}
+
+- (UITableViewController *)historyControllerForTool:(DZNWebViewControllerNavigationTools)tool
+{
+    UITableViewController *controller = [UITableViewController new];
+    controller.title = NSLocalizedStringFromTable(@"History", @"DZNWebViewController", nil);
+    controller.tableView.delegate = self;
+    controller.tableView.dataSource = self;
+    controller.tableView.tag = tool;
+    controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
+    
+    return controller;
+}
+
+- (void)dismissHistoryController
+{
+    if (self.presentedViewController) {
+        [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)showBackwardHistory:(UIGestureRecognizer *)sender
+{
+    if (sender.state != UIGestureRecognizerStateBegan) {
+        return;
+    }
+    
+    if (self.webView.backForwardList.backList.count == 0) {
+        return;
+    }
+    
+    UIViewController *viewController = [self historyControllerForTool:DZNWebViewControllerNavigationToolBackward];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:navigationController animated:YES completion:NULL];
+}
+
+- (void)showForwardHistory:(UIGestureRecognizer *)sender
+{
+    if (sender.state != UIGestureRecognizerStateBegan) {
+        return;
+    }
+    
+    if (self.webView.backForwardList.forwardList.count == 0) {
+        return;
+    }
+    
+    UIViewController *viewController = [self historyControllerForTool:DZNWebViewControllerNavigationToolForward];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:navigationController animated:YES completion:NULL];
 }
 
 - (void)updateToolbarItemsIfNeeded
@@ -732,6 +770,73 @@
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *result))completionHandler
 {
     NSLog(@"%s",__FUNCTION__);
+}
+
+
+#pragma mark - UITableViewDataSource Methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+        return self.webView.backForwardList.backList.count;
+    }
+    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+        return self.webView.backForwardList.forwardList.count;
+    }
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
+    
+    WKBackForwardListItem *item = nil;
+    
+    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+        item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
+    }
+    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+        item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
+    }
+    
+    cell.textLabel.text = item.title;
+    cell.detailTextLabel.text = [item.URL absoluteString];
+
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44.0;
+}
+
+
+#pragma mark - UITableViewDelegate Methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    WKBackForwardListItem *item = nil;
+    
+    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+        item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
+    }
+    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+        item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
+    }
+    
+    [self startRequestWithURL:item.URL];
+    
+    [self dismissHistoryController];
 }
 
 

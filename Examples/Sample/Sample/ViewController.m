@@ -16,12 +16,6 @@
 
 @implementation ViewController
 
-+ (void)initialize
-{
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13.0],
-                                                           NSForegroundColorAttributeName: [UIColor darkGrayColor]}];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,14 +35,13 @@
     NSURL *URL = [NSURL URLWithString:@"http://thenextweb.com/"];
     
     _controller = [[DZNWebViewController alloc] initWithURL:URL];
-    _controller.toolbarTintColor = [UIColor whiteColor];
-    _controller.toolbarBackgroundColor = [UIColor blackColor];
     _controller.supportedActions = DZNWebViewControllerActionAll;
     _controller.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
     _controller.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissWebViewController:)];
     _controller.allowContextualMenu = YES;
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:_controller];
+    
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
 

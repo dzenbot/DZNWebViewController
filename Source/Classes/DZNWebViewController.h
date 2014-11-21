@@ -63,14 +63,6 @@ typedef NS_OPTIONS(NSUInteger, DZNWebViewControllerActions) {
 @property (nonatomic, readwrite) DZNWebViewControllerNavigationTools supportedNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebViewControllerActionAll. */
 @property (nonatomic, readwrite) DZNWebViewControllerActions supportedActions;
-/** The toolbar background color. Default is black, translucent. */
-@property (nonatomic, strong) UIColor *toolbarBackgroundColor;
-/** The toolbar item's tint color. Default is white. */
-@property (nonatomic, strong) UIColor *toolbarTintColor;
-/** The navigation bar's title font. Default uses UINavigation's appearance title text attributes with key NSFontAttributeName. */
-@property (nonatomic, strong) UIFont *titleFont;
-/** The navigation bar's title custom font. Default uses UINavigation's appearance title text attributes with key NSForegroundColorAttributeName. */
-@property (nonatomic, strong) UIColor *titleColor;
 /** YES if a contextual menu should show on web links and buttons. Default is NO. */
 @property (nonatomic) BOOL allowContextualMenu;
 
