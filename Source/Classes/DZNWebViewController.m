@@ -72,6 +72,14 @@
 
 #pragma mark - View lifecycle
 
+- (void)loadView
+{
+    [super loadView];
+    
+    self.view = self.webView;
+    self.automaticallyAdjustsScrollViewInsets = YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -80,9 +88,6 @@
         _actionBarItem = [[UIBarButtonItem alloc] initWithImage:self.actionButtonImage landscapeImagePhone:self.actionButtonLandscapeImage style:0 target:self action:@selector(presentActivityController:)];
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
-    
-    [self.view addSubview:self.webView];
-    self.automaticallyAdjustsScrollViewInsets = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -125,14 +130,11 @@
     if (!_webView)
     {
         DZNWebView *webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
-        webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         webView.backgroundColor = [UIColor whiteColor];
-        
         webView.allowsBackForwardNavigationGestures = YES;
-        
-        webView.navDelegate = self;
         webView.UIDelegate = self;
-        
+        webView.navDelegate = self;
+
         _webView = webView;
     }
     return _webView;
