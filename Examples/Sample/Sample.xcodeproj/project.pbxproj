@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		4F66DC1C18E73CBF007A78D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F66DC1B18E73CBF007A78D8 /* ViewController.m */; };
+		4F6A37671A20E09100323282 /* NSHipster.com.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375A1A20E09100323282 /* NSHipster.com.html */; };
+		4F6A37681A20E09100323282 /* analytics.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375C1A20E09100323282 /* analytics.js */; };
+		4F6A37691A20E09100323282 /* application.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375D1A20E09100323282 /* application.js */; };
+		4F6A376A1A20E09100323282 /* book-cover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375E1A20E09100323282 /* book-cover@2x.png */; };
+		4F6A376B1A20E09100323282 /* cc.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375F1A20E09100323282 /* cc.js */; };
+		4F6A376C1A20E09100323282 /* cfhipsterref-cover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37601A20E09100323282 /* cfhipsterref-cover@2x.png */; };
+		4F6A376D1A20E09100323282 /* embed.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37611A20E09100323282 /* embed.js */; };
+		4F6A376E1A20E09100323282 /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37621A20E09100323282 /* jquery.min.js */; };
+		4F6A376F1A20E09100323282 /* screen.css in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37631A20E09100323282 /* screen.css */; };
+		4F6A37701A20E09100323282 /* swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37641A20E09100323282 /* swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js */; };
+		4F6A37711A20E09100323282 /* swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37651A20E09100323282 /* swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css */; };
+		4F6A37721A20E09100323282 /* the-nshipster-fake-book-cover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A37661A20E09100323282 /* the-nshipster-fake-book-cover@2x.png */; };
 		4FB8460318E50C450056BDFB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460218E50C450056BDFB /* Foundation.framework */; };
 		4FB8460518E50C450056BDFB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460418E50C450056BDFB /* CoreGraphics.framework */; };
 		4FB8460718E50C450056BDFB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FB8460618E50C450056BDFB /* UIKit.framework */; };
@@ -22,7 +34,6 @@
 		4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EE18E725C60009F375 /* Default-568h@2x.png */; };
 		4FC763F218E725C60009F375 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EF18E725C60009F375 /* Default.png */; };
 		4FC763F318E725C60009F375 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F018E725C60009F375 /* Default@2x.png */; };
-		4FF44A9118F2ABF100378B2A /* html-fixture in Resources */ = {isa = PBXBuildFile; fileRef = 4FF44A9018F2ABF100378B2A /* html-fixture */; };
 		AA22BA647F7D4AA39B479ABC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9934BD31402B4CBE9A91C229 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +51,18 @@
 		4F3041DB1A1EFA8900F702A5 /* DZNWebViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = DZNWebViewController.podspec; path = ../../DZNWebViewController.podspec; sourceTree = "<group>"; };
 		4F66DC1A18E73CBF007A78D8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F66DC1B18E73CBF007A78D8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4F6A375A1A20E09100323282 /* NSHipster.com.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = NSHipster.com.html; sourceTree = "<group>"; };
+		4F6A375C1A20E09100323282 /* analytics.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = analytics.js; sourceTree = "<group>"; };
+		4F6A375D1A20E09100323282 /* application.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = application.js; sourceTree = "<group>"; };
+		4F6A375E1A20E09100323282 /* book-cover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "book-cover@2x.png"; sourceTree = "<group>"; };
+		4F6A375F1A20E09100323282 /* cc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = cc.js; sourceTree = "<group>"; };
+		4F6A37601A20E09100323282 /* cfhipsterref-cover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cfhipsterref-cover@2x.png"; sourceTree = "<group>"; };
+		4F6A37611A20E09100323282 /* embed.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = embed.js; sourceTree = "<group>"; };
+		4F6A37621A20E09100323282 /* jquery.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
+		4F6A37631A20E09100323282 /* screen.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = screen.css; sourceTree = "<group>"; };
+		4F6A37641A20E09100323282 /* swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js"; sourceTree = "<group>"; };
+		4F6A37651A20E09100323282 /* swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css"; sourceTree = "<group>"; };
+		4F6A37661A20E09100323282 /* the-nshipster-fake-book-cover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "the-nshipster-fake-book-cover@2x.png"; sourceTree = "<group>"; };
 		4FB845FF18E50C450056BDFB /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FB8460218E50C450056BDFB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4FB8460418E50C450056BDFB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -58,7 +81,6 @@
 		4FC763EE18E725C60009F375 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4FC763EF18E725C60009F375 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4FC763F018E725C60009F375 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		4FF44A9018F2ABF100378B2A /* html-fixture */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "html-fixture"; sourceTree = "<group>"; };
 		84072172328E77E3D64B7C81 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9934BD31402B4CBE9A91C229 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED4997A7C5F4D6AACC9BD7B0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -97,6 +119,41 @@
 				84072172328E77E3D64B7C81 /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		4F6A37581A20E09100323282 /* html-fixture */ = {
+			isa = PBXGroup;
+			children = (
+				4F6A37591A20E09100323282 /* NSHipster.com */,
+			);
+			path = "html-fixture";
+			sourceTree = "<group>";
+		};
+		4F6A37591A20E09100323282 /* NSHipster.com */ = {
+			isa = PBXGroup;
+			children = (
+				4F6A375A1A20E09100323282 /* NSHipster.com.html */,
+				4F6A375B1A20E09100323282 /* NSHipster.com_files */,
+			);
+			path = NSHipster.com;
+			sourceTree = "<group>";
+		};
+		4F6A375B1A20E09100323282 /* NSHipster.com_files */ = {
+			isa = PBXGroup;
+			children = (
+				4F6A375C1A20E09100323282 /* analytics.js */,
+				4F6A375D1A20E09100323282 /* application.js */,
+				4F6A375E1A20E09100323282 /* book-cover@2x.png */,
+				4F6A375F1A20E09100323282 /* cc.js */,
+				4F6A37601A20E09100323282 /* cfhipsterref-cover@2x.png */,
+				4F6A37611A20E09100323282 /* embed.js */,
+				4F6A37621A20E09100323282 /* jquery.min.js */,
+				4F6A37631A20E09100323282 /* screen.css */,
+				4F6A37641A20E09100323282 /* swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js */,
+				4F6A37651A20E09100323282 /* swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css */,
+				4F6A37661A20E09100323282 /* the-nshipster-fake-book-cover@2x.png */,
+			);
+			path = NSHipster.com_files;
 			sourceTree = "<group>";
 		};
 		4FB845F618E50C450056BDFB = {
@@ -146,7 +203,7 @@
 		4FB8460918E50C450056BDFB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4FF44A9018F2ABF100378B2A /* html-fixture */,
+				4F6A37581A20E09100323282 /* html-fixture */,
 				4FC763EE18E725C60009F375 /* Default-568h@2x.png */,
 				4FC763EF18E725C60009F375 /* Default.png */,
 				4FC763F018E725C60009F375 /* Default@2x.png */,
@@ -254,11 +311,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F6A376F1A20E09100323282 /* screen.css in Resources */,
+				4F6A37691A20E09100323282 /* application.js in Resources */,
+				4F6A37701A20E09100323282 /* swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js in Resources */,
+				4F6A37671A20E09100323282 /* NSHipster.com.html in Resources */,
 				4FB8460D18E50C450056BDFB /* InfoPlist.strings in Resources */,
 				4FC763F318E725C60009F375 /* Default@2x.png in Resources */,
-				4FF44A9118F2ABF100378B2A /* html-fixture in Resources */,
 				4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */,
+				4F6A37721A20E09100323282 /* the-nshipster-fake-book-cover@2x.png in Resources */,
+				4F6A37711A20E09100323282 /* swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css in Resources */,
+				4F6A376C1A20E09100323282 /* cfhipsterref-cover@2x.png in Resources */,
+				4F6A376A1A20E09100323282 /* book-cover@2x.png in Resources */,
+				4F6A376B1A20E09100323282 /* cc.js in Resources */,
 				4FC763F218E725C60009F375 /* Default.png in Resources */,
+				4F6A37681A20E09100323282 /* analytics.js in Resources */,
+				4F6A376E1A20E09100323282 /* jquery.min.js in Resources */,
+				4F6A376D1A20E09100323282 /* embed.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,7 +501,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
 				INFOPLIST_FILE = "Sample/Sample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -449,7 +517,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
 				INFOPLIST_FILE = "Sample/Sample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

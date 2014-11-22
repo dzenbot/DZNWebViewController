@@ -30,7 +30,7 @@
 }
 
 
-#pragma mark - KVO Listener
+#pragma mark - Key Value Observer
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {

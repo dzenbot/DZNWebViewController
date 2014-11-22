@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController () <UIScrollViewDelegate>
 @end
 
 @implementation ViewController
@@ -17,10 +17,24 @@
 {
     [super loadView];
     
-    self.supportedActions = DZNWebViewControllerActionAll;
-    self.supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
-    self.loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
+    self.supportedWebActions = DZNWebActionAll;
+    self.supportedWebNavigationTools = DZNWebNavigationToolAll;
+    self.loadingStyle = DZNWebLoadingStyleProgressView;
+    self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//    
+//    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    
+//    self.navigationController.toolbar.barTintColor = [UIColor blackColor];
+//    self.navigationController.toolbar.tintColor = [UIColor whiteColor];
 }
 
 @end

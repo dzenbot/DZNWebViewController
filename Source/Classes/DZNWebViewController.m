@@ -11,7 +11,9 @@
 #import "DZNWebViewController.h"
 #import "DZNPolyActivity.h"
 
-@interface DZNWebViewController () <UITableViewDataSource, UITableViewDelegate>
+static char DZNWebViewControllerKVOContext = 0;
+
+@interface DZNWebViewController ()
 
 @property (nonatomic, strong) UIBarButtonItem *actionBarItem;
 @property (nonatomic, strong) UIBarButtonItem *backwardBarItem;
@@ -24,6 +26,11 @@
 
 @property (nonatomic, strong) UILongPressGestureRecognizer *backwardLongPress;
 @property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
+
+@property (nonatomic, strong) UITapGestureRecognizer *barHideOnTap;
+
+@property (nonatomic, weak) UINavigationBar *navigationBar;
+@property (nonatomic, weak) UIView *navigationBarSuperView;
 
 @end
 
@@ -64,9 +71,10 @@
 
 - (void)commonInit
 {
-    _loadingStyle = DZNWebViewControllerLoadingStyleProgressView;
-    _supportedNavigationTools = DZNWebViewControllerNavigationToolAll;
-    _supportedActions = DZNWebViewControllerActionAll;
+    self.loadingStyle = DZNWebLoadingStyleProgressView;
+    self.supportedWebNavigationTools = DZNWebNavigationToolAll;
+    self.supportedWebActions = DZNWebActionAll;
+    self.hideBarsWithGestures = YES;
 }
 
 
@@ -84,7 +92,7 @@
 {
     [super viewDidLoad];
     
-    if (self.supportedActions > 0) {
+    if (self.supportedWebActions > 0) {
         _actionBarItem = [[UIBarButtonItem alloc] initWithImage:self.actionButtonImage landscapeImagePhone:self.actionButtonLandscapeImage style:0 target:self action:@selector(presentActivityController:)];
         [self.navigationItem setRightBarButtonItem:_actionBarItem];
     }
@@ -95,7 +103,11 @@
     [super viewWillAppear:animated];
     
     [UIView performWithoutAnimation:^{
-        [self configureToolBar];
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self configureToolBar];
+        });
     }];
     
     if (!self.webView.URL) {
@@ -119,7 +131,7 @@
 {
 	[super viewDidDisappear:animated];
     
-    [self stopLoading];
+    [self.webView stopLoading];
 }
 
 
@@ -134,7 +146,8 @@
         webView.allowsBackForwardNavigationGestures = YES;
         webView.UIDelegate = self;
         webView.navDelegate = self;
-
+        webView.scrollView.delegate = self;
+        
         _webView = webView;
     }
     return _webView;
@@ -142,17 +155,17 @@
 
 - (UIProgressView *)progressView
 {
-    if (!_progressView && self.loadingStyle == DZNWebViewControllerLoadingStyleProgressView)
+    if (!_progressView && self.loadingStyle == DZNWebLoadingStyleProgressView)
     {
         CGFloat height = 2.5f;
-        CGSize size = self.navigationController.navigationBar.bounds.size;
+        CGSize size = self.navigationBar.bounds.size;
         CGRect frame = CGRectMake(0, size.height - height, size.width, height);
         
         UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:frame];
         progressView.trackTintColor = [UIColor clearColor];
         progressView.alpha = 0.0f;
         
-        [self.navigationController.navigationBar addSubview:progressView];
+        [self.navigationBar addSubview:progressView];
         
         _progressView = progressView;
     }
@@ -213,11 +226,11 @@
     UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
     fixedSpace.width = 20.0;
     
-    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolBackward) > 0 || self.supportsAllNavigationTools) {
+    if ((self.supportedWebNavigationTools & DZNWebNavigationToolBackward) > 0 || self.supportsAllNavigationTools) {
         [items addObject:self.backwardBarItem];
     }
     
-    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
+    if ((self.supportedWebNavigationTools & DZNWebNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
         
         if (items.count > 0) {
             [items addObject:fixedSpace];
@@ -230,7 +243,7 @@
         [items addObject:flexibleSpace];
     }
     
-    if ((self.supportedNavigationTools & DZNWebViewControllerNavigationToolStopRefresh) > 0 || self.supportsAllNavigationTools) {
+    if ((self.supportedWebNavigationTools & DZNWebNavigationToolStopReload) > 0 || self.supportsAllNavigationTools) {
         [items addObject:self.stateBarItem];
     }
     
@@ -238,7 +251,7 @@
         [items addObject:flexibleSpace];
     }
     
-    if (self.loadingStyle == DZNWebViewControllerLoadingStyleActivityIndicator) {
+    if (self.loadingStyle == DZNWebLoadingStyleActivityIndicator) {
         [items addObject:self.loadingBarItem];
     }
     
@@ -247,7 +260,7 @@
 
 - (BOOL)supportsAllNavigationTools
 {
-    return (_supportedNavigationTools == DZNWebViewControllerNavigationToolAll) ? YES : NO;
+    return (_supportedWebNavigationTools == DZNWebNavigationToolAll) ? YES : NO;
 }
 
 - (UIImage *)actionButtonImage
@@ -274,28 +287,12 @@
     return _backwardButtonImage;
 }
 
-- (UIImage *)backwardButtonLandscapeImage
-{
-    if (!_backwardButtonLandscapeImage) {
-        return [UIImage imageNamed:@"dzn_icn_toolbar_backward_landscape"];
-    }
-    return _backwardButtonLandscapeImage;
-}
-
 - (UIImage *)forwardButtonImage
 {
     if (!_forwardButtonImage) {
         return [UIImage imageNamed:@"dzn_icn_toolbar_forward"];
     }
     return _forwardButtonImage;
-}
-
-- (UIImage *)forwardButtonLandscapeImage
-{
-    if (!_forwardButtonLandscapeImage) {
-        return [UIImage imageNamed:@"dzn_icn_toolbar_forward_landscape"];
-    }
-    return _forwardButtonLandscapeImage;
 }
 
 - (UIImage *)reloadButtonImage
@@ -330,19 +327,19 @@
         return activities;
     }
     
-    if ((_supportedActions & DZNWebViewControllerActionCopyLink) > 0 || self.supportsAllActions) {
+    if ((_supportedWebActions & DZNWebActionCopyLink) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeLink]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenSafari) > 0 || self.supportsAllActions) {
+    if ((_supportedWebActions & DZNWebActionOpenSafari) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeSafari]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenChrome) > 0 || self.supportsAllActions) {
+    if ((_supportedWebActions & DZNWebActionOpenChrome) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeChrome]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenOperaMini) > 0 || self.supportsAllActions) {
+    if ((_supportedWebActions & DZNWebActionOpenOperaMini) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeOpera]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionOpenDolphin) > 0 || self.supportsAllActions) {
+    if ((_supportedWebActions & DZNWebActionOpenDolphin) > 0 || self.supportsAllActions) {
         [activities addObject:[DZNPolyActivity activityWithType:DZNPolyActivityTypeDolphin]];
     }
     
@@ -365,13 +362,13 @@
         return types;
     }
     
-    if ((_supportedActions & DZNWebViewControllerActionShareLink) == 0) {
+    if ((_supportedWebActions & DZNsupportedWebActionshareLink) == 0) {
         [types addObjectsFromArray:@[UIActivityTypeMail, UIActivityTypeMessage,
                                      UIActivityTypePostToFacebook, UIActivityTypePostToTwitter,
                                      UIActivityTypePostToWeibo, UIActivityTypePostToTencentWeibo,
                                      UIActivityTypeAirDrop]];
     }
-    if ((_supportedActions & DZNWebViewControllerActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
+    if ((_supportedWebActions & DZNWebActionReadLater) == 0 && [item isKindOfClass:[UIImage class]]) {
         [types addObject:UIActivityTypeAddToReadingList];
     }
     
@@ -380,7 +377,7 @@
 
 - (BOOL)supportsAllActions
 {
-    return (_supportedActions == DZNWebViewControllerActionAll) ? YES : NO;
+    return (_supportedWebActions == DZNWebActionAll) ? YES : NO;
 }
 
 
@@ -399,26 +396,47 @@
     _URL = URL;
 }
 
-- (void)setViewTitle:(NSString *)title
+- (void)setTitle:(NSString *)title
 {
+    NSString *url = self.webView.URL.absoluteString;
+    
+    if (title.length == 0 || url.length == 0) {
+        return;
+    }
+    
     UILabel *label = (UILabel *)self.navigationItem.titleView;
     
     if (!label || ![label isKindOfClass:[UILabel class]]) {
         label = [UILabel new];
         label.numberOfLines = 2;
         label.textAlignment = NSTextAlignmentCenter;
-        label.font = [UIFont systemFontOfSize:13.0];
+        label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         self.navigationItem.titleView = label;
     }
     
-    if (title) {
-        label.text = title;
-        [label sizeToFit];
-        
-        CGRect frame = label.frame;
-        frame.size.height = CGRectGetHeight(self.navigationController.navigationBar.frame);
-        label.frame = frame;
+    UIFont *titleFont = [UIFont boldSystemFontOfSize:13.0];
+    UIFont *urlFont = [UIFont systemFontOfSize:11.0];
+    UIColor *textColor = [UIColor blackColor];
+    
+    if (self.navigationBar.titleTextAttributes) {
+        titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName];
+        urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
+        textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName];
     }
+    
+    NSString *text = [NSString stringWithFormat:@"%@\n%@", title, url];
+    
+    NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
+    
+    [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
+    
+    label.attributedText = attributedString;
+    [label sizeToFit];
+    
+    CGRect frame = label.frame;
+    frame.size.height = CGRectGetHeight(self.navigationController.navigationBar.frame);
+    label.frame = frame;
 }
 
 // Sets the request errors with an alert view.
@@ -440,7 +458,7 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = visible;
     
-    if (self.loadingStyle != DZNWebViewControllerLoadingStyleActivityIndicator) {
+    if (self.loadingStyle != DZNWebLoadingStyleActivityIndicator) {
         return;
     }
     
@@ -486,7 +504,7 @@
     }
 }
 
-- (UITableViewController *)historyControllerForTool:(DZNWebViewControllerNavigationTools)tool
+- (UITableViewController *)historyControllerForTool:(DZNWebNavigationTools)tool
 {
     UITableViewController *controller = [UITableViewController new];
     controller.title = NSLocalizedStringFromTable(@"History", @"DZNWebViewController", nil);
@@ -519,7 +537,7 @@
         return;
     }
     
-    UIViewController *viewController = [self historyControllerForTool:DZNWebViewControllerNavigationToolBackward];
+    UIViewController *viewController = [self historyControllerForTool:DZNWebNavigationToolBackward];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
@@ -534,7 +552,7 @@
         return;
     }
     
-    UIViewController *viewController = [self historyControllerForTool:DZNWebViewControllerNavigationToolForward];
+    UIViewController *viewController = [self historyControllerForTool:DZNWebNavigationToolForward];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
@@ -542,6 +560,19 @@
 - (void)configureToolBar
 {
     [self setToolbarItems:[self navigationToolItems]];
+    
+    self.navigationBar = self.navigationController.navigationBar;
+    self.navigationBarSuperView = self.navigationBar.superview;
+    
+    self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
+    self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
+    self.navigationController.hidesBarsWhenVerticallyCompact = self.hideBarsWithGestures;
+    
+    if (self.hideBarsWithGestures) {
+        [self.navigationBar addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar addObserver:self forKeyPath:@"center" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
+    }
     
     if (self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
         [self.navigationController setToolbarHidden:NO];
@@ -577,8 +608,6 @@
 {
     [self setActivityIndicatorsVisible:[self.webView isLoading]];
 
-    [self setViewTitle:self.webView.title];
-    
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
     
@@ -629,28 +658,12 @@
                      }];
 }
 
-- (void)stopLoading
-{
-    [self.webView stopLoading];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
 
 #pragma mark - DZNNavigationDelegate methods
 
 - (void)webView:(DZNWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItemsIfNeeded];
-}
-
-- (void)webView:(DZNWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation
-{
-    // Do something.
-}
-
-- (void)webView:(DZNWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
-{
-    // Do something.
 }
 
 - (void)webView:(DZNWebView *)webView didCommitNavigation:(WKNavigation *)navigation
@@ -683,12 +696,16 @@
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItemsIfNeeded];
+    
+    self.title = self.webView.title;
 }
 
 - (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [self updateToolbarItemsIfNeeded];
     [self setLoadingError:error];
+    
+    self.title = nil;
 }
 
 
@@ -713,10 +730,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+    if (tableView.tag == DZNWebNavigationToolBackward) {
         return self.webView.backForwardList.backList.count;
     }
-    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+    if (tableView.tag == DZNWebNavigationToolForward) {
         return self.webView.backForwardList.forwardList.count;
     }
     return 0;
@@ -733,10 +750,10 @@
     
     WKBackForwardListItem *item = nil;
     
-    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+    if (tableView.tag == DZNWebNavigationToolBackward) {
         item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
     }
-    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+    if (tableView.tag == DZNWebNavigationToolForward) {
         item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
     }
     
@@ -758,16 +775,78 @@
 {
     WKBackForwardListItem *item = nil;
     
-    if (tableView.tag == DZNWebViewControllerNavigationToolBackward) {
+    if (tableView.tag == DZNWebNavigationToolBackward) {
         item = [self.webView.backForwardList.backList objectAtIndex:indexPath.row];
     }
-    if (tableView.tag == DZNWebViewControllerNavigationToolForward) {
+    if (tableView.tag == DZNWebNavigationToolForward) {
         item = [self.webView.backForwardList.forwardList objectAtIndex:indexPath.row];
     }
     
     [self.webView goToBackForwardListItem:item];
     
     [self dismissHistoryController];
+}
+
+
+#pragma mark - Key Value Observer
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context != &DZNWebViewControllerKVOContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+    
+    if ([object isEqual:self.navigationBar]) {
+        
+        // Skips for landscape orientation, since there is no status bar visible on iPhone landscape
+        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft ||
+            [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+            return;
+        }
+        
+        id new = change[NSKeyValueChangeNewKey];
+        
+        if ([keyPath isEqualToString:@"hidden"] && [new boolValue] && self.navigationBar.center.y >= -2.0) {
+            
+            self.navigationBar.hidden = NO;
+            
+            if (!self.navigationBar.superview) {
+                [self.navigationBarSuperView addSubview:self.navigationBar];
+            }
+        }
+        
+        if ([keyPath isEqualToString:@"center"]) {
+            
+            CGPoint center = [new CGPointValue];
+            
+            if (center.y < -2.0) {
+                center.y = -2.0;
+                self.navigationBar.center = center;
+                
+                [UIView beginAnimations:@"DZNNavigationBarAnimation" context:nil];
+                for (UIView *subview in self.navigationBar.subviews) {
+                    if (subview != self.navigationBar.subviews[0]) {
+                        subview.alpha = 0.0;
+                    }
+                }
+                [UIView commitAnimations];
+            }
+        }
+    }
+}
+
+
+#pragma mark - View Auto-Rotation
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 
@@ -785,6 +864,10 @@
 
 - (void)dealloc
 {
+    [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
+    [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
+    [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+    
     _actionBarItem = nil;
     _backwardBarItem = nil;
     _forwardBarItem = nil;
@@ -796,19 +879,6 @@
     _webView.UIDelegate = nil;
     _webView = nil;
     _URL = nil;
-}
-
-
-#pragma mark - View Auto-Rotation
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
 }
 
 @end
