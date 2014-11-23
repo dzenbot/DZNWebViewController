@@ -217,17 +217,17 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if ((self.supportedWebNavigationTools & DZNWebNavigationToolForward) > 0 || self.supportsAllNavigationTools) {
-        [items addObject:flexibleSpace];
+        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.forwardBarItem];
     }
     
     if ((self.supportedWebNavigationTools & DZNWebNavigationToolStopReload) > 0 || self.supportsAllNavigationTools) {
-        [items addObject:flexibleSpace];
+        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.stateBarItem];
     }
     
     if (self.supportedWebActions > 0) {
-        [items addObject:flexibleSpace];
+        if (!DZN_IS_IPAD) [items addObject:flexibleSpace];
         [items addObject:self.actionBarItem];
     }
     
@@ -484,10 +484,11 @@ static char DZNWebViewControllerKVOContext = 0;
     controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    UIView *bar = DZN_IS_IPAD ? self.navigationBar : self.toolbar;
     
     if (DZN_IS_IPAD) {
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-        [popover presentPopoverFromRect:view.frame inView:self.toolbar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [popover presentPopoverFromRect:view.frame inView:bar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
     else {
         [self presentViewController:navigationController animated:YES completion:NULL];
@@ -497,7 +498,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)configureToolBars
 {
     if (DZN_IS_IPAD) {
-        self.navigationItem.rightBarButtonItems = [self navigationToolItems];
+        self.navigationItem.rightBarButtonItems = [[[self navigationToolItems] reverseObjectEnumerator] allObjects];
     }
     else {
         [self setToolbarItems:[self navigationToolItems]];
@@ -506,6 +507,8 @@ static char DZNWebViewControllerKVOContext = 0;
     self.toolbar = self.navigationController.toolbar;
     self.navigationBar = self.navigationController.navigationBar;
     self.navigationBarSuperView = self.navigationBar.superview;
+    
+    [self configureBarItemsGestures];
     
     self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
@@ -519,7 +522,6 @@ static char DZNWebViewControllerKVOContext = 0;
 
     if (!DZN_IS_IPAD && self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
         [self.navigationController setToolbarHidden:NO];
-        [self configureBarItemsGestures];
     }
 }
 
