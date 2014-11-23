@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "DZNWebViewController.h"
 
 #define DEBUG_LOCAL 0
 
@@ -24,7 +24,7 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #else
-    ViewController *controller = [[ViewController alloc] initWithURL:[NSURL URLWithString:@"http://www.engadget.com/"]];
+    DZNWebViewController *controller = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://dribbble.com/"]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #endif
