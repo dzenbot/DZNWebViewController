@@ -11,6 +11,9 @@
 #import "DZNWebViewController.h"
 #import "DZNPolyActivity.h"
 
+#define DZN_IS_IPAD [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad
+#define DZN_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
+
 static char DZNWebViewControllerKVOContext = 0;
 
 @interface DZNWebViewController ()
@@ -94,7 +97,7 @@ static char DZNWebViewControllerKVOContext = 0;
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            [self configureToolBar];
+            [self configureToolBars];
         });
     }];
     
@@ -164,7 +167,7 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     if (!_backwardBarItem)
     {
-        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:self.backwardButtonImage landscapeImagePhone:nil style:0 target:self action:@selector(goBackward:)];
+        _backwardBarItem = [[UIBarButtonItem alloc] initWithImage:[self backwardButtonImage] landscapeImagePhone:nil style:0 target:self action:@selector(goBackward:)];
         _backwardBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Backward", @"DZNWebViewController", @"Accessibility label button title");
         _backwardBarItem.enabled = NO;
     }
@@ -187,8 +190,8 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     if (!_stateBarItem)
     {
-        _stateBarItem = [UIBarButtonItem new];
-        _stateBarItem.enabled = NO;
+        _stateBarItem = [[UIBarButtonItem alloc] initWithImage:nil landscapeImagePhone:nil style:0 target:nil action:nil];
+        [self updateStateBarItem];
     }
     return _stateBarItem;
 }
@@ -255,7 +258,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)reloadButtonImage
 {
     if (!_reloadButtonImage) {
-        _reloadButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_refresh"];
+        _reloadButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_reload"];
     }
     return _reloadButtonImage;
 }
@@ -266,14 +269,6 @@ static char DZNWebViewControllerKVOContext = 0;
         _stopButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_stop"];
     }
     return _stopButtonImage;
-}
-
-- (UIImage *)stateButtonImage
-{
-    if ([self.webView isLoading]) {
-        return self.stopButtonImage;
-    }
-    return self.reloadButtonImage;
 }
 
 - (UIImage *)actionButtonImage
@@ -450,18 +445,6 @@ static char DZNWebViewControllerKVOContext = 0;
     }
 }
 
-- (UITableViewController *)historyControllerForTool:(DZNWebNavigationTools)tool
-{
-    UITableViewController *controller = [UITableViewController new];
-    controller.title = NSLocalizedStringFromTable(@"History", @"DZNWebViewController", nil);
-    controller.tableView.delegate = self;
-    controller.tableView.dataSource = self;
-    controller.tableView.tag = tool;
-    controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
-    
-    return controller;
-}
-
 - (void)dismissHistoryController
 {
     if (self.presentedViewController) {
@@ -475,53 +458,50 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)showBackwardHistory:(UIGestureRecognizer *)sender
 {
-    if (!self.allowHistory || self.webView.backForwardList.backList.count == 0) {
+    if (!self.allowHistory || self.webView.backForwardList.backList.count == 0 || sender.state != UIGestureRecognizerStateBegan) {
         return;
     }
-    
-    if (sender.state != UIGestureRecognizerStateBegan) {
-        return;
-    }
-    
-    UIViewController *viewController = [self historyControllerForTool:DZNWebNavigationToolBackward];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-        [popover presentPopoverFromRect:sender.view.frame inView:self.toolbar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        
-    }
-    else {
-        [self presentViewController:navigationController animated:YES completion:NULL];
-    }
+
+    [self presentHistoryControllerForTool:DZNWebNavigationToolBackward fromView:sender.view];
 }
 
 - (void)showForwardHistory:(UIGestureRecognizer *)sender
 {
-    if (sender.state != UIGestureRecognizerStateBegan) {
+    if (!self.allowHistory || self.webView.backForwardList.forwardList.count == 0 || sender.state != UIGestureRecognizerStateBegan) {
         return;
     }
     
-    if (self.webView.backForwardList.forwardList.count == 0) {
-        return;
-    }
+    [self presentHistoryControllerForTool:DZNWebNavigationToolForward fromView:sender.view];
+}
+
+- (void)presentHistoryControllerForTool:(DZNWebNavigationTools)tool fromView:(UIView *)view
+{
+    UITableViewController *controller = [UITableViewController new];
+    controller.title = NSLocalizedStringFromTable(@"History", @"DZNWebViewController", nil);
+    controller.tableView.delegate = self;
+    controller.tableView.dataSource = self;
+    controller.tableView.tag = tool;
+    controller.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissHistoryController)];
     
-    UIViewController *viewController = [self historyControllerForTool:DZNWebNavigationToolForward];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        
+    if (DZN_IS_IPAD) {
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-        [popover presentPopoverFromRect:sender.view.frame inView:self.toolbar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        [popover presentPopoverFromRect:view.frame inView:self.toolbar permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
     else {
         [self presentViewController:navigationController animated:YES completion:NULL];
     }
 }
 
-- (void)configureToolBar
+- (void)configureToolBars
 {
-    [self setToolbarItems:[self navigationToolItems]];
+    if (DZN_IS_IPAD) {
+        self.navigationItem.rightBarButtonItems = [self navigationToolItems];
+    }
+    else {
+        [self setToolbarItems:[self navigationToolItems]];
+    }
     
     self.toolbar = self.navigationController.toolbar;
     self.navigationBar = self.navigationController.navigationBar;
@@ -536,15 +516,11 @@ static char DZNWebViewControllerKVOContext = 0;
         [self.navigationBar addObserver:self forKeyPath:@"center" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
         [self.navigationBar addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
     }
-    
-    if (self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
+
+    if (!DZN_IS_IPAD && self.navigationController.toolbarHidden && self.toolbarItems.count > 0) {
         [self.navigationController setToolbarHidden:NO];
+        [self configureBarItemsGestures];
     }
-    else {
-        return;
-    }
-    
-    [self configureBarItemsGestures];
 }
 
 // Light hack for adding custom gesture recognizers to UIBarButtonItems
@@ -574,9 +550,14 @@ static char DZNWebViewControllerKVOContext = 0;
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
     
+    [self updateStateBarItem];
+}
+
+- (void)updateStateBarItem
+{
     self.stateBarItem.target = self.webView;
     self.stateBarItem.action = self.webView.isLoading ? @selector(stopLoading) : @selector(reload);
-    self.stateBarItem.image = self.stateButtonImage;
+    self.stateBarItem.image = self.webView.isLoading ? self.stopButtonImage : self.reloadButtonImage;
     self.stateBarItem.landscapeImagePhone = nil;
     self.stateBarItem.accessibilityLabel = NSLocalizedStringFromTable(self.webView.isLoading ? @"Stop" : @"Reload", @"DZNWebViewController", @"Accessibility label button title");
     self.stateBarItem.enabled = YES;
@@ -638,7 +619,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)webView:(DZNWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation
 {
-    [self updateToolbarItems];
+    [self updateStateBarItem];
 }
 
 - (void)webView:(DZNWebView *)webView didCommitNavigation:(WKNavigation *)navigation
@@ -780,8 +761,7 @@ static char DZNWebViewControllerKVOContext = 0;
     if ([object isEqual:self.navigationBar]) {
         
         // Skips for landscape orientation, since there is no status bar visible on iPhone landscape
-        if ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft ||
-            [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight) {
+        if (DZN_IS_LANDSCAPE) {
             return;
         }
         

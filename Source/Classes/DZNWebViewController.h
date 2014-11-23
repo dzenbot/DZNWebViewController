@@ -92,15 +92,15 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 ///------------------------------------------------
 
 // The back button displayed on the tool bar (requieres DZNWebNavigationToolBackward)
-@property (nonatomic, assign) UIImage *backwardButtonImage;
+@property (nonatomic, strong) UIImage *backwardButtonImage;
 // The forward button displayed on the tool bar (requieres DZNWebNavigationToolForward)
-@property (nonatomic, assign) UIImage *forwardButtonImage;
+@property (nonatomic, strong) UIImage *forwardButtonImage;
 // The stop button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
-@property (nonatomic, assign) UIImage *stopButtonImage;
+@property (nonatomic, strong) UIImage *stopButtonImage;
 // The reload button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
-@property (nonatomic, assign) UIImage *reloadButtonImage;
+@property (nonatomic, strong) UIImage *reloadButtonImage;
 // The action button displayed on the navigation bar (requieres at least 1 DZNsupportedWebActions value)
-@property (nonatomic, assign) UIImage *actionButtonImage;
+@property (nonatomic, strong) UIImage *actionButtonImage;
 
 
 ///------------------------------------------------
