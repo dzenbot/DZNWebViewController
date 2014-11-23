@@ -70,6 +70,7 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     self.supportedWebNavigationTools = DZNWebNavigationToolAll;
     self.supportedWebActions = DZNWebActionAll;
+    self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
 }
 
@@ -159,6 +160,8 @@ static char DZNWebViewControllerKVOContext = 0;
         [self.navigationBar addSubview:progressView];
         
         _progressView = progressView;
+        
+        NSLog(@"_progressView : %@", _progressView);
     }
     return _progressView;
 }
@@ -551,6 +554,8 @@ static char DZNWebViewControllerKVOContext = 0;
 
     self.backwardBarItem.enabled = [self.webView canGoBack];
     self.forwardBarItem.enabled = [self.webView canGoForward];
+    
+    self.actionBarItem.enabled = !self.webView.isLoading;
     
     [self updateStateBarItem];
 }
