@@ -365,10 +365,6 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     NSString *url = self.webView.URL.absoluteString;
     
-    if (title.length == 0 || url.length == 0) {
-        return;
-    }
-    
     UILabel *label = (UILabel *)self.navigationItem.titleView;
     
     if (!label || ![label isKindOfClass:[UILabel class]]) {
@@ -377,6 +373,11 @@ static char DZNWebViewControllerKVOContext = 0;
         label.textAlignment = NSTextAlignmentCenter;
         label.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         self.navigationItem.titleView = label;
+    }
+    
+    if (title.length == 0) {
+        label.attributedText = nil;
+        return;
     }
     
     UIFont *titleFont = [UIFont boldSystemFontOfSize:12.0];
@@ -389,12 +390,18 @@ static char DZNWebViewControllerKVOContext = 0;
         textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName];
     }
     
-    NSString *text = [NSString stringWithFormat:@"%@\n%@", title, url];
+    NSMutableString *text = [NSMutableString stringWithString:title];
+    
+    if (url.length > 0) {
+        [text appendFormat:@"\n%@", url];
+    }
     
     NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
     
-    [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
+    if (url.length > 0) {
+        [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
+    }
     
     label.attributedText = attributedString;
     [label sizeToFit];
