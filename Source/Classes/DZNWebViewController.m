@@ -72,6 +72,7 @@ static char DZNWebViewControllerKVOContext = 0;
     self.supportedWebActions = DZNWebActionAll;
     self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
+    self.allowHistory = YES;
 }
 
 
@@ -95,9 +96,8 @@ static char DZNWebViewControllerKVOContext = 0;
     [super viewWillAppear:animated];
     
     [UIView performWithoutAnimation:^{
-        
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
+        static dispatch_once_t willAppearConfig;
+        dispatch_once(&willAppearConfig, ^{
             [self configureToolBars];
         });
     }];
@@ -110,6 +110,11 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    static dispatch_once_t didAppearConfig;
+    dispatch_once(&didAppearConfig, ^{
+        [self configureBarItemsGestures];
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -149,9 +154,8 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     if (!_progressView)
     {
-        CGFloat height = 2.5f;
-        CGSize size = self.navigationBar.bounds.size;
-        CGRect frame = CGRectMake(0, size.height - height, size.width, height);
+        CGFloat lineHeight = 2.0f;
+        CGRect frame = CGRectMake(0, CGRectGetHeight(self.navigationBar.bounds) - lineHeight, CGRectGetWidth(self.navigationBar.bounds), lineHeight);
         
         UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:frame];
         progressView.trackTintColor = [UIColor clearColor];
@@ -160,8 +164,6 @@ static char DZNWebViewControllerKVOContext = 0;
         [self.navigationBar addSubview:progressView];
         
         _progressView = progressView;
-        
-        NSLog(@"_progressView : %@", _progressView);
     }
     return _progressView;
 }
@@ -281,7 +283,6 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     return _actionButtonImage;
 }
-
 
 - (NSArray *)applicationActivitiesForItem:(id)item
 {
@@ -511,12 +512,10 @@ static char DZNWebViewControllerKVOContext = 0;
     self.navigationBar = self.navigationController.navigationBar;
     self.navigationBarSuperView = self.navigationBar.superview;
     
-    [self configureBarItemsGestures];
-    
     self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenVerticallyCompact = self.hideBarsWithGestures;
-    
+
     if (self.hideBarsWithGestures) {
         [self.navigationBar addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
         [self.navigationBar addObserver:self forKeyPath:@"center" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
@@ -792,11 +791,13 @@ static char DZNWebViewControllerKVOContext = 0;
                 self.navigationBar.center = center;
                 
                 [UIView beginAnimations:@"DZNNavigationBarAnimation" context:nil];
+                
                 for (UIView *subview in self.navigationBar.subviews) {
                     if (subview != self.navigationBar.subviews[0]) {
                         subview.alpha = 0.0;
                     }
                 }
+                
                 [UIView commitAnimations];
             }
         }

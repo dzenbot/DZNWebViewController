@@ -48,9 +48,9 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 @property (nonatomic, strong) DZNWebView *webView;
 /** The URL identifying the location of the content to load. */
 @property (nonatomic, readwrite) NSURL *URL;
-/** The supported navigation tool bar items. Default is DZNWebNavigationToolAll. */
+/** The supported navigation tool bar items. Default is All. */
 @property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
-/** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebActionAll. */
+/** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
 @property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
