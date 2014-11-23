@@ -24,7 +24,7 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #else
-    ViewController *controller = [[ViewController alloc] initWithURL:[NSURL URLWithString:@"http://nshipster.com/"]];
+    ViewController *controller = [[ViewController alloc] initWithURL:[NSURL URLWithString:@"http://www.engadget.com/"]];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #endif

@@ -19,7 +19,6 @@
     
     self.supportedWebActions = DZNWebActionAll;
     self.supportedWebNavigationTools = DZNWebNavigationToolAll;
-    self.loadingStyle = DZNWebLoadingStyleProgressView;
     self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
 }

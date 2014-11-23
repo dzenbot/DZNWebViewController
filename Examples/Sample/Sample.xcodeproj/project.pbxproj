@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F5F8A0A1A21A3F300C95C4C /* airplay_audio.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F5F8A081A21A3F300C95C4C /* airplay_audio.png */; };
+		4F5F8A0B1A21A3F300C95C4C /* airplay_audio@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F5F8A091A21A3F300C95C4C /* airplay_audio@2x.png */; };
 		4F66DC1C18E73CBF007A78D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F66DC1B18E73CBF007A78D8 /* ViewController.m */; };
 		4F6A37671A20E09100323282 /* NSHipster.com.html in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375A1A20E09100323282 /* NSHipster.com.html */; };
 		4F6A37681A20E09100323282 /* analytics.js in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A375C1A20E09100323282 /* analytics.js */; };
@@ -49,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		4F3041DB1A1EFA8900F702A5 /* DZNWebViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = DZNWebViewController.podspec; path = ../../DZNWebViewController.podspec; sourceTree = "<group>"; };
+		4F5F8A081A21A3F300C95C4C /* airplay_audio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airplay_audio.png; sourceTree = "<group>"; };
+		4F5F8A091A21A3F300C95C4C /* airplay_audio@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airplay_audio@2x.png"; sourceTree = "<group>"; };
 		4F66DC1A18E73CBF007A78D8 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		4F66DC1B18E73CBF007A78D8 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4F6A375A1A20E09100323282 /* NSHipster.com.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = NSHipster.com.html; sourceTree = "<group>"; };
@@ -207,6 +211,8 @@
 				4FC763EE18E725C60009F375 /* Default-568h@2x.png */,
 				4FC763EF18E725C60009F375 /* Default.png */,
 				4FC763F018E725C60009F375 /* Default@2x.png */,
+				4F5F8A081A21A3F300C95C4C /* airplay_audio.png */,
+				4F5F8A091A21A3F300C95C4C /* airplay_audio@2x.png */,
 				4FB8460A18E50C450056BDFB /* Sample-Info.plist */,
 				4FB8460B18E50C450056BDFB /* InfoPlist.strings */,
 				4FB8460E18E50C450056BDFB /* main.m */,
@@ -323,9 +329,11 @@
 				4F6A376C1A20E09100323282 /* cfhipsterref-cover@2x.png in Resources */,
 				4F6A376A1A20E09100323282 /* book-cover@2x.png in Resources */,
 				4F6A376B1A20E09100323282 /* cc.js in Resources */,
+				4F5F8A0B1A21A3F300C95C4C /* airplay_audio@2x.png in Resources */,
 				4FC763F218E725C60009F375 /* Default.png in Resources */,
 				4F6A37681A20E09100323282 /* analytics.js in Resources */,
 				4F6A376E1A20E09100323282 /* jquery.min.js in Resources */,
+				4F5F8A0A1A21A3F300C95C4C /* airplay_audio.png in Resources */,
 				4F6A376D1A20E09100323282 /* embed.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,15 +14,6 @@
 #import "DZNWebView.h"
 
 /**
- Types of network loading style.
- */
-typedef NS_OPTIONS(NSUInteger, DZNWebLoadingStyle) {
-    DZNWebLoadingStyleNone,
-    DZNWebLoadingStyleProgressView,
-    DZNWebLoadingStyleActivityIndicator
-};
-
-/**
  Types of supported navigation tools.
  */
 typedef NS_OPTIONS(NSUInteger, DZNWebNavigationTools) {
@@ -57,12 +48,12 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 @property (nonatomic, strong) DZNWebView *webView;
 /** The URL identifying the location of the content to load. */
 @property (nonatomic, readwrite) NSURL *URL;
-/** The loading visual style, using a progress bar or a network activity indicator. Default is DZNWebLoadingStyleProgressView. */
-@property (nonatomic, readwrite) DZNWebLoadingStyle loadingStyle;
 /** The supported navigation tool bar items. Default is DZNWebNavigationToolAll. */
 @property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is DZNWebActionAll. */
 @property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
+/** Yes if a progress bar indicates the . Default is YES. */
+@property (nonatomic) BOOL showLoadingProgress;
 /** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
 @property (nonatomic) BOOL allowHistory;
 /** YES if both, the navigation and tool bars should hide when panning vertically. Default is YES. */
@@ -93,7 +84,7 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
  
  @param URL The HTTP or file URL to be requested.
  */
-- (void)startRequestWithURL:(NSURL *)URL NS_REQUIRES_SUPER;
+- (void)loadURL:(NSURL *)URL NS_REQUIRES_SUPER;
 
 
 ///------------------------------------------------
@@ -101,16 +92,15 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 ///------------------------------------------------
 
 // The back button displayed on the tool bar (requieres DZNWebNavigationToolBackward)
-@property (nonatomic, assign) UIImage *backwardButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *backwardButtonImage;
 // The forward button displayed on the tool bar (requieres DZNWebNavigationToolForward)
-@property (nonatomic, assign) UIImage *forwardButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *forwardButtonImage;
 // The stop button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
-@property (nonatomic, assign) UIImage *stopButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *stopButtonImage;
 // The reload button displayed on the tool bar (requieres DZNWebNavigationToolStopReload)
-@property (nonatomic, assign) UIImage *reloadButtonImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *reloadButtonImage;
 // The action button displayed on the navigation bar (requieres at least 1 DZNsupportedWebActions value)
-@property (nonatomic, assign) UIImage *actionButtonImage UI_APPEARANCE_SELECTOR;
-@property (nonatomic, assign) UIImage *actionButtonLandscapeImage UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIImage *actionButtonImage;
 
 
 ///------------------------------------------------
