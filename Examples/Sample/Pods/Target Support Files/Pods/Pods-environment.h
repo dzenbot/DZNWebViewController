@@ -8,7 +8,7 @@
 
 // DZNWebViewController
 #define COCOAPODS_POD_AVAILABLE_DZNWebViewController
-#define COCOAPODS_VERSION_MAJOR_DZNWebViewController 2
+#define COCOAPODS_VERSION_MAJOR_DZNWebViewController 3
 #define COCOAPODS_VERSION_MINOR_DZNWebViewController 0
 #define COCOAPODS_VERSION_PATCH_DZNWebViewController 0
 
