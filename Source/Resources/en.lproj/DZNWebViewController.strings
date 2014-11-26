@@ -10,3 +10,6 @@
 
 "Backward" = "Backward";
 "Forward" = "Forward";
+"History" = "History"
+"Stop" = "Stop"
+"Reload" = "Reload"
