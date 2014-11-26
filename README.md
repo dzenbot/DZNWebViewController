@@ -6,7 +6,7 @@ DZWebBrowser 3.0
 An iPhone/iPad mini WebKit browser controller with navigation controls and contextual features, useful for in-app web browsing.
 Built to be subclassed and extended.
 
-![DZWebBrowser](Docs/screenshot.jpg)
+![DZWebBrowser](Docs/DZNWebViewController_screenshot.png)
 
 ### Features
 * Load HTTP links or local HTML.
