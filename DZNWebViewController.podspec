@@ -1,10 +1,10 @@
 
-@version = "2.0"
+@version = "3.0"
 
 Pod::Spec.new do |s|
   s.name           = "DZNWebViewController"
   s.version        = @version
-  s.summary        = "A very simple web browser with useful navigation and export tools."
+  s.summary        = "An iPhone/iPad mini WebKit browser controller, useful for in-app web browsing experience."
   s.homepage       = "https://github.com/dzenbot/DZNWebViewController"
   s.license        = { :type => 'MIT', :file => 'LICENSE' }
   s.author         = { "Ignacio Romero Z." => "iromero@dzen.cl" }
