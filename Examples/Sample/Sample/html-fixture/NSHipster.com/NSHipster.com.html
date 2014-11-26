@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<!-- saved from url=(0021)http://nshipster.com/ -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+    <title>NSHipster</title>
+    <meta name="description" content="NSHipster is a journal of the overlooked bits in Objective-C, Swift, and Cocoa. Updated weekly.">
+    <link rel="canonical" href="./NSHipster.com_files/NSHipster.com.html">
+    <link rel="alternate" hreflang="en-us" href="./NSHipster.com_files/NSHipster.com.html">
+    <link rel="alternate" hreflang="zh-Hans" href="http://nshipster.cn/">
+    <link rel="alternate" hreflang="x-default" href="./NSHipster.com_files/NSHipster.com.html">
+  
+  <meta name="author" content="Mattt Thompson">
+  <meta name="revisit-after" content="7 days">
+  <meta name="viewport" content="width=device-width">
+  <link rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://nshipster.com/feed.xml">
+  <link rel="stylesheet" type="text/css" href="./NSHipster.com_files/screen.css">
+  <link rel="apple-touch-icon" href="http://nshipster.com/touch-icon-iphone.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://nshipster.com/touch-icon-ipad.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="http://nshipster.com/touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="http://nshipster.com/touch-icon-ipad-retina.png">
+  <link rel="icon" sizes="16x16 24x24 32x32 48x48 64x64" type="image/vnd.microsoft.icon" href="http://nshipster.com/favicon.ico">
+  <link rel="author" type="text/plain" href="http://nshipster.com/humans.txt">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@NSHipster">
+  <meta name="twitter:creator" content="@mattt">
+  
+    <meta name="twitter:title" content="NSHipster">
+    <meta name="twitter:description" content="NSHipster is a journal of the overlooked bits in Objective-C, Swift, and Cocoa. Updated weekly.">
+  
+  <meta property="twitter:account_id" content="629523445">
+
+  <meta property="og:site_name" content="NSHipster">
+  <meta property="og:image" content="http://nshipster.com//touch-icon-ipad-retina.png">
+  
+    <meta property="og:title" content="NSHipster">
+    <meta property="og:url" content="http://nshipster.com">
+    <meta property="og:description" content="NSHipster is a journal of the overlooked bits in Objective-C, Swift, and Cocoa. Updated weekly.">
+  
+
+  
+    <meta property="st:type" content="home">
+  
+<link rel="stylesheet" type="text/css" href="./NSHipster.com_files/swiftype_nocode-c3886df84f1fbe6c1177c96bbf4a40ac.css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage">
+  <div role="container">
+    <header role="banner">
+      <h1 id="logo">
+        <a href="./NSHipster.com_files/NSHipster.com.html">
+          <svg id="ns" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 79.5 45.7" enable-background="new 0 0 79.5 45.7" xml:space="preserve">
+<g>
+  <path fill="#F58020" d="M0.6,1h13.7L27,24.4h0.1V1h12.7v43.6H26.8L13.4,20.8h-0.1v23.8H0.6V1z"></path>
+  <path fill="#F58020" d="M51.4,30c0,1.1,0.2,2.1,0.5,2.9c1,2.6,3.9,3.2,6.4,3.2c2.2,0,5.6-0.7,5.6-4c0-2.3-1.9-2.9-9.4-5
+    c-6.9-2-14.8-3.8-14.8-12.6C39.7,4.3,48.3,0,57.3,0c9.5,0,17.8,3.6,18.2,14.2H62.8c0.2-1.6-0.5-2.7-1.6-3.5
+    c-1.1-0.8-2.6-1.1-4-1.1c-1.8,0-4.8,0.5-4.8,2.9c0.2,3.1,6.5,3.8,12.6,5.5c6.2,1.7,12.3,4.6,12.3,12.6c0,11.4-10.4,15-20.1,15
+    c-4.9,0-19-1.8-19.2-15.7H51.4z"></path>
+</g>
+</svg>
+
+          <svg id="mustache" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 79.5 45.7" enable-background="new 0 0 79.5 45.7" xml:space="preserve">
+  <g transform="translate(0,-952.36217)" opacity="0.95">
+    <path id="path2987" fill="#010101" d="M28.2,971.4c-10,0.5-19.1,13.3-28.2,2.1c0,15.1,23.7,30.5,39.8,16.3
+      c16,14.1,39.8-1.3,39.8-16.3c-12.5,15.4-25-14.4-39.8,4.5C35.8,972.7,31.9,971.2,28.2,971.4z"></path>
+  </g>
+</svg>
+
+        </a>
+
+        <span hidden="" style="display:none;">NSHipster</span>
+      </h1>
+
+      <form role="search">
+        <input type="text" id="st-search-input" class="st-search-input" autocomplete="off" autocorrect="off" autocapitalize="off" style="outline: none;">
+      </form>
+
+      
+        <h2 class="tagline"><strong>NSHipster</strong> is a journal of the overlooked bits in Objective-C, Swift, and Cocoa. Updated weekly.</h2>
+      
+    </header>
+
+    <div id="main" role="main" itemprop="mainContentOfPage">
+      <section id="latest">
+  <article>
+    <header>
+      <small>This Week...</small>
+      <h1><a href="http://nshipster.com/uiprintinteractioncontroller/">UIPrint​Interaction​Controller</a></h1>
+    </header>
+
+    <p>With all the different means to comment, mark up, save, and share right at our fingertips, it's easy to overlook the value of a printed sheet of paper.</p>
+
+
+    <a class="readmore" href="http://nshipster.com/uiprintinteractioncontroller/">Continue Reading</a>
+  </article>
+</section>
+
+<section id="recent">
+  <h1>Recent Articles</h1>
+
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/core-location-in-ios-8/">Core Location in i​OS 8</a></h1>
+      </header>
+
+      <p>For as long has the iPhone has existed, location services have been front and center. iOS 8 brings three major sets of changes to the Core Location framework: more granular permissions, indoor positioning, and visit monitoring.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/uisplitviewcontroller/">UISplit​View​Controller</a></h1>
+      </header>
+
+      <p>The introduction of iPhone 6+ brought on a new importance for UISplitViewController. With just a few little tweaks, an app can now become Universal, with Apple handling most of the UI logic for all the different screen sizes.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/cmdevicemotion/">CMDevice​Motion</a></h1>
+      </header>
+
+      <p>Beneath the smooth glass of each shiny iPhone, nestled on a logic board between touch screen controllers and Apple-designed SoCs, the gyroscope and accelerometer sit largely neglected.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/inter-process-communication/">Inter-Process Communication</a></h1>
+      </header>
+
+      <p>In many ways, the story of Apple has been about fusing together technologies through happy accidents of history to create something better than before: OS X as a hybrid of MacOS &amp; NeXTSTEP. Objective-C as the combination of Smalltalk's OOP paradigm and C. iCloud as the byproduct of MobileMe and actual clouds (presumably).</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/swift-system-version-checking/">Swift System Version Checking</a></h1>
+      </header>
+
+      <p>C uses preprocessor directives capable of unspeakable evil. Swift has a safe subset of preprocessor directives. So how do we check system version for API compatibility?</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/uialertcontroller/">UIAlert​Controller</a></h1>
+      </header>
+
+      <p>Did you know that <code>UIAlertView</code> and <code>UIActionSheet</code> (as well as their respective delegate protocols) are deprecated in iOS 8? It's true.</p>
+
+    </article>
+  
+</section>
+
+<section id="publications">
+  <h1>Publications</h1>
+
+  
+<div id="" class="book" itemscope="" itemtype="http://schema.org/Product">
+  <div itemscope="" itemtype="http://schema.org/Book">
+    <link itemprop="bookFormat" href="http://schema.org/EBook">
+    <a href="https://gum.co/nshipster" title="NSHipster: Obscure Topics in Cocoa &amp; Objective-C">
+      <img src="./NSHipster.com_files/book-cover@2x.png" class="cover" alt="NSHipster: Obscure Topics in Cocoa &amp; Objective-C" itemprop="image">
+    </a>
+    <span itemprop="name" style="display:none;" hidden="">NSHipster: Obscure Topics in Cocoa &amp; Objective-C</span>
+    <span itemprop="author" style="display:none;" hidden="">Mattt Thompson</span>
+    <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" style="display:none;">
+      <link itemprop="availability" href="http://schema.org/InStock">
+      <meta itemprop="priceCurrency" content="USD">
+      <span itemprop="price">19.99</span>
+    </div>
+  </div>
+</div>
+
+  
+<div id="" class="book" itemscope="" itemtype="http://schema.org/Product">
+  <div itemscope="" itemtype="http://schema.org/Book">
+    <link itemprop="bookFormat" href="http://schema.org/EBook">
+    <a href="https://gum.co/cfhipsterref" title="CFHipsterRef: Low-Level Programming on iOS &amp; OS X">
+      <img src="./NSHipster.com_files/cfhipsterref-cover@2x.png" class="cover" alt="CFHipsterRef: Low-Level Programming on iOS &amp; OS X" itemprop="image">
+    </a>
+    <span itemprop="name" style="display:none;" hidden="">CFHipsterRef: Low-Level Programming on iOS &amp; OS X</span>
+    <span itemprop="author" style="display:none;" hidden="">Mattt Thompson</span>
+    <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" style="display:none;">
+      <link itemprop="availability" href="http://schema.org/InStock">
+      <meta itemprop="priceCurrency" content="USD">
+      <span itemprop="price">29.99</span>
+    </div>
+  </div>
+</div>
+
+  
+<div id="" class="book" itemscope="" itemtype="http://schema.org/Product">
+  <div itemscope="" itemtype="http://schema.org/Book">
+    <link itemprop="bookFormat" href="http://schema.org/EBook">
+    <a href="https://gum.co/the-nshipster-fake-book" title="The NSHipster Fake Book (Objective-C)">
+      <img src="./NSHipster.com_files/the-nshipster-fake-book-cover@2x.png" class="cover" alt="The NSHipster Fake Book (Objective-C)" itemprop="image">
+    </a>
+    <span itemprop="name" style="display:none;" hidden="">The NSHipster Fake Book (Objective-C)</span>
+    <span itemprop="author" style="display:none;" hidden="">Mattt Thompson</span>
+    <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" style="display:none;">
+      <link itemprop="availability" href="http://schema.org/InStock">
+      <meta itemprop="priceCurrency" content="USD">
+      <span itemprop="price">19.99</span>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<section id="popular">
+  <h1>Popular Articles</h1>
+
+  
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/nil/">nil / Nil / NULL / NSNull</a></h1>
+      </header>
+
+      <p>Understanding the concept of nothingness is as much a philosophical issue as it is a pragmatic one. We are inhabitants of a universe of somethings, yet reason in a logical universe of existential uncertainties. As a physical manifestation of a logical system, computers are faced with the intractable problem of how to represent nothing with something.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/bool/">BOOL / bool / Boolean / NSCFBoolean</a></h1>
+      </header>
+
+      <p>Once again, encoding our logical universe into the cold, calculating bytecode of computers forces us to deal with these questions one way or another. And as you'll see from our discussion of boolean types in Objective-C and its kin, truth is indeed stranger than fiction.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/network-link-conditioner/">Network Link Conditioner</a></h1>
+      </header>
+
+      <p>Product design is about empathy. Knowing what a user wants, what they like, what they dislike, what causes them frustration, and learning to understand and embody those motivations in design decisions—this is what it takes to make something insanely great.</p>
+
+    </article>
+  
+    <article class="excerpt">
+      <header>
+        <h1 class="title"><a href="http://nshipster.com/cfstringtransform/">CFString​Transform</a></h1>
+      </header>
+
+      <p>NSString is the crown jewel of Foundation. But as powerful as it is, one would be remiss not to mention its toll-free bridged cousin, CFMutableString—or more specifically, CFStringTransform.</p>
+
+    </article>
+  
+</section>
+
+<section class="archive" role="navigation">
+  
+    <dl>
+      <dt>Cocoa</dt>
+      
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/avspeechsynthesizer/">AVSpeechSynthesizer</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/addressbookui/">AddressBookUI</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/cfbag/">CFBag</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/cfstringtransform/">CFStringTransform</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/cggeometry/">CGGeometry</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/cmdevicemotion/">CMDeviceMotion</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/core-location-in-ios-8/">Core Location in iOS 8</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/ibaction-iboutlet-iboutletcollection/">IBAction / IBOutlet / IBOutletCollection</a></dd>
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/kvc-collection-operators/">KVC Collection Operators</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/key-value-observing/">Key-Value Observing</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/mkgeodesicpolyline/">MKGeodesicPolyline</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/mklocalsearch/">MKLocalSearch</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/mktileoverlay-mkmapsnapshotter-mkdirections/">MKTileOverlay,<br>MKMapSnapshotter &amp;<br>MKDirections</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/multipeer-connectivity/">Multipeer Connectivity</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsassertionhandler/">NSAssertionHandler</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nscache/">NSCache</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/nscharacterset/">NSCharacterSet</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nscoding/">NSCoding / NSKeyedArchiver</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsdatadetector/">NSDataDetector</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsdatecomponents/">NSDateComponents</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nserror/">NSError</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsexpression/">NSExpression</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/enumerators/">NSFastEnumeration / NSEnumerator</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsfilemanager/">NSFileManager</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsformatter/">NSFormatter</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshashtable-and-nsmaptable/">NSHashTable &amp; NSMapTable</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsincrementalstore/">NSIncrementalStore</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsindexset/">NSIndexSet</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nslinguistictagger/">NSLinguisticTagger</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nslocale/">NSLocale</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nslocalizedstring/">NSLocalizedString</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsnotification-and-nsnotificationcenter/">NSNotification &amp;<br>NSNotificationCenter</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsoperation/">NSOperation</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsorderedset/">NSOrderedSet</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nspredicate/">NSPredicate</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsrange/">NSRange</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nssecurecoding/">NSSecureCoding</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nssortdescriptor/">NSSortDescriptor</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nstemporarydirectory/">NSTemporaryDirectory /<br>NSItemReplacementDirectory /<br>mktemp(3)</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsurl/">NSURL /<br>NSURLComponents</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsurlcache/">NSURLCache</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsurlprotocol/">NSURLProtocol</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uuid-udid-unique-identifier/">NSUUID /<br>CFUUIDRef /<br>UIDevice -uniqueIdentifier /<br>-identifierForVendor</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsvalue/">NSValue</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nsvaluetransformer/">NSValueTransformer</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/ns_enum-ns_options/">NS_ENUM &amp; NS_OPTIONS</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/phimagemanager/">PHImageManager</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/search-kit/">Search Kit</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/uiaccessibility/">UIAccessibility</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uiactivityviewcontroller/">UIActivityViewController</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uialertcontroller/">UIAlertController</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uiappearance/">UIAppearance</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/launch-options/">UIApplicationDelegate launchOptions</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uicollectionview/">UICollectionView</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uilocalizedindexedcollation/">UILocalizedIndexedCollation</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uimenucontroller/">UIMenuController</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uiprintinteractioncontroller/">UIPrintInteractionController</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/dictionary-services/">UIReferenceLibraryViewController /<br>DCSDictionaryRef/<br>/usr/share/dict/words</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/uisplitviewcontroller/">UISplitViewController</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/instancetype/">instancetype</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Objective-C</dt>
+      
+      
+        
+          <dd><a href="http://nshipster.com/pragma/">#pragma</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/at-compiler-directives/">@</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/associated-objects/">Associated Objects</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/bool/">BOOL / bool / Boolean / NSCFBoolean</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/benchmarking/">Benchmarking</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/c-storage-classes/">C Storage Classes</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/clang-diagnostics/">Clang Diagnostics</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/documentation/">Documentation</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/equality/">Equality</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/extended-file-attributes/">Extended File Attributes</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/method-swizzling/">Method Swizzling</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/namespacing/">Namespacing</a></dd>
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/object-subscripting/">Object Subscripting</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/type-encodings/">Type Encodings</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/unit-testing/">Unit Testing</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/__attribute__/">__attribute__</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/nil/">nil / Nil / NULL / NSNull</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/random/">rand(3) / random(3) / arc4random(3) / et al.</a></dd>
+        
+      
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Swift</dt>
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/nscalendarunityear/">NSCalendarUnitYear</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/rawoptionsettype/">RawOptionSetType</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-comparison-protocols/">Swift Comparison Protocols</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-default-protocol-implementations/">Swift Default Protocol Implementations</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-documentation/">Swift Documentation</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-literal-convertible/">Swift Literal Convertibles</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-operators/">Swift Operators</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/swift-system-version-checking/">Swift System Version Checking</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Open Source</dt>
+      
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/afnetworking-2/">AFNetworking 2.0</a></dd>
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/alamofire/">Alamofire</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/cocoapods/">CocoaPods</a></dd>
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/core-data-libraries-and-utilities/">Core Data Libraries &amp; Utilities</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/gpuimage/">GPUImage</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/reactivecocoa/">ReactiveCocoa</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/xctool/">xctool</a></dd>
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Xcode</dt>
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/launch-arguments-and-environment-variables/">Launch Arguments &amp;<br>Environment Variables</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/network-link-conditioner/">Network Link Conditioner</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/xctestcase/">XCTestCase /<br>XCTestExpectation /<br> measureBlock()</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/xcode-key-bindings-and-gestures/">Xcode Key Bindings &amp; Gestures</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/xcode-plugins/">Xcode Plugins</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/xcode-snippets/">Xcode Snippets</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Miscellanea</dt>
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/backrow/">Back Row</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/colophon/">Colophon</a></dd>
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/configuration-profiles/">Configuration Profiles</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/empathy/">Empathy</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/image-resizing/">Image Resizing Techniques</a></dd>
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/inter-process-communication/">Inter-Process Communication</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/new-years-2014/">Reader Submissions -<br> New Year's 2014</a></dd>
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/reader-submissions-new-years-2013/">Reader Submissions -<br>New Year's 2013</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/stewardship/">Stewardship</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/wkwebkit/">WKWebView</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/icloud/">iCloud</a></dd>
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/ios7/">iOS 7</a></dd>
+          
+        
+      
+        
+          
+            <dd><a href="http://nshipster.com/ios8/">iOS 8</a></dd>
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    </dl>
+  
+    <dl>
+      <dt>Trivia</dt>
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-1/">NSHipster Quiz #1</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-2/">NSHipster Quiz #2</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-3/">NSHipster Quiz #3</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-4/">NSHipster Quiz #4</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-5/">NSHipster Quiz #5</a></dd>
+        
+      
+        
+          <dd><a href="http://nshipster.com/nshipster-quiz-6/">NSHipster Quiz #6</a></dd>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </dl>
+  
+</section>
+
+    </div>
+
+    <footer role="contentinfo">
+      <section class="credits colophon">
+        <p>
+          <i aria-hidden="true" class="icon-cc"></i>
+          <i aria-hidden="true" class="icon-cc-by"></i>
+          <i aria-hidden="true" class="icon-cc-nc"></i>
+          NSHipster.com is released under a <a href="http://creativecommons.org/licenses/by-nc/4.0/" rel="license">Creative Commons BY-NC License</a>.
+        </p>
+        <p><abbr title="International Standard Serial Number">ISSN</abbr> 2373-9800</p>
+        <p lang="zh-Hans"><a href="http://nshipster.cn/" hreflang="zh-Hans" title="Articles also available in Chinese">文章也可在中文版阅读</a>。</p>
+        <a href="https://plus.google.com/105091289906267717942" rel="publisher"></a>
+      </section>
+    </footer>
+  </div>
+
+  <script type="text/javascript" async="" src="./NSHipster.com_files/cc.js"></script><script type="text/javascript" async="" src="./NSHipster.com_files/swiftype_nocode-07cbc4b36e68587ab665b0b38990d144.js"></script><script async="" src="./NSHipster.com_files/analytics.js"></script><script type="text/javascript" async="" src="./NSHipster.com_files/embed.js"></script><script>
+    if (window.navigator && window.navigator.loadPurpose === "preview") {
+      window.location.href = "http://nshipster.com/topsites_preview.html";
+    }
+  </script>
+
+  <script>
+    var Swiftype = window.Swiftype || {};
+    (function() {
+      Swiftype.key = 'Q5jNBiR8qVs5xE5dNect';
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = "//swiftype.com/embed.js";
+      var entry = document.getElementsByTagName('script')[0];
+      document.getElementsByTagName('script')[0].parentNode.insertBefore(script, entry);
+    }());
+  </script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-49868484-1', 'nshipster.com');
+    ga('send', 'pageview');
+  </script>
+
+  <script src="./NSHipster.com_files/jquery.min.js"></script>
+  <script src="./NSHipster.com_files/application.js"></script>
+
+
+<div id="window-resizer-tooltip"><a href="http://nshipster.com/#" title="Edit settings" style="background-image: url(chrome-extension://kkelicaakdanhinjdeammmilcgefonfh/images/icon_19.png);"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth"></span> x <span class="tooltipHeight" id="winHeight"></span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth"></span> x <span class="tooltipHeight" id="vpHeight"></span></div><div id="st-main-container" style="display: none;">
+  <div class="swiftype">
+  <a class="close" data-dismiss="st-modal" href="http://nshipster.com/#">×</a>
+  <div class="st-search-bar st-only-input">
+    <form>
+      <div class="st-input-wrapper">
+        <div class="st-input-inner">
+          <input type="text" value="" id="st-overlay-search-input" placeholder="search this website" autocomplete="off" autocorrect="off" autocapitalize="off" style="outline: none;">
+          <span class="st-input-icon"></span>
+          <a href="https://swiftype.com/?ref=pbo" class="st-input-powered-by st-powered-by" target="_blank"></a>
+        </div>
+        <input type="submit" value="search" id="submitbutton">
+      </div>
+    </form>
+  </div>
+  <div class="st-result-wrapper" style="min-height: 613px;">
+    <div class="st-result-listing">
+      <div class="st-results">
+      </div>
+      <div class="st-indexing-notice" style="display: none;">
+        This site is still being indexed. Please try your search again in a few minutes.
+      </div>
+      <div class="st-logo-footer st-powered-by">
+        <a href="http://swiftype.com/?ref=pbo" target="_blank">search by swiftype</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div><div class="swiftype-widget"><div class="autocomplete" style="position: absolute; z-index: 199999; width: 210px; top: -3px; left: -8px; display: none;"><ul></ul></div></div><div class="swiftype-widget"><div class="autocomplete" style="position: absolute; z-index: 199999; width: 210px; top: 65px; left: 960px; display: none;"><ul></ul></div></div></body></html>

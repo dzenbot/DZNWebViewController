@@ -10,12 +10,10 @@ Pod::Spec.new do |s|
   s.author         = { "Ignacio Romero Z." => "iromero@dzen.cl" }
   s.source         = { :git => "https://github.com/dzenbot/DZNWebViewController.git", :tag => "v#{s.version}" }
 
-  s.platform       = :ios, "7.0"
+  s.platform       = :ios, "8.0"
   s.requires_arc   = true
 
   s.source_files   = 'Classes', 'Source/Classes/**/*.*'
-  s.resources      = ["Source/Resources/**/*.*", "Source/Scripts/*.js"]
-  s.frameworks     = 'UIKit'
-
-  s.dependency 'NJKWebViewProgress', '0.2.3'
+  s.resources      = ["Source/Resources/*.*", "Source/Scripts/*.js"]
+  s.framework      = 'UIKit', 'WebKit'
 end
