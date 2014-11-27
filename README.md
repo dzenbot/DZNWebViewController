@@ -1,18 +1,18 @@
-DZWebBrowser 3.0
+DZNWebViewController 3.0
 ================
 [![Pod Version](http://img.shields.io/cocoapods/v/DZNWebViewController.svg)](https://cocoadocs.org/docsets/DZNWebViewController)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
-An iPhone/iPad mini WebKit browser controller with navigation controls and contextual features, useful for in-app web browsing.
-Built to be subclassed and extended.
+An iPhone/iPad web browser built on top of WebKit with navigation controls and contextual features, useful for in-app web browsing.
+Designed to be subclassed and extended.
 
-![DZWebBrowser](Docs/DZNWebViewController_screenshot.png)
+![DZNWebViewController](Docs/DZNWebViewController_screenshot.png)
 
 ### Features
 * Load HTTP links or local HTML.
 * Navigation tools: backward/foward/stop/reload.
-* Dragging gestures for back/forward, like Safari app.
-* Back/forard History (optional).
+* Back/forward History (optional).
+* * Dragging gestures for back/forward, like Safari app.
 * Progress bar embeded on the navigation bar or activity indicator (optional).
 * Hide top and bottom bars when scrolling, like Safari app (optional).
 * Contextual features: share link, copy link, read later.
@@ -28,7 +28,7 @@ Built to be subclassed and extended.
 * ARC
 
 ## Installation
-Available in [Cocoa Pods](http://cocoapods.org/?q=DZWebBrowser)
+Available in [Cocoa Pods](http://cocoapods.org/?q=DZNWebViewController)
 ```
 pod 'DZNWebViewController'
 ```
@@ -36,7 +36,7 @@ pod 'DZNWebViewController'
 ## How to use
 
 Create a new instance of DZNWebViewController, or your custom subclass, and initialize it with a NSURL.
-You must embed the view controller into a UINavigationController to make it work properly.
+You MUST embed the view controller into a UINavigationController to make it work properly.
 ```
 NSURL *URL = [NSURL URLWithString:@"http://www.google.com/"];
 
