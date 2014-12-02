@@ -206,6 +206,7 @@ static char DZNWebViewControllerKVOContext = 0;
     if (!_actionBarItem)
     {
         _actionBarItem = [[UIBarButtonItem alloc] initWithImage:[self actionButtonImage] landscapeImagePhone:nil style:0 target:self action:@selector(presentActivityController:)];
+        _actionBarItem.accessibilityLabel = NSLocalizedStringFromTable(@"Share", @"DZNWebViewController", @"Accessibility label button title");
         _actionBarItem.enabled = NO;
     }
     return _actionBarItem;
