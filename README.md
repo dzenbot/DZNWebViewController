@@ -12,7 +12,7 @@ Designed to be subclassed and extended.
 * Load HTTP links or local HTML.
 * Navigation tools: backward/foward/stop/reload.
 * Back/forward History (optional).
-* * Dragging gestures for back/forward, like Safari app.
+* Dragging gestures for back/forward, like Safari app.
 * Progress bar embeded on the navigation bar or activity indicator (optional).
 * Hide top and bottom bars when scrolling, like Safari app (optional).
 * Contextual features: share link, copy link, read later.
@@ -32,6 +32,8 @@ Available in [Cocoa Pods](http://cocoapods.org/?q=DZNWebViewController)
 ```
 pod 'DZNWebViewController'
 ```
+
+If you're importing the source files manually, you must add the `WebKit` framework to your project.
 
 ## How to use
 
