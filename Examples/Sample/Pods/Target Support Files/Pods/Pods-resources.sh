@@ -73,6 +73,7 @@ install_resource()
                     install_resource "../../../Source/Resources/dzn_icn_toolbar_stop@3x.png"
                     install_resource "../../../Source/Resources/de.lproj"
                     install_resource "../../../Source/Resources/en.lproj"
+                    install_resource "../../../Source/Resources/es.lproj"
           
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 if [[ "${ACTION}" == "install" ]]; then

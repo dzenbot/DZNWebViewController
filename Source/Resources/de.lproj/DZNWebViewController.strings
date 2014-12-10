@@ -10,6 +10,6 @@
 
 "Backward" = "Zurück";
 "Forward" = "Vorwärts";
-"History" = ""
-"Stop" = ""
-"Reload" = ""
+"History" = "Geschichte";
+"Stop" = "Stoppen";
+"Reload" = "Nachladen";

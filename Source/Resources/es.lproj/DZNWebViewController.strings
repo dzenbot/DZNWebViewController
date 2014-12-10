@@ -8,8 +8,8 @@
 //  Licence: MIT-Licence
 //
 
-"Backward" = "Backward";
-"Forward" = "Forward";
-"History" = "History";
-"Stop" = "Stop";
-"Reload" = "Reload";
+"Backward" = "Retroceder";
+"Forward" = "Avanzar";
+"History" = "Historial";
+"Stop" = "Parar";
+"Reload" = "Recargar";
