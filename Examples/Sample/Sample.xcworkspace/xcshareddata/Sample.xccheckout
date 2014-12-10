@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6B754464-05DE-472A-8D87-77B5F7CBD98A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Sample</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D311AB8C174840A4EE4A47EBDC7C8F65527E0B7B</key>
+		<string>https://github.com/dzenbot/DZNWebViewController.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Examples/Sample/Sample.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D311AB8C174840A4EE4A47EBDC7C8F65527E0B7B</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/dzenbot/DZNWebViewController.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D311AB8C174840A4EE4A47EBDC7C8F65527E0B7B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D311AB8C174840A4EE4A47EBDC7C8F65527E0B7B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>DZNWebViewController</string>
+		</dict>
+	</array>
+</dict>
+</plist>
