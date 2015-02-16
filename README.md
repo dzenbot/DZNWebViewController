@@ -46,7 +46,7 @@ DZNWebViewController *WVC = [[DZNWebViewController alloc] initWithURL:URL];
 UINavigationController *NC = [[UINavigationController alloc] initWithRootViewController:WVC];
 
 WVC.supportedWebNavigationTools = DZNWebNavigationToolAll;
-WVC.DZNsupportedWebActions = DZNWebActionAll;
+WVC.supportedWebActions = DZNWebActionAll;
 WVC.showLoadingProgress = YES;
 WVC.allowHistory = YES;
 WVC.hideBarsWithGestures = YES;
