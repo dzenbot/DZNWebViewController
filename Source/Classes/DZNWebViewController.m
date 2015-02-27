@@ -144,6 +144,7 @@ static char DZNWebViewControllerKVOContext = 0;
         webView.UIDelegate = self;
         webView.navDelegate = self;
         webView.scrollView.delegate = self;
+        [webView addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
         
         _webView = webView;
     }
@@ -671,16 +672,12 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     [self updateToolbarItems];
-    
-    self.title = self.webView.title;
 }
 
 - (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     [self updateToolbarItems];
     [self setLoadingError:error];
-    
-    self.title = nil;
 }
 
 
@@ -810,6 +807,12 @@ static char DZNWebViewControllerKVOContext = 0;
             }
         }
     }
+    else if ([object isEqual:self.webView]) {
+        
+        if ([keyPath isEqualToString:@"title"]) {
+            self.title = change[NSKeyValueChangeNewKey];
+        }
+    }
 }
 
 
@@ -853,6 +856,7 @@ static char DZNWebViewControllerKVOContext = 0;
     _backwardLongPress = nil;
     _forwardLongPress = nil;
     
+    [_webView removeObserver:self forKeyPath:@"title" context:&DZNWebViewControllerKVOContext];
     _webView.navDelegate = nil;
     _webView.UIDelegate = nil;
     _webView = nil;
