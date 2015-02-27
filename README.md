@@ -29,7 +29,7 @@ Designed to be subclassed and extended.
 
 ## Installation
 Available in [Cocoa Pods](http://cocoapods.org/?q=DZNWebViewController)
-```
+```ruby
 pod 'DZNWebViewController'
 ```
 
@@ -39,7 +39,7 @@ If you're importing the source files manually, you must add the `WebKit` framewo
 
 Create a new instance of DZNWebViewController, or your custom subclass, and initialize it with a NSURL.
 You MUST embed the view controller into a UINavigationController to make it work properly.
-```
+```objc
 NSURL *URL = [NSURL URLWithString:@"http://www.google.com/"];
 
 DZNWebViewController *WVC = [[DZNWebViewController alloc] initWithURL:URL];
