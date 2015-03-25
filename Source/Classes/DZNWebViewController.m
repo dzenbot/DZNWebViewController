@@ -381,15 +381,9 @@ static char DZNWebViewControllerKVOContext = 0;
         return;
     }
     
-    UIFont *titleFont = [UIFont boldSystemFontOfSize:12.0];
-    UIFont *urlFont = [UIFont systemFontOfSize:10.0];
-    UIColor *textColor = [UIColor blackColor];
-    
-    if (self.navigationBar.titleTextAttributes) {
-        titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName];
-        urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
-        textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName];
-    }
+    UIFont *titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName] ?: [UIFont boldSystemFontOfSize:12.0];
+    UIFont *urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
+    UIColor *textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
     
     NSMutableString *text = [NSMutableString stringWithString:title];
     
