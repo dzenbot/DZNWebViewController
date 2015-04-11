@@ -6,9 +6,9 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   DZNWebViewController:
-    :path: ../../DZNWebViewController.podspec
+    :path: "../../DZNWebViewController.podspec"
 
 SPEC CHECKSUMS:
-  DZNWebViewController: 50271156811fd1a6dbde7ddf67cb326bd85c3282
+  DZNWebViewController: 3c63bfa4f8f9ae4da03329d20f10b8b9900c14cc
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.3
