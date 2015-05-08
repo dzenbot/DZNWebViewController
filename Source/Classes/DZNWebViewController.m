@@ -425,11 +425,17 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)loadURL:(NSURL *)URL
 {
+    NSURL *baseURL = [[NSURL alloc] initFileURLWithPath:URL.path.stringByDeletingLastPathComponent isDirectory:YES];
+    [self loadURL:URL baseURL:baseURL];
+}
+
+- (void)loadURL:(NSURL *)URL baseURL:(NSURL *)baseURL
+{
     if ([URL isFileURL]) {
         NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
         NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
-        
-        [self.webView loadHTMLString:HTMLString baseURL:nil];
+
+        [self.webView loadHTMLString:HTMLString baseURL:baseURL];
     }
     else {
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];

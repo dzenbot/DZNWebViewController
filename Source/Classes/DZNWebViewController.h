@@ -86,6 +86,13 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
  */
 - (void)loadURL:(NSURL *)URL NS_REQUIRES_SUPER;
 
+/**
+ Starts loading a new request. Useful to programatically update the web content.
+
+ @param URL The HTTP or file URL to be requested.
+ @param baseURL A URL that is used to resolve relative URLs within the document.
+ */
+- (void)loadURL:(NSURL *)URL baseURL:(NSURL *)baseURL;
 
 ///------------------------------------------------
 /// @name Appearance customisation
