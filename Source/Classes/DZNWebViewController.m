@@ -248,7 +248,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)backwardButtonImage
 {
     if (!_backwardButtonImage) {
-        _backwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_backward"];
+        _backwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_backward" inBundle:[NSBundle bundleForClass:DZNWebViewController.self] compatibleWithTraitCollection:nil];
     }
     return _backwardButtonImage;
 }
@@ -256,7 +256,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)forwardButtonImage
 {
     if (!_forwardButtonImage) {
-        _forwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_forward"];
+        _forwardButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_forward" inBundle:[NSBundle bundleForClass:DZNWebViewController.self] compatibleWithTraitCollection:nil];
     }
     return _forwardButtonImage;
 }
@@ -264,7 +264,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)reloadButtonImage
 {
     if (!_reloadButtonImage) {
-        _reloadButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_reload"];
+        _reloadButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_reload" inBundle:[NSBundle bundleForClass:DZNWebViewController.self] compatibleWithTraitCollection:nil];
     }
     return _reloadButtonImage;
 }
@@ -272,7 +272,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)stopButtonImage
 {
     if (!_stopButtonImage) {
-        _stopButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_stop"];
+        _stopButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_stop" inBundle:[NSBundle bundleForClass:DZNWebViewController.self] compatibleWithTraitCollection:nil];
     }
     return _stopButtonImage;
 }
@@ -280,7 +280,7 @@ static char DZNWebViewControllerKVOContext = 0;
 - (UIImage *)actionButtonImage
 {
     if (!_actionButtonImage) {
-        _actionButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_action"];
+        _actionButtonImage = [UIImage imageNamed:@"dzn_icn_toolbar_action" inBundle:[NSBundle bundleForClass:DZNWebViewController.self] compatibleWithTraitCollection:nil];
     }
     return _actionButtonImage;
 }
@@ -425,11 +425,17 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)loadURL:(NSURL *)URL
 {
+    NSURL *baseURL = [[NSURL alloc] initFileURLWithPath:URL.path.stringByDeletingLastPathComponent isDirectory:YES];
+    [self loadURL:URL baseURL:baseURL];
+}
+
+- (void)loadURL:(NSURL *)URL baseURL:(NSURL *)baseURL
+{
     if ([URL isFileURL]) {
         NSData *data = [[NSData alloc] initWithContentsOfURL:URL];
         NSString *HTMLString = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
-        
-        [self.webView loadHTMLString:HTMLString baseURL:nil];
+
+        [self.webView loadHTMLString:HTMLString baseURL:baseURL];
     }
     else {
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
