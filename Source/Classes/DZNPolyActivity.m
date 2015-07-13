@@ -59,11 +59,11 @@
 - (UIImage *)activityImage
 {
     switch (self.type) {
-        case DZNPolyActivityTypeLink:           return [UIImage imageNamed:@"dzn_icn_activity_link" inBundle:[NSBundle bundleForClass:DZNPolyActivity.self] compatibleWithTraitCollection:nil];
-        case DZNPolyActivityTypeSafari:         return [UIImage imageNamed:@"dzn_icn_activity_safari" inBundle:[NSBundle bundleForClass:DZNPolyActivity.self] compatibleWithTraitCollection:nil];
-        case DZNPolyActivityTypeChrome:         return [UIImage imageNamed:@"dzn_icn_activity_chrome" inBundle:[NSBundle bundleForClass:DZNPolyActivity.self] compatibleWithTraitCollection:nil];
-        case DZNPolyActivityTypeOpera:          return [UIImage imageNamed:@"dzn_icn_activity_opera" inBundle:[NSBundle bundleForClass:DZNPolyActivity.self] compatibleWithTraitCollection:nil];
-        case DZNPolyActivityTypeDolphin:        return [UIImage imageNamed:@"dzn_icn_activity_dolphin" inBundle:[NSBundle bundleForClass:DZNPolyActivity.self] compatibleWithTraitCollection:nil];
+        case DZNPolyActivityTypeLink:           return [UIImage imageNamed:@"dzn_icn_activity_link" inBundle:[NSBundle bundleForClass:[DZNPolyActivity class]] compatibleWithTraitCollection:nil];
+        case DZNPolyActivityTypeSafari:         return [UIImage imageNamed:@"dzn_icn_activity_safari" inBundle:[NSBundle bundleForClass:[DZNPolyActivity class]] compatibleWithTraitCollection:nil];
+        case DZNPolyActivityTypeChrome:         return [UIImage imageNamed:@"dzn_icn_activity_chrome" inBundle:[NSBundle bundleForClass:[DZNPolyActivity class]] compatibleWithTraitCollection:nil];
+        case DZNPolyActivityTypeOpera:          return [UIImage imageNamed:@"dzn_icn_activity_opera" inBundle:[NSBundle bundleForClass:[DZNPolyActivity class]] compatibleWithTraitCollection:nil];
+        case DZNPolyActivityTypeDolphin:        return [UIImage imageNamed:@"dzn_icn_activity_dolphin" inBundle:[NSBundle bundleForClass:[DZNPolyActivity class]] compatibleWithTraitCollection:nil];
         default:                                return nil;
     }
 }
