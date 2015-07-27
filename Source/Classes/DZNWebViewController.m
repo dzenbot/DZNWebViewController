@@ -840,9 +840,11 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)dealloc
 {
-    [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
-    [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
-    [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+    if (self.hideBarsWithGestures) {
+    	[self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
+    	[self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
+    	[self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+    }
     
     _backwardBarItem = nil;
     _forwardBarItem = nil;
