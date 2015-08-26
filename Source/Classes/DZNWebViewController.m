@@ -31,6 +31,8 @@ static char DZNWebViewControllerKVOContext = 0;
 @property (nonatomic, weak) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIView *navigationBarSuperView;
 
+@property (nonatomic) BOOL completedInitialLoad;
+
 @end
 
 @implementation DZNWebViewController
@@ -73,6 +75,17 @@ static char DZNWebViewControllerKVOContext = 0;
     self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
+    self.showPageTitleAndURL = YES;
+    
+    self.webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
+    self.webView.backgroundColor = [UIColor whiteColor];
+    self.webView.allowsBackForwardNavigationGestures = YES;
+    self.webView.UIDelegate = self;
+    self.webView.navDelegate = self;
+    self.webView.scrollView.delegate = self;
+    
+    [self.webView addObserver:self forKeyPath:@"loading" options:NSKeyValueObservingOptionNew context:&DZNWebViewControllerKVOContext];
+    self.completedInitialLoad = NO;
 }
 
 
@@ -95,12 +108,13 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     [super viewWillAppear:animated];
     
-    [UIView performWithoutAnimation:^{
-        static dispatch_once_t willAppearConfig;
-        dispatch_once(&willAppearConfig, ^{
+    if (!self.completedInitialLoad) {
+        
+        [UIView performWithoutAnimation:^{
             [self configureToolBars];
-        });
-    }];
+        }];
+        self.completedInitialLoad = YES;
+    }
     
     if (!self.webView.URL) {
         [self loadURL:self.URL];
@@ -133,22 +147,6 @@ static char DZNWebViewControllerKVOContext = 0;
 
 
 #pragma mark - Getter methods
-
-- (DZNWebView *)webView
-{
-    if (!_webView)
-    {
-        DZNWebView *webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
-        webView.backgroundColor = [UIColor whiteColor];
-        webView.allowsBackForwardNavigationGestures = YES;
-        webView.UIDelegate = self;
-        webView.navDelegate = self;
-        webView.scrollView.delegate = self;
-        
-        _webView = webView;
-    }
-    return _webView;
-}
 
 - (UIProgressView *)progressView
 {
@@ -364,6 +362,11 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)setTitle:(NSString *)title
 {
+    if (!self.showPageTitleAndURL) {
+        [super setTitle:title];
+        return;
+    }
+    
     NSString *url = self.webView.URL.absoluteString;
     
     UILabel *label = (UILabel *)self.navigationItem.titleView;
@@ -670,16 +673,20 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    [self updateToolbarItems];
-    
-    self.title = self.webView.title;
+    if (self.showPageTitleAndURL) {
+        self.title = self.webView.title;
+    }
 }
 
 - (void)webView:(DZNWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    [self updateToolbarItems];
     [self setLoadingError:error];
     
+    // if this is a cancelled error, then don't affect the title
+    switch (error.code) {
+        case NSURLErrorCancelled:   return;
+    }
+
     self.title = nil;
 }
 
@@ -810,6 +817,10 @@ static char DZNWebViewControllerKVOContext = 0;
             }
         }
     }
+    
+    if ([object isEqual:self.webView] && [keyPath isEqualToString:@"loading"]) {
+        [self updateToolbarItems];
+    }
 }
 
 
@@ -841,10 +852,11 @@ static char DZNWebViewControllerKVOContext = 0;
 - (void)dealloc
 {
     if (self.hideBarsWithGestures) {
-    	[self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
-    	[self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
-    	[self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
     }
+    [self.webView removeObserver:self forKeyPath:@"loading" context:&DZNWebViewControllerKVOContext];
     
     _backwardBarItem = nil;
     _forwardBarItem = nil;
