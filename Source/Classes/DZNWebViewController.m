@@ -31,6 +31,10 @@ static char DZNWebViewControllerKVOContext = 0;
 @property (nonatomic, weak) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIView *navigationBarSuperView;
 
+@property (nonatomic) BOOL previousHidesBarsOnSwipe;
+@property (nonatomic) BOOL previousHidesBarsWhenKeyboardAppears;
+@property (nonatomic) BOOL previousHidesBarsWhenVerticallyCompact;
+
 @end
 
 @implementation DZNWebViewController
@@ -122,6 +126,10 @@ static char DZNWebViewControllerKVOContext = 0;
 	[super viewWillDisappear:animated];
     
     [self clearProgressViewAnimated:animated];
+    
+    self.navigationController.hidesBarsOnSwipe = self.previousHidesBarsOnSwipe;
+    self.navigationController.hidesBarsWhenKeyboardAppears = self.previousHidesBarsWhenKeyboardAppears;
+    self.navigationController.hidesBarsWhenVerticallyCompact = self.previousHidesBarsWhenVerticallyCompact;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -519,6 +527,10 @@ static char DZNWebViewControllerKVOContext = 0;
     self.toolbar = self.navigationController.toolbar;
     self.navigationBar = self.navigationController.navigationBar;
     self.navigationBarSuperView = self.navigationBar.superview;
+    
+    self.previousHidesBarsOnSwipe = self.navigationController.hidesBarsOnSwipe;
+    self.previousHidesBarsWhenKeyboardAppears = self.navigationController.hidesBarsWhenKeyboardAppears;
+    self.previousHidesBarsWhenVerticallyCompact = self.navigationController.hidesBarsWhenVerticallyCompact;
     
     self.navigationController.hidesBarsOnSwipe = self.hideBarsWithGestures;
     self.navigationController.hidesBarsWhenKeyboardAppears = self.hideBarsWithGestures;
