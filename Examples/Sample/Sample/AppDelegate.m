@@ -21,10 +21,12 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"NSHipster.com" ofType:@"html"];
     
     ViewController *controller = [[ViewController alloc] initWithFileURL:[NSURL fileURLWithPath:path]];
+    
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #else
     DZNWebViewController *controller = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://dribbble.com/"]];
+    
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
 #endif

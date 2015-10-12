@@ -826,7 +826,11 @@ static char DZNWebViewControllerKVOContext = 0;
 
 #pragma mark - View Auto-Rotation
 
+#ifdef __IPHONE_9_0
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+#else
 - (NSUInteger)supportedInterfaceOrientations
+#endif
 {
     return UIInterfaceOrientationMaskAll;
 }
