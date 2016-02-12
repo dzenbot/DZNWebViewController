@@ -28,7 +28,7 @@ Designed to be subclassed and extended.
 * ARC
 
 ## Installation
-Available in [Cocoa Pods](http://cocoapods.org/?q=DZNWebViewController)
+Available in [CocoaPods](http://cocoapods.org/?q=DZNWebViewController)
 ```ruby
 pod 'DZNWebViewController'
 ```
