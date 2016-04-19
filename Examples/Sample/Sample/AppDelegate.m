@@ -20,16 +20,15 @@
 #if DEBUG_LOCAL
     NSString *path = [[NSBundle mainBundle] pathForResource:@"NSHipster.com" ofType:@"html"];
     
-    ViewController *controller = [[ViewController alloc] initWithFileURL:[NSURL fileURLWithPath:path]];
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-    self.window.rootViewController = navController;
+    DZNWebViewController *controller = [[DZNWebViewController alloc] initWithFileURL:[NSURL fileURLWithPath:path]];
+
 #else
     DZNWebViewController *controller = [[DZNWebViewController alloc] initWithURL:[NSURL URLWithString:@"https://dribbble.com/"]];
+
+#endif
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     self.window.rootViewController = navController;
-#endif
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
