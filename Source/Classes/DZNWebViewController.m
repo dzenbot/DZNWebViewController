@@ -72,10 +72,10 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     self.supportedWebNavigationTools = DZNWebNavigationToolAll;
     self.supportedWebActions = DZNWebActionAll;
+    self.infoOnNavigationBar = DZNWebInfoOnNavigationBarAll;
     self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
-    self.showPageTitleAndURL = YES;
     
     self.webView = [[DZNWebView alloc] initWithFrame:self.view.bounds configuration:[WKWebViewConfiguration new]];
     self.webView.backgroundColor = [UIColor whiteColor];
@@ -362,7 +362,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)setTitle:(NSString *)title
 {
-    if (!self.showPageTitleAndURL) {
+    if (self.infoOnNavigationBar == 0) {
         [super setTitle:title];
         return;
     }
@@ -388,17 +388,28 @@ static char DZNWebViewControllerKVOContext = 0;
     UIFont *urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
     UIColor *textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
     
-    NSMutableString *text = [NSMutableString stringWithString:title];
+    NSMutableString *text = [NSMutableString stringWithString: @""];
+    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarTitle) > 0 || self.showAllInfoOnNavigationBar) {
+        [text appendFormat:@"%@", title];
+    }
     
-    if (url.length > 0) {
-        [text appendFormat:@"\n%@", url];
+    if (self.showAllInfoOnNavigationBar) {
+        [text appendFormat:@"\n"];
+    }
+    
+    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarURL) > 0 || self.showAllInfoOnNavigationBar) {
+        if (url.length > 0) {
+            [text appendFormat:@"%@", url];
+        }
     }
     
     NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
     
-    if (url.length > 0) {
-        [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
+    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarURL) > 0 || self.showAllInfoOnNavigationBar) {
+        if (url.length > 0) {
+            [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
+        }
     }
     
     label.attributedText = attributedString;
@@ -421,6 +432,11 @@ static char DZNWebViewControllerKVOContext = 0;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", nil) message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles: nil];
     [alert show];
+}
+
+- (BOOL)showAllInfoOnNavigationBar
+{
+    return (_infoOnNavigationBar == DZNWebInfoOnNavigationBarAll) ? YES : NO;
 }
 
 
@@ -673,7 +689,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    if (self.showPageTitleAndURL) {
+    if (self.infoOnNavigationBar > 0) {
         self.title = self.webView.title;
     }
 }
