@@ -70,6 +70,8 @@ typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
 @property (nonatomic) BOOL allowHistory;
 /** YES if both, the navigation and tool bars should hide when panning vertically. Default is YES. */
 @property (nonatomic) BOOL hideBarsWithGestures;
+/** [Deprecated] YES if should set the title automatically based on the page title and URL. Default is YES. */
+@property (nonatomic) BOOL showPageTitleAndURL __deprecated_msg("Use 'infoOnNavigationBar' instead.");
 
 ///------------------------------------------------
 /// @name Initialization
