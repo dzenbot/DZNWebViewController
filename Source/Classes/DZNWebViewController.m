@@ -362,7 +362,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)setTitle:(NSString *)title
 {
-    if (self.infoOnNavigationBar == 0) {
+    if (self.infoOnNavigationBar == DZNWebInfoOnNavigationBarNone) {
         [super setTitle:title];
         return;
     }
@@ -689,7 +689,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    if (self.infoOnNavigationBar > 0) {
+    if (self.infoOnNavigationBar > DZNWebInfoOnNavigationBarNone) {
         self.title = self.webView.title;
     }
 }
