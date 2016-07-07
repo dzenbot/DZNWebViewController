@@ -40,6 +40,16 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 };
 
 /**
+ Types of information to be shown on navigation bar
+ */
+typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
+    DZNWebInfoOnNavigationBarAll = -1,
+    DZNWebInfoOnNavigationBarNone = 0,
+    DZNWebInfoOnNavigationBarTitle = (1 << 0),
+    DZNWebInfoOnNavigationBarURL = (1 << 1),
+};
+
+/**
  A very simple web browser with useful navigation and tooling features.
  */
 @interface DZNWebViewController : UIViewController <DZNNavigationDelegate, WKUIDelegate, UITableViewDataSource, UITableViewDelegate>
@@ -52,14 +62,16 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 @property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
 @property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
+/** The information to be shown on navigation bar. */
+@property (nonatomic, readwrite) DZNWebInfoOnNavigationBar infoOnNavigationBar;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
 /** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
 @property (nonatomic) BOOL allowHistory;
 /** YES if both, the navigation and tool bars should hide when panning vertically. Default is YES. */
 @property (nonatomic) BOOL hideBarsWithGestures;
-/** YES if should set the title automatically based on the page title and URL. Default is YES. */
-@property (nonatomic) BOOL showPageTitleAndURL;
+/** [Deprecated] YES if should set the title automatically based on the page title and URL. Default is YES. */
+@property (nonatomic) BOOL showPageTitleAndURL __deprecated_msg("Use 'infoOnNavigationBar' instead.");
 
 ///------------------------------------------------
 /// @name Initialization
