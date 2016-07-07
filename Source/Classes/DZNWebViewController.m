@@ -436,7 +436,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (BOOL)showAllInfoOnNavigationBar
 {
-    return (_infoOnNavigationBar == DZNWebInfoOnNavigationBarAll) ? YES : NO;
+    return ( _infoOnNavigationBar == DZNWebInfoOnNavigationBarAll || _infoOnNavigationBar == (DZNWebInfoOnNavigationBarURL | DZNWebInfoOnNavigationBarTitle) ) ? YES : NO;
 }
 
 
