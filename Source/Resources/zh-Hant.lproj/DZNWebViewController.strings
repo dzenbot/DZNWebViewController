@@ -1,0 +1,15 @@
+//
+//  DZNWebViewController.strings
+//  DZNWebViewController
+//  https://github.com/dzenbot/DZNWebViewController
+//
+//  Created by Yifei He on 07/07/16.
+//  Copyright (c) 2016 DZN Labs. All rights reserved.
+//  Licence: MIT-Licence
+//
+
+"Backward" = "上一頁";
+"Forward" = "下一頁";
+"History" = "瀏覽記錄";
+"Stop" = "停止載入";
+"Reload" = "重新載入";
