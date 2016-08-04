@@ -143,6 +143,7 @@ static char DZNWebViewControllerKVOContext = 0;
 	[super viewDidDisappear:animated];
     
     [self.webView stopLoading];
+    [self clearProgressViewAnimated:animated];
 }
 
 
