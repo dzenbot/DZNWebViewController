@@ -72,7 +72,7 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     self.supportedWebNavigationTools = DZNWebNavigationToolAll;
     self.supportedWebActions = DZNWebActionAll;
-    self.infoOnNavigationBar = DZNWebInfoOnNavigationBarAll;
+    self.webNavigationPrompt = DZNWebNavigationPromptAll;
     self.showLoadingProgress = YES;
     self.hideBarsWithGestures = YES;
     self.allowHistory = YES;
@@ -362,7 +362,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)setTitle:(NSString *)title
 {
-    if (self.infoOnNavigationBar == DZNWebInfoOnNavigationBarNone) {
+    if (self.webNavigationPrompt == DZNWebNavigationPromptNone) {
         [super setTitle:title];
         return;
     }
@@ -389,15 +389,15 @@ static char DZNWebViewControllerKVOContext = 0;
     UIColor *textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
     
     NSMutableString *text = [NSMutableString stringWithString: @""];
-    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarTitle) > 0 || self.showAllInfoOnNavigationBar) {
+    if ((_webNavigationPrompt & DZNWebNavigationPromptTitle) > 0 || self.showAllWebNavigationPrompt) {
         [text appendFormat:@"%@", title];
     }
     
-    if (self.showAllInfoOnNavigationBar) {
+    if (self.showAllWebNavigationPrompt) {
         [text appendFormat:@"\n"];
     }
     
-    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarURL) > 0 || self.showAllInfoOnNavigationBar) {
+    if ((_webNavigationPrompt & DZNWebNavigationPromptURL) > 0 || self.showAllWebNavigationPrompt) {
         if (url.length > 0) {
             [text appendFormat:@"%@", url];
         }
@@ -406,7 +406,7 @@ static char DZNWebViewControllerKVOContext = 0;
     NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
     
-    if ((_infoOnNavigationBar & DZNWebInfoOnNavigationBarURL) > 0 || self.showAllInfoOnNavigationBar) {
+    if ((_webNavigationPrompt & DZNWebNavigationPromptURL) > 0 || self.showAllWebNavigationPrompt) {
         if (url.length > 0) {
             [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
         }
@@ -434,9 +434,9 @@ static char DZNWebViewControllerKVOContext = 0;
     [alert show];
 }
 
-- (BOOL)showAllInfoOnNavigationBar
+- (BOOL)showAllWebNavigationPrompt
 {
-    return ( _infoOnNavigationBar == DZNWebInfoOnNavigationBarAll || _infoOnNavigationBar == (DZNWebInfoOnNavigationBarURL | DZNWebInfoOnNavigationBarTitle) ) ? YES : NO;
+    return ( _webNavigationPrompt == DZNWebNavigationPromptAll || _webNavigationPrompt == (DZNWebNavigationPromptURL | DZNWebNavigationPromptTitle) ) ? YES : NO;
 }
 
 
@@ -689,7 +689,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)webView:(DZNWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    if (self.infoOnNavigationBar > DZNWebInfoOnNavigationBarNone) {
+    if (self.webNavigationPrompt > DZNWebNavigationPromptNone) {
         self.title = self.webView.title;
     }
 }

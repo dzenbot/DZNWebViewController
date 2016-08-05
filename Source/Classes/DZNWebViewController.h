@@ -40,13 +40,13 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 };
 
 /**
- Types of information to be shown on navigation bar. Default is DZNWebInfoOnNavigationBarAll.
+ Types of information to be shown on navigation bar. Default is DZNWebNavigationPromptAll.
  */
-typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
-    DZNWebInfoOnNavigationBarAll = -1,
-    DZNWebInfoOnNavigationBarNone = 0,
-    DZNWebInfoOnNavigationBarTitle = (1 << 0),
-    DZNWebInfoOnNavigationBarURL = (1 << 1),
+typedef NS_OPTIONS(NSUInteger, DZNWebNavigationPrompt) {
+    DZNWebNavigationPromptAll = -1,
+    DZNWebNavigationPromptNone = 0,
+    DZNWebNavigationPromptTitle = (1 << 0),
+    DZNWebNavigationPromptURL = (1 << 1),
 };
 
 /**
@@ -62,8 +62,8 @@ typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
 @property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
 @property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
-/** The information to be shown on navigation bar. Default is DZNWebInfoOnNavigationBarAll. */
-@property (nonatomic, readwrite) DZNWebInfoOnNavigationBar infoOnNavigationBar;
+/** The information to be shown on navigation bar. Default is DZNWebNavigationPromptAll. */
+@property (nonatomic, readwrite) DZNWebNavigationPrompt webNavigationPrompt;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
 /** YES if long pressing the backward and forward buttons the navigation history is displayed. Default is YES. */
@@ -71,7 +71,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
 /** YES if both, the navigation and tool bars should hide when panning vertically. Default is YES. */
 @property (nonatomic) BOOL hideBarsWithGestures;
 /** [Deprecated] YES if should set the title automatically based on the page title and URL. Default is YES. */
-@property (nonatomic) BOOL showPageTitleAndURL __deprecated_msg("Use 'infoOnNavigationBar' instead.");
+@property (nonatomic) BOOL showPageTitleAndURL __deprecated_msg("Use 'webNavigationPrompt' instead.");
 
 ///------------------------------------------------
 /// @name Initialization
