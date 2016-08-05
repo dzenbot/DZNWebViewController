@@ -43,10 +43,10 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
  Types of information to be shown on navigation bar. Default is DZNWebNavigationPromptAll.
  */
 typedef NS_OPTIONS(NSUInteger, DZNWebNavigationPrompt) {
-    DZNWebNavigationPromptAll = -1,
     DZNWebNavigationPromptNone = 0,
     DZNWebNavigationPromptTitle = (1 << 0),
     DZNWebNavigationPromptURL = (1 << 1),
+    DZNWebNavigationPromptAll = DZNWebNavigationPromptTitle | DZNWebNavigationPromptURL,
 };
 
 /**
