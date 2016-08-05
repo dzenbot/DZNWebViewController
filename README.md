@@ -47,7 +47,7 @@ UINavigationController *NC = [[UINavigationController alloc] initWithRootViewCon
 
 WVC.supportedWebNavigationTools = DZNWebNavigationToolAll;
 WVC.supportedWebActions = DZNWebActionAll;
-WVC.infoOnNavigationBar = DZNWebInfoOnNavigationBarAll;
+WVC.webNavigationPrompt = DZNWebNavigationPromptAll;
 WVC.showLoadingProgress = YES;
 WVC.allowHistory = YES;
 WVC.hideBarsWithGestures = YES;
