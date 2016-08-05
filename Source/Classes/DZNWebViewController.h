@@ -62,7 +62,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
 @property (nonatomic, readwrite) DZNWebNavigationTools supportedWebNavigationTools;
 /** The supported actions like sharing and copy link, add to reading list, open in Safari, etc. Default is All. */
 @property (nonatomic, readwrite) DZNsupportedWebActions supportedWebActions;
-/** The information to be shown on navigation bar. */
+/** The information to be shown on navigation bar. Default is DZNWebInfoOnNavigationBarAll. */
 @property (nonatomic, readwrite) DZNWebInfoOnNavigationBar infoOnNavigationBar;
 /** Yes if a progress bar indicates the . Default is YES. */
 @property (nonatomic) BOOL showLoadingProgress;
