@@ -40,7 +40,7 @@ typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
 };
 
 /**
- Types of information to be shown on navigation bar
+ Types of information to be shown on navigation bar. Default is DZNWebInfoOnNavigationBarAll.
  */
 typedef NS_OPTIONS(NSUInteger, DZNWebInfoOnNavigationBar) {
     DZNWebInfoOnNavigationBarAll = -1,
