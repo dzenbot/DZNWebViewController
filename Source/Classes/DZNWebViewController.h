@@ -16,7 +16,7 @@
 /**
  Types of supported navigation tools.
  */
-typedef NS_OPTIONS(NSUInteger, DZNWebNavigationTools) {
+typedef NS_OPTIONS(NSInteger, DZNWebNavigationTools) {
     DZNWebNavigationToolAll = -1,
     DZNWebNavigationToolNone = 0,
     DZNWebNavigationToolBackward = (1 << 0),
@@ -27,7 +27,7 @@ typedef NS_OPTIONS(NSUInteger, DZNWebNavigationTools) {
 /**
  Types of supported actions (i.e. Share & Copy link, Add to Reading List, Open in Safari/Chrome/Opera/Dolphin).
  */
-typedef NS_OPTIONS(NSUInteger, DZNsupportedWebActions) {
+typedef NS_OPTIONS(NSInteger, DZNsupportedWebActions) {
     DZNWebActionAll = -1,
     DZNWebActionNone = 0,
     DZNsupportedWebActionshareLink = (1 << 0),
