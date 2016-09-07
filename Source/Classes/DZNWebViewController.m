@@ -379,37 +379,30 @@ static char DZNWebViewControllerKVOContext = 0;
         self.navigationItem.titleView = label;
     }
     
-    if (title.length == 0) {
-        label.attributedText = nil;
-        return;
-    }
-    
-    UIFont *titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName] ?: [UIFont boldSystemFontOfSize:12.0];
+    UIFont *titleFont = self.navigationBar.titleTextAttributes[NSFontAttributeName] ? : [UIFont boldSystemFontOfSize:14.0];
     UIFont *urlFont = [UIFont fontWithName:titleFont.fontName size:titleFont.pointSize-2.0];
-    UIColor *textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
+    UIColor *textColor = self.navigationBar.titleTextAttributes[NSForegroundColorAttributeName] ? : [UIColor blackColor];
     
-    NSMutableString *text = [NSMutableString stringWithString: @""];
-    if ((_webNavigationPrompt & DZNWebNavigationPromptTitle) > 0 || self.showAllWebNavigationPrompt) {
+    NSMutableString *text = [NSMutableString new];
+    
+    if (title.length > 0 && self.showNavigationPromptTitle) {
         [text appendFormat:@"%@", title];
-    }
-    
-    if (self.showAllWebNavigationPrompt) {
-        [text appendFormat:@"\n"];
-    }
-    
-    if ((_webNavigationPrompt & DZNWebNavigationPromptURL) > 0 || self.showAllWebNavigationPrompt) {
-        if (url.length > 0) {
-            [text appendFormat:@"%@", url];
+        
+        if (url.length > 0 && self.showNavigationPromptURL) {
+            [text appendFormat:@"\n"];
         }
+    }
+    
+    if (url.length > 0 && self.showNavigationPromptURL) {
+        [text appendFormat:@"%@", url];
     }
     
     NSDictionary *attributes = @{NSFontAttributeName: titleFont, NSForegroundColorAttributeName: textColor};
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
-    
-    if ((_webNavigationPrompt & DZNWebNavigationPromptURL) > 0 || self.showAllWebNavigationPrompt) {
-        if (url.length > 0) {
-            [attributedString addAttribute:NSFontAttributeName value:urlFont range:[text rangeOfString:url]];
-        }
+    NSRange urlRange = [text rangeOfString:url];
+
+    if (urlRange.location != NSNotFound && self.showNavigationPromptTitle) {
+        [attributedString addAttribute:NSFontAttributeName value:urlFont range:urlRange];
     }
     
     label.attributedText = attributedString;
@@ -434,9 +427,20 @@ static char DZNWebViewControllerKVOContext = 0;
     [alert show];
 }
 
-- (BOOL)showAllWebNavigationPrompt
+- (BOOL)showNavigationPromptTitle
 {
-    return ( _webNavigationPrompt == DZNWebNavigationPromptAll || _webNavigationPrompt == (DZNWebNavigationPromptURL | DZNWebNavigationPromptTitle) ) ? YES : NO;
+    if ((self.webNavigationPrompt & DZNWebNavigationPromptTitle) > 0 || self.webNavigationPrompt == DZNWebNavigationPromptAll) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)showNavigationPromptURL
+{
+    if ((self.webNavigationPrompt & DZNWebNavigationPromptURL) > 0 || self.webNavigationPrompt == DZNWebNavigationPromptAll) {
+        return YES;
+    }
+    return NO;
 }
 
 
