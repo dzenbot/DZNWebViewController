@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07B7689B1DA00CFF007AC3C2 /* DZNPolyActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B768771DA00CFF007AC3C2 /* DZNPolyActivity.h */; };
+		07B7689B1DA00CFF007AC3C2 /* DZNPolyActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B768771DA00CFF007AC3C2 /* DZNPolyActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07B7689C1DA00CFF007AC3C2 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B768781DA00CFF007AC3C2 /* DZNPolyActivity.m */; };
-		07B7689D1DA00CFF007AC3C2 /* DZNWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B768791DA00CFF007AC3C2 /* DZNWebView.h */; };
+		07B7689D1DA00CFF007AC3C2 /* DZNWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B768791DA00CFF007AC3C2 /* DZNWebView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07B7689E1DA00CFF007AC3C2 /* DZNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B7687A1DA00CFF007AC3C2 /* DZNWebView.m */; };
-		07B7689F1DA00CFF007AC3C2 /* DZNWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B7687B1DA00CFF007AC3C2 /* DZNWebViewController.h */; };
+		07B7689F1DA00CFF007AC3C2 /* DZNWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B7687B1DA00CFF007AC3C2 /* DZNWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07B768A01DA00CFF007AC3C2 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B7687C1DA00CFF007AC3C2 /* DZNWebViewController.m */; };
 		07B768A11DA00CFF007AC3C2 /* DZNWebViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 07B7687E1DA00CFF007AC3C2 /* DZNWebViewController.strings */; };
 		07B768A21DA00CFF007AC3C2 /* dzn_icn_activity_chrome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07B768801DA00CFF007AC3C2 /* dzn_icn_activity_chrome@2x.png */; };
