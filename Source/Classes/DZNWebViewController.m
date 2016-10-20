@@ -55,6 +55,7 @@ static char DZNWebViewControllerKVOContext = 0;
     self = [self init];
     if (self) {
         _URL = URL;
+        _fileURL = nil;
     }
     return self;
 }
@@ -63,6 +64,7 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     self = [self init];
     if (self) {
+        _URL = nil;
         _fileURL = URL;
     }
     return self;
@@ -363,10 +365,16 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if (self.isViewLoaded) {
-        [self loadURL:URL];
+        if ([URL isFileURL]) {
+            [self loadFileURL:URL];
+            _fileURL = URL;
+            _URL = nil;
+        } else {
+            [self loadURL:URL];
+            _URL = URL;
+            _fileURL = nil;
+        }
     }
-    
-    _URL = URL;
 }
 
 - (void)setTitle:(NSString *)title
