@@ -124,9 +124,9 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if (!self.webView.URL) {
-        if (self.URL) {
+        if (self.URL != nil) {
             [self loadURL:self.URL];
-        } else if (self.fileURL) {
+        } else if (self.fileURL != nil) {
             [self loadFileURL:self.fileURL];
         }
     }
