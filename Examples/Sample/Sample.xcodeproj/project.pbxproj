@@ -34,6 +34,14 @@
 		4FC763F118E725C60009F375 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EE18E725C60009F375 /* Default-568h@2x.png */; };
 		4FC763F218E725C60009F375 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763EF18E725C60009F375 /* Default.png */; };
 		4FC763F318E725C60009F375 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FC763F018E725C60009F375 /* Default@2x.png */; };
+		79EE0B581DEDC69F00DDC8B4 /* DZNWebViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79EE0B511DEDC69F00DDC8B4 /* DZNWebViewController.framework */; };
+		79EE0B591DEDC69F00DDC8B4 /* DZNWebViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 79EE0B511DEDC69F00DDC8B4 /* DZNWebViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		79EE0B651DEDC76B00DDC8B4 /* DZNPolyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EE0B5F1DEDC76B00DDC8B4 /* DZNPolyActivity.m */; };
+		79EE0B671DEDC76B00DDC8B4 /* DZNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EE0B611DEDC76B00DDC8B4 /* DZNWebView.m */; };
+		79EE0B691DEDC76B00DDC8B4 /* DZNWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79EE0B631DEDC76B00DDC8B4 /* DZNWebViewController.m */; };
+		79EE0B6A1DEDC80E00DDC8B4 /* DZNPolyActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 79EE0B5E1DEDC76B00DDC8B4 /* DZNPolyActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		79EE0B6B1DEDC80E00DDC8B4 /* DZNWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 79EE0B601DEDC76B00DDC8B4 /* DZNWebView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		79EE0B6C1DEDC80E00DDC8B4 /* DZNWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 79EE0B621DEDC76B00DDC8B4 /* DZNWebViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA22BA647F7D4AA39B479ABC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9934BD31402B4CBE9A91C229 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -45,7 +53,28 @@
 			remoteGlobalIDString = 4FB845FE18E50C450056BDFB;
 			remoteInfo = Sample;
 		};
+		79EE0B561DEDC69F00DDC8B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FB845F718E50C450056BDFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79EE0B501DEDC69F00DDC8B4;
+			remoteInfo = DZNWebViewController;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		79EE0B5D1DEDC69F00DDC8B4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				79EE0B591DEDC69F00DDC8B4 /* DZNWebViewController.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4F3041DB1A1EFA8900F702A5 /* DZNWebViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = DZNWebViewController.podspec; path = ../../DZNWebViewController.podspec; sourceTree = "<group>"; };
@@ -80,6 +109,14 @@
 		4FC763EE18E725C60009F375 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4FC763EF18E725C60009F375 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		4FC763F018E725C60009F375 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		79EE0B511DEDC69F00DDC8B4 /* DZNWebViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DZNWebViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		79EE0B541DEDC69F00DDC8B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79EE0B5E1DEDC76B00DDC8B4 /* DZNPolyActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DZNPolyActivity.h; path = ../../../Source/Classes/DZNPolyActivity.h; sourceTree = "<group>"; };
+		79EE0B5F1DEDC76B00DDC8B4 /* DZNPolyActivity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZNPolyActivity.m; path = ../../../Source/Classes/DZNPolyActivity.m; sourceTree = "<group>"; };
+		79EE0B601DEDC76B00DDC8B4 /* DZNWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DZNWebView.h; path = ../../../Source/Classes/DZNWebView.h; sourceTree = "<group>"; };
+		79EE0B611DEDC76B00DDC8B4 /* DZNWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZNWebView.m; path = ../../../Source/Classes/DZNWebView.m; sourceTree = "<group>"; };
+		79EE0B621DEDC76B00DDC8B4 /* DZNWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DZNWebViewController.h; path = ../../../Source/Classes/DZNWebViewController.h; sourceTree = "<group>"; };
+		79EE0B631DEDC76B00DDC8B4 /* DZNWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DZNWebViewController.m; path = ../../../Source/Classes/DZNWebViewController.m; sourceTree = "<group>"; };
 		84072172328E77E3D64B7C81 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9934BD31402B4CBE9A91C229 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED4997A7C5F4D6AACC9BD7B0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -90,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79EE0B581DEDC69F00DDC8B4 /* DZNWebViewController.framework in Frameworks */,
 				4FB8460518E50C450056BDFB /* CoreGraphics.framework in Frameworks */,
 				4FB8460718E50C450056BDFB /* UIKit.framework in Frameworks */,
 				4FB8460318E50C450056BDFB /* Foundation.framework in Frameworks */,
@@ -104,6 +142,13 @@
 				4FB8461C18E50C450056BDFB /* XCTest.framework in Frameworks */,
 				4FB8461E18E50C450056BDFB /* UIKit.framework in Frameworks */,
 				4FB8461D18E50C450056BDFB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79EE0B4D1DEDC69F00DDC8B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +205,7 @@
 			children = (
 				4FB8460818E50C450056BDFB /* Sample */,
 				4FB8462118E50C450056BDFB /* SampleTests */,
+				79EE0B521DEDC69F00DDC8B4 /* DZNWebViewController */,
 				4FB8460118E50C450056BDFB /* Frameworks */,
 				4FB8460018E50C450056BDFB /* Products */,
 				2CD7BE64F3B51825C90A986D /* Pods */,
@@ -171,6 +217,7 @@
 			children = (
 				4FB845FF18E50C450056BDFB /* Sample.app */,
 				4FB8461A18E50C450056BDFB /* SampleTests.xctest */,
+				79EE0B511DEDC69F00DDC8B4 /* DZNWebViewController.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -231,7 +278,34 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		79EE0B521DEDC69F00DDC8B4 /* DZNWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				79EE0B5E1DEDC76B00DDC8B4 /* DZNPolyActivity.h */,
+				79EE0B5F1DEDC76B00DDC8B4 /* DZNPolyActivity.m */,
+				79EE0B601DEDC76B00DDC8B4 /* DZNWebView.h */,
+				79EE0B611DEDC76B00DDC8B4 /* DZNWebView.m */,
+				79EE0B621DEDC76B00DDC8B4 /* DZNWebViewController.h */,
+				79EE0B631DEDC76B00DDC8B4 /* DZNWebViewController.m */,
+				79EE0B541DEDC69F00DDC8B4 /* Info.plist */,
+			);
+			path = DZNWebViewController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		79EE0B4E1DEDC69F00DDC8B4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79EE0B6C1DEDC80E00DDC8B4 /* DZNWebViewController.h in Headers */,
+				79EE0B6A1DEDC80E00DDC8B4 /* DZNPolyActivity.h in Headers */,
+				79EE0B6B1DEDC80E00DDC8B4 /* DZNWebView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		4FB845FE18E50C450056BDFB /* Sample */ = {
@@ -243,10 +317,12 @@
 				4FB845FC18E50C450056BDFB /* Frameworks */,
 				4FB845FD18E50C450056BDFB /* Resources */,
 				A50537A689D94FC3A207D8C1 /* Copy Pods Resources */,
+				79EE0B5D1DEDC69F00DDC8B4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				79EE0B571DEDC69F00DDC8B4 /* PBXTargetDependency */,
 			);
 			name = Sample;
 			productName = Sample;
@@ -271,6 +347,24 @@
 			productReference = 4FB8461A18E50C450056BDFB /* SampleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		79EE0B501DEDC69F00DDC8B4 /* DZNWebViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79EE0B5C1DEDC69F00DDC8B4 /* Build configuration list for PBXNativeTarget "DZNWebViewController" */;
+			buildPhases = (
+				79EE0B4C1DEDC69F00DDC8B4 /* Sources */,
+				79EE0B4D1DEDC69F00DDC8B4 /* Frameworks */,
+				79EE0B4E1DEDC69F00DDC8B4 /* Headers */,
+				79EE0B4F1DEDC69F00DDC8B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DZNWebViewController;
+			productName = DZNWebViewController;
+			productReference = 79EE0B511DEDC69F00DDC8B4 /* DZNWebViewController.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -282,6 +376,10 @@
 				TargetAttributes = {
 					4FB8461918E50C450056BDFB = {
 						TestTargetID = 4FB845FE18E50C450056BDFB;
+					};
+					79EE0B501DEDC69F00DDC8B4 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -300,6 +398,7 @@
 			targets = (
 				4FB845FE18E50C450056BDFB /* Sample */,
 				4FB8461918E50C450056BDFB /* SampleTests */,
+				79EE0B501DEDC69F00DDC8B4 /* DZNWebViewController */,
 			);
 		};
 /* End PBXProject section */
@@ -334,6 +433,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FB8462618E50C450056BDFB /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79EE0B4F1DEDC69F00DDC8B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +496,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		79EE0B4C1DEDC69F00DDC8B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79EE0B651DEDC76B00DDC8B4 /* DZNPolyActivity.m in Sources */,
+				79EE0B671DEDC76B00DDC8B4 /* DZNWebView.m in Sources */,
+				79EE0B691DEDC76B00DDC8B4 /* DZNWebViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -397,6 +513,11 @@
 			isa = PBXTargetDependency;
 			target = 4FB845FE18E50C450056BDFB /* Sample */;
 			targetProxy = 4FB8461F18E50C450056BDFB /* PBXContainerItemProxy */;
+		};
+		79EE0B571DEDC69F00DDC8B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79EE0B501DEDC69F00DDC8B4 /* DZNWebViewController */;
+			targetProxy = 79EE0B561DEDC69F00DDC8B4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -501,6 +622,7 @@
 				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
 				INFOPLIST_FILE = "Sample/Sample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "cl.dzn.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -518,6 +640,7 @@
 				GCC_PREFIX_HEADER = "Sample/Sample-Prefix.pch";
 				INFOPLIST_FILE = "Sample/Sample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "cl.dzn.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -567,6 +690,69 @@
 			};
 			name = Release;
 		};
+		79EE0B5A1DEDC69F00DDC8B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = DZNWebViewController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.dzn.DZNWebViewController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		79EE0B5B1DEDC69F00DDC8B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = DZNWebViewController/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = cl.dzn.DZNWebViewController;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -593,6 +779,15 @@
 			buildConfigurations = (
 				4FB8462F18E50C450056BDFB /* Debug */,
 				4FB8463018E50C450056BDFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79EE0B5C1DEDC69F00DDC8B4 /* Build configuration list for PBXNativeTarget "DZNWebViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79EE0B5A1DEDC69F00DDC8B4 /* Debug */,
+				79EE0B5B1DEDC69F00DDC8B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
