@@ -12,6 +12,7 @@
 #import <WebKit/WebKit.h>
 
 #import "DZNWebView.h"
+#import "DZNPolyActivity.h"
 
 /**
  Types of supported navigation tools.
