@@ -11,7 +11,7 @@
 #import "DZNWebViewController.h"
 #import "DZNPolyActivity.h"
 
-#define DZN_IS_IPAD [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad
+#define DZN_IS_IPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 #define DZN_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
 
 static char DZNWebViewControllerKVOContext = 0;
@@ -887,10 +887,12 @@ static char DZNWebViewControllerKVOContext = 0;
     _forwardBarItem = nil;
     _stateBarItem = nil;
     _actionBarItem = nil;
-    _progressView = nil;
     
     _backwardLongPress = nil;
     _forwardLongPress = nil;
+    
+    [_progressView removeFromSuperview];
+    _progressView = nil;
     
     _webView.scrollView.delegate = nil;
     _webView.navDelegate = nil;
