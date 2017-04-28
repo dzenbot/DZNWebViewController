@@ -27,8 +27,8 @@ static char DZNWebViewControllerKVOContext = 0;
 @property (nonatomic, strong) UILongPressGestureRecognizer *backwardLongPress;
 @property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
 
+@property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIToolbar *toolbar;
-@property (nonatomic, weak) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIView *navigationBarSuperView;
 
 @property (nonatomic) BOOL completedInitialLoad;
@@ -65,6 +65,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [self commonInit];
 }
 
@@ -133,16 +134,16 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[super viewWillDisappear:animated];
-    
+    [super viewWillDisappear:animated];
     [self clearProgressViewAnimated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
+    [super viewDidDisappear:animated];
     
     [self.webView stopLoading];
+    [self clearProgressViewAnimated:animated];
 }
 
 
@@ -875,12 +876,12 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)dealloc
 {
-    if (self.hideBarsWithGestures) {
-        [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
-        [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
-        [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+    if (_hideBarsWithGestures) {
+        [_navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
+        [_navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
+        [_navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
     }
-    [self.webView removeObserver:self forKeyPath:@"loading" context:&DZNWebViewControllerKVOContext];
+    [_webView removeObserver:self forKeyPath:@"loading" context:&DZNWebViewControllerKVOContext];
     
     _backwardBarItem = nil;
     _forwardBarItem = nil;
