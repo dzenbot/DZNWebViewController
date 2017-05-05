@@ -27,8 +27,8 @@ static char DZNWebViewControllerKVOContext = 0;
 @property (nonatomic, strong) UILongPressGestureRecognizer *backwardLongPress;
 @property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
 
-@property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIToolbar *toolbar;
+@property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIView *navigationBarSuperView;
 
 @property (nonatomic) BOOL completedInitialLoad;
@@ -876,12 +876,12 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)dealloc
 {
-    if (_hideBarsWithGestures) {
-        [_navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
-        [_navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
-        [_navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
+    if (self.hideBarsWithGestures) {
+        [self.navigationBar removeObserver:self forKeyPath:@"hidden" context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar removeObserver:self forKeyPath:@"center" context:&DZNWebViewControllerKVOContext];
+        [self.navigationBar removeObserver:self forKeyPath:@"alpha" context:&DZNWebViewControllerKVOContext];
     }
-    [_webView removeObserver:self forKeyPath:@"loading" context:&DZNWebViewControllerKVOContext];
+    [self.webView removeObserver:self forKeyPath:@"loading" context:&DZNWebViewControllerKVOContext];
     
     _backwardBarItem = nil;
     _forwardBarItem = nil;
