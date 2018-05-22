@@ -40,14 +40,13 @@ If you're importing the source files manually, you must add the `WebKit` framewo
 Create a new instance of DZNWebViewController, or your custom subclass, and initialize it with a NSURL.
 You MUST embed the view controller into a UINavigationController to make it work properly.
 ```objc
-NSURL *URL = [NSURL URLWithString:@"http://www.google.com/"];
+NSURL *URL = [NSURL URLWithString:@"https://www.google.com/"];
 
 DZNWebViewController *WVC = [[DZNWebViewController alloc] initWithURL:URL];
 UINavigationController *NC = [[UINavigationController alloc] initWithRootViewController:WVC];
 
 WVC.supportedWebNavigationTools = DZNWebNavigationToolAll;
 WVC.supportedWebActions = DZNWebActionAll;
-WVC.webNavigationPrompt = DZNWebNavigationPromptAll;
 WVC.showLoadingProgress = YES;
 WVC.allowHistory = YES;
 WVC.hideBarsWithGestures = YES;
