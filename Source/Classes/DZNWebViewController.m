@@ -37,6 +37,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 @implementation DZNWebViewController
 @synthesize URL = _URL;
+@synthesize fileURL = _fileURL;
 
 - (instancetype)init
 {
@@ -54,13 +55,19 @@ static char DZNWebViewControllerKVOContext = 0;
     self = [self init];
     if (self) {
         _URL = URL;
+        _fileURL = nil;
     }
     return self;
 }
 
 - (instancetype)initWithFileURL:(NSURL *)URL
 {
-    return [self initWithURL:URL];
+    self = [self init];
+    if (self) {
+        _URL = nil;
+        _fileURL = URL;
+    }
+    return self;
 }
 
 - (void)awakeFromNib
@@ -117,7 +124,11 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if (!self.webView.URL) {
-        [self loadURL:self.URL];
+        if (self.URL != nil) {
+            [self loadURL:self.URL];
+        } else if (self.fileURL != nil) {
+            [self loadFileURL:self.fileURL];
+        }
     }
 }
 
@@ -354,10 +365,16 @@ static char DZNWebViewControllerKVOContext = 0;
     }
     
     if (self.isViewLoaded) {
-        [self loadURL:URL];
+        if ([URL isFileURL]) {
+            [self loadFileURL:URL];
+            _fileURL = URL;
+            _URL = nil;
+        } else {
+            [self loadURL:URL];
+            _URL = URL;
+            _fileURL = nil;
+        }
     }
-    
-    _URL = URL;
 }
 
 - (void)setTitle:(NSString *)title
@@ -450,6 +467,11 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     NSURL *baseURL = [[NSURL alloc] initFileURLWithPath:URL.path.stringByDeletingLastPathComponent isDirectory:YES];
     [self loadURL:URL baseURL:baseURL];
+}
+
+- (void)loadFileURL:(NSURL *)URL
+{
+    [self.webView loadFileURL:URL allowingReadAccessToURL:URL];
 }
 
 - (void)loadURL:(NSURL *)URL baseURL:(NSURL *)baseURL
