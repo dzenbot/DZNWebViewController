@@ -15,6 +15,7 @@
 #define DZN_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
 
 static char DZNWebViewControllerKVOContext = 0;
+const int KPLUGINHANDLEDERROR  = 204;
 
 @interface DZNWebViewController ()
 
@@ -419,7 +420,9 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     switch (error.code) {
         case NSURLErrorUnknown:
-        case NSURLErrorCancelled:   return;
+        case NSURLErrorCancelled:
+        case KPLUGINHANDLEDERROR: // When there is a plugin in error ignore it, as the content will continue to play.
+            return;
     }
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
