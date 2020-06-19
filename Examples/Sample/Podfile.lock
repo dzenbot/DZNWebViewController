@@ -1,14 +1,16 @@
 PODS:
-  - DZNWebViewController (3.1)
+  - DZNWebViewController (3.2)
 
 DEPENDENCIES:
   - DZNWebViewController (from `../../DZNWebViewController.podspec`)
 
 EXTERNAL SOURCES:
   DZNWebViewController:
-    :path: ../../DZNWebViewController.podspec
+    :path: "../../DZNWebViewController.podspec"
 
 SPEC CHECKSUMS:
-  DZNWebViewController: 2c5dbb6874e49297a74011380bef6c8059402e4d
+  DZNWebViewController: 8e927a5de637fe0c4104c001d5cccd4fa5621e50
 
-COCOAPODS: 0.35.0
+PODFILE CHECKSUM: 51f540e277a3055aeb765a75d4273bb2a8d1999f
+
+COCOAPODS: 1.2.1

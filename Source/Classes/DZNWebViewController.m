@@ -15,6 +15,7 @@
 #define DZN_IS_LANDSCAPE ([UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeLeft || [UIApplication sharedApplication].statusBarOrientation == UIInterfaceOrientationLandscapeRight)
 
 static char DZNWebViewControllerKVOContext = 0;
+const int KPLUGINHANDLEDERROR  = 204;
 
 @interface DZNWebViewController ()
 
@@ -28,7 +29,7 @@ static char DZNWebViewControllerKVOContext = 0;
 @property (nonatomic, strong) UILongPressGestureRecognizer *forwardLongPress;
 
 @property (nonatomic, weak) UIToolbar *toolbar;
-@property (nonatomic, weak) UINavigationBar *navigationBar;
+@property (nonatomic, strong) UINavigationBar *navigationBar;
 @property (nonatomic, weak) UIView *navigationBarSuperView;
 
 @property (nonatomic) BOOL completedInitialLoad;
@@ -65,6 +66,7 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [self commonInit];
 }
 
@@ -133,16 +135,16 @@ static char DZNWebViewControllerKVOContext = 0;
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[super viewWillDisappear:animated];
-    
+    [super viewWillDisappear:animated];
     [self clearProgressViewAnimated:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
+    [super viewDidDisappear:animated];
     
     [self.webView stopLoading];
+    [self clearProgressViewAnimated:animated];
 }
 
 
@@ -418,7 +420,9 @@ static char DZNWebViewControllerKVOContext = 0;
 {
     switch (error.code) {
         case NSURLErrorUnknown:
-        case NSURLErrorCancelled:   return;
+        case NSURLErrorCancelled:
+        case KPLUGINHANDLEDERROR: // When there is a plugin in error ignore it, as the content will continue to play.
+            return;
     }
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -886,10 +890,12 @@ static char DZNWebViewControllerKVOContext = 0;
     _forwardBarItem = nil;
     _stateBarItem = nil;
     _actionBarItem = nil;
-    _progressView = nil;
     
     _backwardLongPress = nil;
     _forwardLongPress = nil;
+    
+    [_progressView removeFromSuperview];
+    _progressView = nil;
     
     _webView.scrollView.delegate = nil;
     _webView.navDelegate = nil;
